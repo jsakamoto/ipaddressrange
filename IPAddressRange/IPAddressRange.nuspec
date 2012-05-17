@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<package >
+  <metadata>
+    <id>IPAddressRange</id>
+    <version>1.0.0</version>
+    <authors>J.Sakamoto</authors>
+    <owners>J.Sakamoto</owners>
+    <licenseUrl>http://www.microsoft.com/en-us/openness/licenses.aspx</licenseUrl>
+    <projectUrl>https://github.com/jsakamoto/ipaddressrange</projectUrl>
+    <!--
+    <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>
+    -->
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>This library allows you to parse range of IP address string such as "192.168.0.0/24", and can conatins check. This library supports both IPv4 and IPv6.</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2012 J.Sakamoto, Ms-PL License.</copyright>
+    <tags>IPAddress</tags>
+  </metadata>
+  <files>
+    <file src="bin\Release\IPAddressRange.dll" target="lib"/>
+  </files>
+</package>

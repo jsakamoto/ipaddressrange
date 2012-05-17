@@ -1,0 +1,7 @@
+
+/TestResults
+*.suo
+/IPAddressRange/bin
+/IPAddressRange/obj
+/IPAddressRange/IPAddressRange.Test/bin
+/IPAddressRange/IPAddressRange.Test/obj
