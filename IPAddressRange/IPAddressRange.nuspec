@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>IPAddressRange</id>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <authors>J.Sakamoto</authors>
     <owners>J.Sakamoto</owners>
     <licenseUrl>http://www.microsoft.com/en-us/openness/licenses.aspx</licenseUrl>

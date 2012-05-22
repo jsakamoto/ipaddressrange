@@ -73,4 +73,13 @@ public class BitsTest
             new[] { (byte)0x11, (byte)0xFF, (byte)0xA5 },
             new[] { (byte)0x10, (byte)0x3c, (byte)0xA5 }).Is(true);
     }
+
+    [TestMethod]
+    public void GetBitMaskTest()
+    {
+        Bits.GetBitMask(4, 15).Is((byte)0xff, (byte)0xfe, (byte)0x00, (byte)0x00);
+        Bits.GetBitMask(4, 16).Is((byte)0xff, (byte)0xff, (byte)0x00, (byte)0x00);
+        Bits.GetBitMask(4, 19).Is((byte)0xff, (byte)0xff, (byte)0xe0, (byte)0x00);
+        Bits.GetBitMask(4, 24).Is((byte)0xff, (byte)0xff, (byte)0xff, (byte)0x00);
+    }
 }

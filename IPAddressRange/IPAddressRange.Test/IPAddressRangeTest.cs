@@ -30,11 +30,11 @@ public class IPAddressRangeTest
     [TestMethod]
     public void ParseTest_IPv4_Bitmask()
     {
-        var range = new IPAddressRange("192.168.60.0/24");
+        var range = new IPAddressRange("219.165.64.0/19");
         range.Begin.AddressFamily.Is(AddressFamily.InterNetwork);
-        range.Begin.ToString().Is("192.168.60.0");
+        range.Begin.ToString().Is("219.165.64.0");
         range.End.AddressFamily.Is(AddressFamily.InterNetwork);
-        range.End.ToString().Is("192.168.60.255");
+        range.End.ToString().Is("219.165.95.255");
     }
 
     [TestMethod]
