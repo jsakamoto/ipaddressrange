@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
 
 namespace NetTools
 {
-    public class IPAddressRange
+    [Serializable]
+    public class IPAddressRange : ISerializable
     {
         public IPAddress Begin { get; set; }
 
@@ -53,11 +55,30 @@ namespace NetTools
             throw new FormatException("Unknown IP range string.");
         }
 
+        protected IPAddressRange(SerializationInfo info, StreamingContext context)
+        {
+            var names = new List<string>();
+            foreach (var item in info) names.Add(item.Name);
+            
+            Func<string,IPAddress> deserialize = (name) => names.Contains(name) ? 
+                IPAddress.Parse(info.GetValue(name, typeof(object)).ToString()) : 
+                new IPAddress(0L);
+
+            this.Begin = deserialize("Begin");
+            this.End = deserialize("End");
+        }
+
         public bool Contains(IPAddress ipaddress)
         {
             if (ipaddress.AddressFamily != this.Begin.AddressFamily) return false;
             var adrBytes = ipaddress.GetAddressBytes();
             return Bits.GE(this.Begin.GetAddressBytes(), adrBytes) && Bits.LE(this.End.GetAddressBytes(), adrBytes);
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Begin", this.Begin != null ? this.Begin.ToString() : "");
+            info.AddValue("End", this.End != null ? this.End.ToString() : "");
         }
     }
 }
