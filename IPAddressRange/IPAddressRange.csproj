@@ -43,13 +43,16 @@
     <Compile Include="IPAddressRange.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="IPAddressRange.nuspec" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if "$(ConfigurationName)" == "Release" goto PACK
 goto END
 :PACK
 pushd "$(ProjectDir)"
-"$(SolutionDir).nuget\nuget.exe" pack "$(ProjectName).nuspec" -o $(OutDir)
+"$(SolutionDir).nuget\nuget.exe" pack "$(ProjectFileName)" -o $(OutDir)
 :END</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

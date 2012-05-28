@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>IPAddressRange</id>
-    <version>1.0.1</version>
+    <version>$version$</version>
     <authors>J.Sakamoto</authors>
     <owners>J.Sakamoto</owners>
     <licenseUrl>http://www.microsoft.com/en-us/openness/licenses.aspx</licenseUrl>
@@ -16,7 +16,4 @@
     <copyright>Copyright 2012 J.Sakamoto, Ms-PL License.</copyright>
     <tags>IPAddress</tags>
   </metadata>
-  <files>
-    <file src="bin\Release\IPAddressRange.dll" target="lib"/>
-  </files>
 </package>
