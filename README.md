@@ -10,10 +10,10 @@ Example
 	using NetTools;
 	...
 	var rangeA = new IPAddressRange("192.168.0.0/24"); // rangeA.Begin is "192.168.0.0", and rangeA.End is "192.168.0.255".
-	rangeA.Conatins(IPAddress.Parse("192.168.0.34")) // is True.
-	rangeA.Conatins(IPAddress.Parse("192.168.10.1")) // is False.
+	rangeA.Contains(IPAddress.Parse("192.168.0.34")) // is True.
+	rangeA.Contains(IPAddress.Parse("192.168.10.1")) // is False.
 
 	var rangeB = new IPAddressRange("192.168.0.10 - 192.168.10.20"); // rangeB.Begin is "192.168.0.10", and rangeB.End is "192.168.10.20".
-	rangeB.Conatins(IPAddress.Parse("192.168.3.45")) // is True.
-	rangeB.Conatins(IPAddress.Parse("192.168.0.9")) // is False.
+	rangeB.Contains(IPAddress.Parse("192.168.3.45")) // is True.
+	rangeB.Contains(IPAddress.Parse("192.168.0.9")) // is False.
 
