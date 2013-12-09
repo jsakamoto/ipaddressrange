@@ -31,13 +31,23 @@ public class IPAddressRangeTest
     }
 
     [TestMethod]
-    public void ParseTest_IPv4_Bitmask()
+    public void ParseTest_IPv4_CIDR()
     {
         var range = new IPAddressRange("219.165.64.0/19");
         range.Begin.AddressFamily.Is(AddressFamily.InterNetwork);
         range.Begin.ToString().Is("219.165.64.0");
         range.End.AddressFamily.Is(AddressFamily.InterNetwork);
         range.End.ToString().Is("219.165.95.255");
+    }
+
+    [TestMethod]
+    public void ParseTest_IPv4_Bitmask()
+    {
+        var range = new IPAddressRange("192.168.1.0/255.255.255.0");
+        range.Begin.AddressFamily.Is(AddressFamily.InterNetwork);
+        range.Begin.ToString().Is("192.168.1.0");
+        range.End.AddressFamily.Is(AddressFamily.InterNetwork);
+        range.End.ToString().Is("192.168.1.255");
     }
 
     [TestMethod]
@@ -74,7 +84,7 @@ public class IPAddressRangeTest
 
 
     [TestMethod]
-    public void ParseTest_IPv6_Bitmask()
+    public void ParseTest_IPv6_CIDR()
     {
         var range = new IPAddressRange("fe80::/10");
         range.Begin.AddressFamily.Is(AddressFamily.InterNetworkV6);

@@ -26,7 +26,7 @@ namespace NetTools
             // remove all spaces.
             ipRangeString = ipRangeString.Replace(" ", "");
 
-            // Pattern 1. Bitmask range: "192.168.0.0/24", "fe80::/10"
+            // Pattern 1. CIDR range: "192.168.0.0/24", "fe80::/10"
             var m1 = Regex.Match(ipRangeString, @"^(?<adr>[\da-f\.:]+)/(?<maskLen>\d+)$", RegexOptions.IgnoreCase);
             if (m1.Success)
             {
@@ -52,6 +52,18 @@ namespace NetTools
             {
                 this.Begin = IPAddress.Parse(m3.Groups["begin"].Value);
                 this.End = IPAddress.Parse(m3.Groups["end"].Value);
+                return;
+            }
+
+            // Pattern 4. Bit mask range: "192.168.0.0/255.255.255.0"
+            var m4 = Regex.Match(ipRangeString, @"^(?<adr>[\da-f\.:]+)/(?<bitmask>[\da-f\.:]+)$", RegexOptions.IgnoreCase);
+            if (m4.Success)
+            {
+                var baseAdrBytes = IPAddress.Parse(m4.Groups["adr"].Value).GetAddressBytes();
+                var maskBytes = IPAddress.Parse(m4.Groups["bitmask"].Value).GetAddressBytes();
+                baseAdrBytes = Bits.And(baseAdrBytes, maskBytes);
+                this.Begin = new IPAddress(baseAdrBytes);
+                this.End = new IPAddress(Bits.Or(baseAdrBytes, Bits.Not(maskBytes)));
                 return;
             }
 
