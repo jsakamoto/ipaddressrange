@@ -72,6 +72,27 @@ public class IPAddressRangeTest
         range.Contains(IPAddress.Parse("c0a8:3c1a::")).Is(false);
     }
 
+
+    [TestMethod]
+    public void ParseTest_IPv6_Bitmask()
+    {
+        var range = new IPAddressRange("fe80::/10");
+        range.Begin.AddressFamily.Is(AddressFamily.InterNetworkV6);
+        range.Begin.ToString().Is("fe80::");
+        range.End.AddressFamily.Is(AddressFamily.InterNetworkV6);
+        range.End.ToString().Is("febf:ffff:ffff:ffff:ffff:ffff:ffff:ffff");
+    }
+
+    [TestMethod]
+    public void ContainsTest_IPv6()
+    {
+        var range = new IPAddressRange("FE80::/10");
+
+        range.Contains(IPAddress.Parse("::1")).Is(false);
+        range.Contains(IPAddress.Parse("fe80::d503:4ee:3882:c586")).Is(true);
+        range.Contains(IPAddress.Parse("fe80::d503:4ee:3882:c586%3")).Is(true);
+    }
+
     [TestMethod]
     public void SerializeTest()
     {
