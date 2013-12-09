@@ -14,6 +14,7 @@
     <description>This library allows you to parse range of IP address string such as "192.168.0.0/24" and "192.168.0.0/255.255.255.0" and "192.168.0.0-192.168.0.255", and can conatins check. This library supports both IPv4 and IPv6.</description>
     <releaseNotes>
       <![CDATA[
+      V.1.0.5 - Fix: IPv4 CIDR range ".../32" causes crush.
       v.1.0.4 - Enhance: support bit mask range not only CIDR range.
       v.1.0.3 - Fix: Can not parse the address which contains hex string.
       ]]>

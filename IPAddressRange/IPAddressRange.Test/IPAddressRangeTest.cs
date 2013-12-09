@@ -41,6 +41,16 @@ public class IPAddressRangeTest
     }
 
     [TestMethod]
+    public void ParseTest_IPv4_CIDR_Max()
+    {
+        var range = new IPAddressRange("219.165.64.73/32");
+        range.Begin.AddressFamily.Is(AddressFamily.InterNetwork);
+        range.Begin.ToString().Is("219.165.64.73");
+        range.End.AddressFamily.Is(AddressFamily.InterNetwork);
+        range.End.ToString().Is("219.165.64.73");
+    }
+
+    [TestMethod]
     public void ParseTest_IPv4_Bitmask()
     {
         var range = new IPAddressRange("192.168.1.0/255.255.255.0");

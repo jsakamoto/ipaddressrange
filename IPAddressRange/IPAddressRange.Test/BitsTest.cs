@@ -81,5 +81,6 @@ public class BitsTest
         Bits.GetBitMask(4, 16).Is((byte)0xff, (byte)0xff, (byte)0x00, (byte)0x00);
         Bits.GetBitMask(4, 19).Is((byte)0xff, (byte)0xff, (byte)0xe0, (byte)0x00);
         Bits.GetBitMask(4, 24).Is((byte)0xff, (byte)0xff, (byte)0xff, (byte)0x00);
+        Bits.GetBitMask(4, 32).Is((byte)0xff, (byte)0xff, (byte)0xff, (byte)0xff);
     }
 }
