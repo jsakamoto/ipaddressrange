@@ -90,6 +90,17 @@ namespace NetTools
             return Bits.GE(this.Begin.GetAddressBytes(), adrBytes) && Bits.LE(this.End.GetAddressBytes(), adrBytes);
         }
 
+        public bool Contains(IPAddressRange range)
+        {
+            if (this.Begin.AddressFamily != range.Begin.AddressFamily) return false;
+
+            return 
+                Bits.GE(this.Begin.GetAddressBytes(), range.Begin.GetAddressBytes()) &&
+                Bits.LE(this.End.GetAddressBytes(), range.End.GetAddressBytes());
+
+            throw new NotImplementedException();
+        }
+
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("Begin", this.Begin != null ? this.Begin.ToString() : "");

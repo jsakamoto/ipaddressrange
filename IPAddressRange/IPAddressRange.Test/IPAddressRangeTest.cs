@@ -74,7 +74,7 @@ public class IPAddressRangeTest
     public void ContainsTest_IPv4()
     {
         var range = new IPAddressRange("192.168.60.26-192.168.60.37");
-        
+
         range.Contains(IPAddress.Parse("192.168.60.25")).Is(false);
         range.Contains(IPAddress.Parse("192.168.60.26")).Is(true);
         range.Contains(IPAddress.Parse("192.168.60.27")).Is(true);
@@ -88,10 +88,49 @@ public class IPAddressRangeTest
     public void ContainsTest_TestIPv6_to_IPv4Range()
     {
         var range = new IPAddressRange("192.168.60.26-192.168.60.37");
-        
+
         range.Contains(IPAddress.Parse("c0a8:3c1a::")).Is(false);
     }
 
+    [TestMethod]
+    public void ContainsTest_with_IPV4andv6_is_False_ever()
+    {
+        var fullRangeIPv6 = new IPAddressRange("::-fff:ffff:ffff:ffff:ffff:ffff:ffff:ffff");
+        fullRangeIPv6.Contains(new IPAddressRange("192.168.0.0/24")).Is(false);
+
+        var fullRangeIPv4 = new IPAddressRange("0.0.0.0-255.255.255.255");
+        fullRangeIPv4.Contains(new IPAddressRange("::1-::2")).Is(false);
+    }
+
+    [TestMethod]
+    public void ContainsTest_Range_is_True_IPv4()
+    {
+        var range = new IPAddressRange("192.168.60.26-192.168.60.37");
+        var range1_same = new IPAddressRange("192.168.60.26-192.168.60.37");
+        var range2_samestart = new IPAddressRange("192.168.60.26-192.168.60.30");
+        var range3_sameend = new IPAddressRange("192.168.60.36-192.168.60.37");
+        var range4_subset = new IPAddressRange("192.168.60.29-192.168.60.32");
+
+        range.Contains(range1_same).Is(true);
+        range.Contains(range2_samestart).Is(true);
+        range.Contains(range3_sameend).Is(true);
+        range.Contains(range4_subset).Is(true);
+    }
+
+    [TestMethod]
+    public void ContainsTest_Range_is_False_IPv4()
+    {
+        var range = new IPAddressRange("192.168.60.29-192.168.60.32");
+        var range1_overLeft = new IPAddressRange("192.168.60.26-192.168.70.1");
+        var range2_overRight = new IPAddressRange("192.168.50.1-192.168.60.37");
+        var range3_outOfLeft = new IPAddressRange("192.168.50.30-192.168.50.31");
+        var range4_outOfRight = new IPAddressRange("192.168.70.30-192.168.70.31");
+
+        range.Contains(range1_overLeft).Is(false);
+        range.Contains(range2_overRight).Is(false);
+        range.Contains(range3_outOfLeft).Is(false);
+        range.Contains(range4_outOfRight).Is(false);
+    }
 
     [TestMethod]
     public void ParseTest_IPv6_CIDR()
@@ -111,6 +150,36 @@ public class IPAddressRangeTest
         range.Contains(IPAddress.Parse("::1")).Is(false);
         range.Contains(IPAddress.Parse("fe80::d503:4ee:3882:c586")).Is(true);
         range.Contains(IPAddress.Parse("fe80::d503:4ee:3882:c586%3")).Is(true);
+    }
+
+    [TestMethod]
+    public void ContainsTest_Range_is_True_IPv6()
+    {
+        var range = new IPAddressRange("fe80::/10");
+        var range1_same = new IPAddressRange("fe80::/10");
+        var range2_samestart = new IPAddressRange("fe80::-fe80::d503:4ee:3882:c586");
+        var range3_sameend = new IPAddressRange("fe80::d503:4ee:3882:c586-febf:ffff:ffff:ffff:ffff:ffff:ffff:ffff");
+        var range4_subset = new IPAddressRange("fe80::d503:4ee:3882:c586-fe80::d504:4ee:3882:c586");
+
+        range.Contains(range1_same).Is(true);
+        range.Contains(range2_samestart).Is(true);
+        range.Contains(range3_sameend).Is(true);
+        range.Contains(range4_subset).Is(true);
+    }
+
+    [TestMethod]
+    public void ContainsTest_Range_is_False_IPv6()
+    {
+        var range = new IPAddressRange("fe80::d503:4ee:3882:c586-fe80::d504:4ee:3882:c586");
+        var range1_overLeft = new IPAddressRange("fe80::d502:4ee:3882:c586-fe80::d503:4ee:3882:c586");
+        var range2_overRight = new IPAddressRange("fe80::d503:4ef:3882:c586-fe80::d505:4ee:3882:c586");
+        var range3_outOfLeft = new IPAddressRange("fe80::d501:4ee:3882:c586-fe80::d502:4ee:3882:c586");
+        var range4_outOfRight = new IPAddressRange("fe80::d505:4ee:3882:c586-fe80::d506:4ee:3882:c586");
+
+        range.Contains(range1_overLeft).Is(false);
+        range.Contains(range2_overRight).Is(false);
+        range.Contains(range3_outOfLeft).Is(false);
+        range.Contains(range4_outOfRight).Is(false);
     }
 
     [TestMethod]
