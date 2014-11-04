@@ -23,4 +23,9 @@ rangeB.Contains(IPAddress.Parse("192.168.0.9")) // is False.
 var rangeC = new IPAddressRange("fe80::/10"); // Support CIDR expression and IPv6.
 rangeC.Contains(IPAddress.Parse("fe80::d503:4ee:3882:c586%3")) // is True.
 rangeC.Contains(IPAddress.Parse("::1")) // is False.
+
+// "Contains()" method also support IPAddressRange argument.
+var rangeD1 = new IPAddressRange("192.168.0.0/16");
+var rangeD2 = new IPAddressRange("192.168.10.0/24");
+rangeD1.Contains(rangeD2) // is True.
 ```
