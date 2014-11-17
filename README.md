@@ -29,3 +29,7 @@ var rangeD1 = new IPAddressRange("192.168.0.0/16");
 var rangeD2 = new IPAddressRange("192.168.10.0/24");
 rangeD1.Contains(rangeD2) // is True.
 ```
+
+License
+-------
+[LGPL v.3](LICENSE)
