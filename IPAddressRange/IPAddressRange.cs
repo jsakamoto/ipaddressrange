@@ -106,5 +106,24 @@ namespace NetTools
             info.AddValue("Begin", this.Begin != null ? this.Begin.ToString() : "");
             info.AddValue("End", this.End != null ? this.End.ToString() : "");
         }
+
+        public static IPAddressRange Parse(string ipRangeString)
+        {
+            return new IPAddressRange(ipRangeString);
+        }
+
+        public static bool TryParse(string ipRangeString, out IPAddressRange ipRange)
+        {
+            try
+            {
+                ipRange = IPAddressRange.Parse(ipRangeString);
+                return true;
+            }
+            catch (FormatException)
+            {
+                ipRange = null;
+                return false;
+            }
+        }
     }
 }
