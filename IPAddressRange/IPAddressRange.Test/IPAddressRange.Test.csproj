@@ -57,6 +57,7 @@
     <Compile Include="IPAddressRangeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BitsTest.cs" />
+    <Compile Include="IPAddressRangeParseTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
