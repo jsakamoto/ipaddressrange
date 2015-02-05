@@ -7,6 +7,8 @@ using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NetTools;
 
+#pragma warning disable 618
+
 [TestClass]
 public class IPAddressRangeTest
 {

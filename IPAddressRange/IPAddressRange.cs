@@ -21,6 +21,7 @@ namespace NetTools
             this.End = new IPAddress(0L);
         }
 
+        [Obsolete("Use IPAddressRange.Parse static method instead.")]
         public IPAddressRange(string ipRangeString)
         {
             // remove all spaces.
@@ -109,7 +110,9 @@ namespace NetTools
 
         public static IPAddressRange Parse(string ipRangeString)
         {
+#pragma warning disable 618
             return new IPAddressRange(ipRangeString);
+#pragma warning restore
         }
 
         public static bool TryParse(string ipRangeString, out IPAddressRange ipRange)
