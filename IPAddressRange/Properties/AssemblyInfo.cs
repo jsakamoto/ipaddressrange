@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("IPAddressRange")]
-[assembly: AssemblyCopyright("Copyright © 2012-2014 J.Sakamoto, Ms-PL License.")]
+[assembly: AssemblyCopyright("Copyright © 2012-2015 J.Sakamoto, LGPL v.3")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

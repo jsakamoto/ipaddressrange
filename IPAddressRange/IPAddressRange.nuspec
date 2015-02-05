@@ -5,7 +5,7 @@
     <version>$version$-beta</version>
     <authors>J.Sakamoto</authors>
     <owners>J.Sakamoto</owners>
-    <licenseUrl>http://www.microsoft.com/en-us/openness/licenses.aspx</licenseUrl>
+    <licenseUrl>https://github.com/jsakamoto/ipaddressrange/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/jsakamoto/ipaddressrange</projectUrl>
     <!--
     <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>
@@ -21,7 +21,7 @@
       v.1.0.3 - Fix: Can not parse the address which contains hex string.
       ]]>
     </releaseNotes>
-    <copyright>Copyright 2012-2013 J.Sakamoto, Ms-PL License.</copyright>
+    <copyright>Copyright 2012-2015 J.Sakamoto, LGPL v.3.</copyright>
     <tags>IPAddress</tags>
   </metadata>
 </package>
