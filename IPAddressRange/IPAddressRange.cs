@@ -32,7 +32,9 @@ namespace NetTools
             if (m1.Success)
             {
                 var baseAdrBytes = IPAddress.Parse(m1.Groups["adr"].Value).GetAddressBytes();
-                var maskBytes = Bits.GetBitMask(baseAdrBytes.Length, int.Parse(m1.Groups["maskLen"].Value));
+                var maskLen = int.Parse(m1.Groups["maskLen"].Value);
+                if (baseAdrBytes.Length * 8 < maskLen) throw new FormatException();
+                var maskBytes = Bits.GetBitMask(baseAdrBytes.Length, maskLen);
                 baseAdrBytes = Bits.And(baseAdrBytes, maskBytes);
                 this.Begin = new IPAddress(baseAdrBytes);
                 this.End = new IPAddress(Bits.Or(baseAdrBytes, Bits.Not(maskBytes)));

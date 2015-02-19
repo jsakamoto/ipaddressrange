@@ -64,6 +64,13 @@ namespace IPRange.Test
         }
 
         [TestMethod]
+        [ExpectedException(typeof(FormatException))]
+        public void Parse_CIDR_OutOfRange()
+        {
+            IPAddressRange.Parse("192.168.0.10/48");
+        }
+
+        [TestMethod]
         public void TryParse_Empty_String()
         {
             IPAddressRange temp;
@@ -79,6 +86,14 @@ namespace IPRange.Test
             var result = IPAddressRange.TryParse("fdfv", out temp);
             result.Is(false);
             temp.IsNull();
+        }
+
+        [TestMethod]
+        public void TryParse_CIDR_OutOfRange()
+        {
+            var ipadr = default(IPAddressRange);
+            IPAddressRange.TryParse("192.168.0.10/48", out ipadr).Is(false);
+            ipadr.IsNull();
         }
 
         [TestMethod]

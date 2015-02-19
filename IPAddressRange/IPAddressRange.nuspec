@@ -14,6 +14,7 @@
     <description>This library allows you to parse range of IP address string such as "192.168.0.0/24" and "192.168.0.0/255.255.255.0" and "192.168.0.0-192.168.0.255", and can conatins check. This library supports both IPv4 and IPv6.</description>
     <releaseNotes>
       <![CDATA[
+      v.1.2.1 - Fix: "Parse()" and "TryParse()" methods throw IndexOutOfRangeException when bit mask length is invalid at CIDR format.
       v.1.2.0 - Enhance: Add "Parse()" and "TryParse()" methods. (Instead, the constructor which has one string argument is obsoleted.)
       v.1.1.0 - Enhance: Add "Contains()" method overload version of IPAddressRange argument.
       v.1.0.6 - Fix Package: Repackage with Release build. (1.0.5 was Debug build)
