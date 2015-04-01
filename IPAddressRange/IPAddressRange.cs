@@ -50,7 +50,7 @@ namespace NetTools
             }
 
             // Pattern 3. Begin end range: "169.258.0.0-169.258.0.255"
-            var m3 = Regex.Match(ipRangeString, @"^(?<begin>[\da-f\.:]+)-(?<end>[\da-f\.:]+)$", RegexOptions.IgnoreCase);
+            var m3 = Regex.Match(ipRangeString, @"^(?<begin>[\da-f\.:]+)[\-–](?<end>[\da-f\.:]+)$", RegexOptions.IgnoreCase);
             if (m3.Success)
             {
                 this.Begin = IPAddress.Parse(m3.Groups["begin"].Value);

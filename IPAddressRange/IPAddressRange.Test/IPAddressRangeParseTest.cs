@@ -47,6 +47,12 @@ namespace IPRange.Test
         {
             var range = IPAddressRange.Parse("192.168.60.26-192.168.60.37");
             range.IsNotNull();
+
+            // with "dash (–)" (0x2013) is also support.
+            var range2 = IPAddressRange.Parse("192.168.60.26–192.168.60.37");
+            range2.IsNotNull();
+            range2.Begin.ToString().Is("192.168.60.26");
+            range2.End.ToString().Is("192.168.60.37");
         }
 
         [TestMethod]
@@ -148,6 +154,13 @@ namespace IPRange.Test
             var result = IPAddressRange.TryParse("192.168.60.26-192.168.60.37", out temp);
             result.Is(true);
             temp.IsNotNull();
+
+            IPAddressRange temp2;
+            var result2 = IPAddressRange.TryParse("192.168.60.26–192.168.60.37", out temp2);
+            result2.Is(true);
+            temp2.IsNotNull();
+            temp2.Begin.ToString().Is("192.168.60.26");
+            temp2.End.ToString().Is("192.168.60.37");
         }
     }
 }
