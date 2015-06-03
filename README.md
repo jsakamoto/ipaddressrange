@@ -7,7 +7,7 @@ This library supports both IPv4 and IPv6.
 Example
 -------
 
-```C#
+```csharp
 using NetTools;
 ...
 // rangeA.Begin is "192.168.0.0", and rangeA.End is "192.168.0.255".
@@ -28,6 +28,12 @@ rangeC.Contains(IPAddress.Parse("::1")); // is False.
 var rangeD1 = IPAddressRange.Parse("192.168.0.0/16");
 var rangeD2 = IPAddressRange.Parse("192.168.10.0/24");
 rangeD1.Contains(rangeD2); // is True.
+
+// IEnumerable<IPAddress> support, it's lazy evaluation.
+foreach (var ip in IPAddressRange.Parse("192.168.0.1/23"))
+{
+    Console.WriteLine(ip);
+}
 ```
 
 License
