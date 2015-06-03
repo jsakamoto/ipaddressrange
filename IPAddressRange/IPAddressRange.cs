@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -9,7 +10,7 @@ using System.Text.RegularExpressions;
 namespace NetTools
 {
     [Serializable]
-    public class IPAddressRange : ISerializable
+    public class IPAddressRange : ISerializable, IEnumerable<IPAddress>
     {
         public IPAddress Begin { get; set; }
 
@@ -129,6 +130,19 @@ namespace NetTools
                 ipRange = null;
                 return false;
             }
+        }
+
+        public IEnumerator<IPAddress> GetEnumerator()
+        {
+            var first = Begin.GetAddressBytes();
+            var last = End.GetAddressBytes();
+            for (var ip = first; Bits.GE(ip, last); ip = Bits.Increment(ip)) 
+                yield return new IPAddress(ip);
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

@@ -49,5 +49,16 @@ namespace NetTools
             return maskBytes;
         }
 
+        public static byte[] Increment(byte[] bytes)
+        {
+            var incrementIndex = Array.FindLastIndex(bytes, x => x < byte.MaxValue);
+            if (incrementIndex < 0) throw new OverflowException();
+            return bytes
+                .Take(incrementIndex)
+                .Concat(new byte[] { (byte)(bytes[incrementIndex] + 1) })
+                .Concat(new byte[bytes.Length - incrementIndex - 1])
+                .ToArray();
+        }
+
     }
 }
