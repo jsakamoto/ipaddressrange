@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.Serialization.Json;
@@ -223,5 +224,39 @@ public class IPAddressRangeTest
         range3.End.ToString().Is("::6");
     }
 
+
+    [TestMethod]
+    public void Enumerate_IPv4()
+    {
+        var ips = IPAddressRange.Parse("192.168.60.253-192.168.61.2").AsEnumerable().ToArray();
+        ips.Is(new IPAddress[]
+        {
+            IPAddress.Parse("192.168.60.253"),
+            IPAddress.Parse("192.168.60.254"),
+            IPAddress.Parse("192.168.60.255"),
+            IPAddress.Parse("192.168.61.0"),
+            IPAddress.Parse("192.168.61.1"),
+            IPAddress.Parse("192.168.61.2"),
+        });
+    }
+
+    [TestMethod]
+    public void Enumerate_IPv6()
+    {
+        var ips = IPAddressRange.Parse("fe80::d503:4ee:3882:c586/120").AsEnumerable().ToArray();
+        ips.Length.Is(256);
+        ips.First().Is(IPAddress.Parse("fe80::d503:4ee:3882:c500"));
+        ips.Last().Is(IPAddress.Parse("fe80::d503:4ee:3882:c5ff"));
+    }
+
+    [TestMethod]
+    public void EnumerateTest_With_Foreach()
+    {
+        foreach (var ip in IPAddressRange.Parse("192.168.60.2"))
+        {
+            ip.Is(IPAddress.Parse("192.168.60.2"));
+        }
+
+    }
 
 }
