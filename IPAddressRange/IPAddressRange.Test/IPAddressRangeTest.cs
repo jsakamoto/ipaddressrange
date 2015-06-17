@@ -14,13 +14,95 @@ using NetTools;
 public class IPAddressRangeTest
 {
     [TestMethod]
-    public void CtorTest()
+    public void CtorTest_Empty()
     {
         var range = new IPAddressRange();
         range.Begin.AddressFamily.Is(AddressFamily.InterNetwork);
         range.Begin.ToString().Is("0.0.0.0");
         range.End.AddressFamily.Is(AddressFamily.InterNetwork);
         range.End.ToString().Is("0.0.0.0");
+    }
+
+    [TestMethod]
+    public void CtorTest_Single()
+    {
+        var range = new IPAddressRange(IPAddress.Parse("192.168.0.88"));
+        range.Begin.AddressFamily.Is(AddressFamily.InterNetwork);
+        range.Begin.ToString().Is("192.168.0.88");
+        range.End.AddressFamily.Is(AddressFamily.InterNetwork);
+        range.End.ToString().Is("192.168.0.88");
+    }
+
+
+
+    [TestMethod]
+    public void CtorTest_Array_Throws()
+    {
+        AssertEx.Throws<ArgumentNullException>(() => new IPAddressRange((IPAddress[])null));
+        AssertEx.Throws<ArgumentOutOfRangeException>(() => new IPAddressRange(new IPAddress[] {}));
+        AssertEx.Throws<ArgumentException>(() => new IPAddressRange(new[] {IPAddress.Loopback, IPAddress.IPv6Loopback}), "Should not allow mixing of ipv4 and v6");
+    }
+
+    [TestMethod]
+    public void CtorTest_Array()
+    {
+        var range = new IPAddressRange(new[] { IPAddress.Parse("192.168.0.80"), IPAddress.Parse("192.168.0.88") });
+        range.Begin.AddressFamily.Is(AddressFamily.InterNetwork);
+        range.Begin.ToString().Is("192.168.0.80");
+        range.End.AddressFamily.Is(AddressFamily.InterNetwork);
+        range.End.ToString().Is("192.168.0.88");
+    }
+
+    [TestMethod]
+    public void CtorTest_Array_Single()
+    {
+        var range = new IPAddressRange(new[] { IPAddress.Parse("192.168.0.80") });
+        range.Begin.AddressFamily.Is(AddressFamily.InterNetwork);
+        range.Begin.ToString().Is("192.168.0.80");
+        range.End.AddressFamily.Is(AddressFamily.InterNetwork);
+        range.End.ToString().Is("192.168.0.80");
+    }
+
+    [TestMethod]
+    public void CtorTest_Array_Two_Equal()
+    {
+        var range = new IPAddressRange(new[] { IPAddress.Parse("192.168.0.80"), IPAddress.Parse("192.168.0.80") });
+        range.Begin.AddressFamily.Is(AddressFamily.InterNetwork);
+        range.Begin.ToString().Is("192.168.0.80");
+        range.End.AddressFamily.Is(AddressFamily.InterNetwork);
+        range.End.ToString().Is("192.168.0.80");
+    }
+
+    [TestMethod]
+    public void CtorTest_Array_Middle_Ignored()
+    {
+        var range = new IPAddressRange(new[] { IPAddress.Parse("192.168.0.80"), IPAddress.Parse("192.168.0.254"), IPAddress.Parse("192.168.0.88") });
+        range.Begin.AddressFamily.Is(AddressFamily.InterNetwork);
+        range.Begin.ToString().Is("192.168.0.80");
+        range.End.AddressFamily.Is(AddressFamily.InterNetwork);
+        range.End.ToString().Is("192.168.0.88");
+    }
+
+    
+    [TestMethod]
+    public void CtorTest_MaskLength()
+    {
+        var range = new IPAddressRange(IPAddress.Parse("192.168.0.80"), 24);
+        range.Begin.AddressFamily.Is(AddressFamily.InterNetwork);
+        range.Begin.ToString().Is("192.168.0.0");
+        range.End.AddressFamily.Is(AddressFamily.InterNetwork);
+        range.End.ToString().Is("192.168.0.255");
+    }
+
+
+    [TestMethod]
+    public void CtorTest_SubnetMask()
+    {
+        var range = new IPAddressRange(IPAddress.Parse("192.168.0.80"), IPAddress.Parse("255.255.255.0"));
+        range.Begin.AddressFamily.Is(AddressFamily.InterNetwork);
+        range.Begin.ToString().Is("192.168.0.0");
+        range.End.AddressFamily.Is(AddressFamily.InterNetwork);
+        range.End.ToString().Is("192.168.0.255");
     }
 
     [TestMethod]
