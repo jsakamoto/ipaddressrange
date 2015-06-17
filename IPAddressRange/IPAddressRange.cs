@@ -124,39 +124,48 @@ namespace NetTools
             info.AddValue("End", this.End != null ? this.End.ToString() : "");
         }
 
+
+        protected static string ParseRegex =
+            @"^(?:" +
+            @"(?<cidrBase>[\da-f\.:]+)/(?<cidrMask>\d+)$" +                 // Pattern 1. CIDR range: "192.168.0.0/24", "fe80::/10"
+            @"|(?<singleAddr>[\da-f\.:]+)" +                                // Pattern 2. Uni address: "127.0.0.1", ":;1"
+            @"|(?<begin>[\da-f\.:]+)[\-–](?<end>[\da-f\.:]+)" +             // Pattern 3. Begin end range: "169.258.0.0-169.258.0.255"
+            @"|(?<bitmaskAddr>[\da-f\.:]+)/(?<bitmaskMask>[\da-f\.:]+)" +   // Pattern 4. Bit mask range: "192.168.0.0/255.255.255.0"
+            @")$";
+
+        /// <summary>
+        /// Parse an IP Adddress range from a string. Accepts CIDR ranges like "192.168.0.0/24", "fe80::/10",
+        /// single IPs, Begin-end ranges like "169.258.0.0-169.258.0.255" or bitmask ranges like
+        /// "192.168.0.0/255.255.255.0".
+        /// </summary>
+        /// <param name="ipRangeString"></param>
+        /// <returns></returns>
         public static IPAddressRange Parse(string ipRangeString)
         {
             // remove all spaces.
             ipRangeString = ipRangeString.Replace(" ", "");
 
-            // Pattern 1. CIDR range: "192.168.0.0/24", "fe80::/10"
-            var m1 = Regex.Match(ipRangeString, @"^(?<adr>[\da-f\.:]+)/(?<maskLen>\d+)$", RegexOptions.IgnoreCase);
-            if (m1.Success)
+            var match = Regex.Match(ipRangeString, ParseRegex, RegexOptions.IgnoreCase);
+            if (match.Success)
             {
-                return new IPAddressRange(IPAddress.Parse(m1.Groups["adr"].Value), int.Parse(m1.Groups["maskLen"].Value));
-            }
+                if (!string.IsNullOrEmpty(match.Groups["cidrBase"].Value))
+                    return new IPAddressRange(IPAddress.Parse(match.Groups["cidrBase"].Value), int.Parse(match.Groups["cidrMask"].Value));
 
-            // Pattern 2. Uni address: "127.0.0.1", ":;1"
-            var m2 = Regex.Match(ipRangeString, @"^(?<adr>[\da-f\.:]+)$", RegexOptions.IgnoreCase);
-            if (m2.Success)
-            {
-                return new IPAddressRange(IPAddress.Parse(ipRangeString));
-            }
+                if (!string.IsNullOrEmpty(match.Groups["singleAddr"].Value))
+                    return new IPAddressRange(IPAddress.Parse(ipRangeString));
 
-            // Pattern 3. Begin end range: "169.258.0.0-169.258.0.255"
-            var m3 = Regex.Match(ipRangeString, @"^(?<begin>[\da-f\.:]+)[\-–](?<end>[\da-f\.:]+)$", RegexOptions.IgnoreCase);
-            if (m3.Success)
-            {
-                return new IPAddressRange(new[] { IPAddress.Parse(m3.Groups["begin"].Value), IPAddress.Parse(m3.Groups["end"].Value) });
-            }
+                if (!string.IsNullOrEmpty(match.Groups["begin"].Value))
+                    return new IPAddressRange(new[]
+                    {
+                        IPAddress.Parse(match.Groups["begin"].Value), 
+                        IPAddress.Parse(match.Groups["end"].Value)
+                    });
 
-            // Pattern 4. Bit mask range: "192.168.0.0/255.255.255.0"
-            var m4 = Regex.Match(ipRangeString, @"^(?<adr>[\da-f\.:]+)/(?<bitmask>[\da-f\.:]+)$", RegexOptions.IgnoreCase);
-            if (m4.Success)
-            {
-                return new IPAddressRange(
-                    IPAddress.Parse(m4.Groups["adr"].Value),
-                    IPAddress.Parse(m4.Groups["bitmask"].Value));
+
+                if (!string.IsNullOrEmpty(match.Groups["bitmaskAddr"].Value))
+                    return new IPAddressRange(
+                        IPAddress.Parse(match.Groups["bitmaskAddr"].Value),
+                        IPAddress.Parse(match.Groups["bitmaskMask"].Value));
             }
 
             throw new FormatException("Unknown IP range string.");
