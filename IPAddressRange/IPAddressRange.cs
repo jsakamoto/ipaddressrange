@@ -126,12 +126,12 @@ namespace NetTools
 
 
         protected static string ParseRegex =
-            @"^(?:" +
-            @"(?<cidrBase>[\da-f\.:]+)/(?<cidrMask>\d+)$" +                 // Pattern 1. CIDR range: "192.168.0.0/24", "fe80::/10"
-            @"|(?<singleAddr>[\da-f\.:]+)" +                                // Pattern 2. Uni address: "127.0.0.1", ":;1"
-            @"|(?<begin>[\da-f\.:]+)[\-–](?<end>[\da-f\.:]+)" +             // Pattern 3. Begin end range: "169.258.0.0-169.258.0.255"
-            @"|(?<bitmaskAddr>[\da-f\.:]+)/(?<bitmaskMask>[\da-f\.:]+)" +   // Pattern 4. Bit mask range: "192.168.0.0/255.255.255.0"
-            @")$";
+            @"^\s*(?:" +
+            @"(?<cidrBase>[\da-f\.:]+)\s*/\s*(?<cidrMask>\d+)$" +                   // Pattern 1. CIDR range: "192.168.0.0/24", "fe80::/10"
+            @"|(?<singleAddr>[\da-f\.:]+)" +                                        // Pattern 2. Uni address: "127.0.0.1", ":;1"
+            @"|(?<begin>[\da-f\.:]+)\s*[\-–]\s*(?<end>[\da-f\.:]+)" +               // Pattern 3. Begin end range: "169.258.0.0-169.258.0.255"
+            @"|(?<bitmaskAddr>[\da-f\.:]+)\s*/\s*(?<bitmaskMask>[\da-f\.:]+)" +     // Pattern 4. Bit mask range: "192.168.0.0/255.255.255.0"
+            @")\s*$";
 
         /// <summary>
         /// Parse an IP Adddress range from a string. Accepts CIDR ranges like "192.168.0.0/24", "fe80::/10",
@@ -142,9 +142,6 @@ namespace NetTools
         /// <returns></returns>
         public static IPAddressRange Parse(string ipRangeString)
         {
-            // remove all spaces.
-            ipRangeString = ipRangeString.Replace(" ", "");
-
             var match = Regex.Match(ipRangeString, ParseRegex, RegexOptions.IgnoreCase);
             if (match.Success)
             {
