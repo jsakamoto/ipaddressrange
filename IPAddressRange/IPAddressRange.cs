@@ -16,10 +16,13 @@ namespace NetTools
 
         public IPAddress End { get; set; }
 
+        /// <summary>
+        /// Creates an empty range object, equivalent to "0.0.0.0/0".
+        /// </summary>
         public IPAddressRange() : this(new IPAddress(0L)) { }
 
         /// <summary>
-        /// Creates an empty range object, equivalent to "0.0.0.0/0".
+        /// Creates a new range with the same start/end address (range of one)
         /// </summary>
         /// <param name="singleAddress"></param>
         public IPAddressRange(IPAddress singleAddress)
