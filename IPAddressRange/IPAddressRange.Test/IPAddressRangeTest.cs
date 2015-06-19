@@ -13,6 +13,8 @@ using NetTools;
 [TestClass]
 public class IPAddressRangeTest
 {
+    public TestContext TestContext { get; set; }
+
     [TestMethod]
     public void CtorTest()
     {
@@ -261,30 +263,22 @@ public class IPAddressRangeTest
 
 
     [TestMethod]
-    public void ToString_IPv4_Single()
+    [TestCase("192.168.60.2", "192.168.60.2")]
+    [TestCase("192.168.60.2/24", "192.168.60.0-192.168.60.255")]
+    [TestCase("fe80::d503:4ee:3882:c586", "fe80::d503:4ee:3882:c586")]
+    [TestCase("fe80::d503:4ee:3882:c586/120", "fe80::d503:4ee:3882:c500-fe80::d503:4ee:3882:c5ff")]
+    public void ToString_Output()
     {
-        var ips = IPAddressRange.Parse("192.168.60.2");
-        ips.ToString().Is("192.168.60.2");
-    }
-    
-    [TestMethod]
-    public void ToString_IPv4_Range()
-    {
-        var ips = IPAddressRange.Parse("192.168.60.2/24");
-        ips.ToString().Is("192.168.60.0-192.168.60.255");
-    }
-    
-    [TestMethod]
-    public void ToString_IPv6_Single()
-    {
-        var ips = IPAddressRange.Parse("fe80::d503:4ee:3882:c586");
-        ips.ToString().Is("fe80::d503:4ee:3882:c586");
-    }
+        TestContext.Run((string input, string expected) =>
+        {
+            Console.WriteLine("TestCase: \"{0}\", Expected: \"{1}\"", input, expected);
+            var output = IPAddressRange.Parse(input).ToString();
+            Console.WriteLine("  Result: \"{0}\"", output);
+            output.Is(expected);
 
-    [TestMethod]
-    public void ToString_IPv6_Range()
-    {
-        var ips = IPAddressRange.Parse("fe80::d503:4ee:3882:c586/120");
-        ips.ToString().Is("fe80::d503:4ee:3882:c500-fe80::d503:4ee:3882:c5ff");
+            var parsed = IPAddressRange.Parse(output).ToString();
+            parsed.Is(expected, "Output of ToString() should be usable by Parse() and result in the same output");
+        });
     }
+    
 }
