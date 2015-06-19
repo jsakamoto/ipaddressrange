@@ -5,7 +5,7 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IPAddressRange", "IPAddressRange\IPAddressRange.csproj", "{D3DEA965-247F-4C4C-B3B0-44A039C75A5C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IPAddressRange.Test", "IPAddressRange\IPAddressRange.Test\IPAddressRange.Test.csproj", "{4B6A09CA-5FFA-4C04-81F0-B5E706E3F6D3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IPAddressRange.Test", "IPAddressRange.Test\IPAddressRange.Test.csproj", "{4B6A09CA-5FFA-4C04-81F0-B5E706E3F6D3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{30275536-66D5-4D2D-BB34-EC66C65F814B}"
 	ProjectSection(SolutionItems) = preProject
