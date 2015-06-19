@@ -259,4 +259,32 @@ public class IPAddressRangeTest
 
     }
 
+
+    [TestMethod]
+    public void ToString_IPv4_Single()
+    {
+        var ips = IPAddressRange.Parse("192.168.60.2");
+        ips.ToString().Is("192.168.60.2");
+    }
+    
+    [TestMethod]
+    public void ToString_IPv4_Range()
+    {
+        var ips = IPAddressRange.Parse("192.168.60.2/24");
+        ips.ToString().Is("192.168.60.0-192.168.60.255");
+    }
+    
+    [TestMethod]
+    public void ToString_IPv6_Single()
+    {
+        var ips = IPAddressRange.Parse("fe80::d503:4ee:3882:c586");
+        ips.ToString().Is("fe80::d503:4ee:3882:c586");
+    }
+
+    [TestMethod]
+    public void ToString_IPv6_Range()
+    {
+        var ips = IPAddressRange.Parse("fe80::d503:4ee:3882:c586/120");
+        ips.ToString().Is("fe80::d503:4ee:3882:c500-fe80::d503:4ee:3882:c5ff");
+    }
 }
