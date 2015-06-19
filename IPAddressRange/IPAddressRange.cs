@@ -152,7 +152,7 @@ namespace NetTools
                     return new IPAddressRange(IPAddress.Parse(match.Groups["cidrBase"].Value), int.Parse(match.Groups["cidrMask"].Value));
 
                 if (!string.IsNullOrEmpty(match.Groups["singleAddr"].Value))
-                    return new IPAddressRange(IPAddress.Parse(ipRangeString));
+                    return new IPAddressRange(IPAddress.Parse(match.Groups["singleAddr"].Value));
 
                 if (!string.IsNullOrEmpty(match.Groups["begin"].Value))
                     return new IPAddressRange(new[]
