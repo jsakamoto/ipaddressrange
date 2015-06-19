@@ -130,7 +130,7 @@ namespace NetTools
 
         protected static string ParseRegex =
             @"^\s*(?:" +
-            @"(?<cidrBase>[\da-f\.:]+)\s*/\s*(?<cidrMask>\d+)$" +                   // Pattern 1. CIDR range: "192.168.0.0/24", "fe80::/10"
+            @"(?<cidrBase>[\da-f\.:]+)\s*/\s*(?<cidrMask>\d+)" +                    // Pattern 1. CIDR range: "192.168.0.0/24", "fe80::/10"
             @"|(?<singleAddr>[\da-f\.:]+)" +                                        // Pattern 2. Uni address: "127.0.0.1", ":;1"
             @"|(?<begin>[\da-f\.:]+)\s*[\-–]\s*(?<end>[\da-f\.:]+)" +               // Pattern 3. Begin end range: "169.258.0.0-169.258.0.255"
             @"|(?<bitmaskAddr>[\da-f\.:]+)\s*/\s*(?<bitmaskMask>[\da-f\.:]+)" +     // Pattern 4. Bit mask range: "192.168.0.0/255.255.255.0"
