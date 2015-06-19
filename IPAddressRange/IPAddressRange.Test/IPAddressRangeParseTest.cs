@@ -84,10 +84,12 @@ namespace IPRange.Test
         }
 
         [TestMethod]
+        [TestCase(null, false)] // bug3
         [TestCase("", false)]
         [TestCase(" ", false)]
         [TestCase("fdfv", false)]
         [TestCase("192.168.0.10/48", false)] // CIDR out of range
+        [TestCase("192.168.60.26-192.168.60.22", false)] // big to lower
 
         [TestCase("192.168.60.13", true)]
         [TestCase("fe80::d503:4ee:3882:c586", true)]

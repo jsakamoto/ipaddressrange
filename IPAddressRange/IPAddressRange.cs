@@ -178,7 +178,7 @@ namespace NetTools
                 ipRange = IPAddressRange.Parse(ipRangeString);
                 return true;
             }
-            catch (FormatException)
+            catch (Exception)
             {
                 ipRange = null;
                 return false;
