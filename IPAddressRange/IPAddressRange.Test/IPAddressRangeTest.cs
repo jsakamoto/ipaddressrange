@@ -13,6 +13,8 @@ using NetTools;
 [TestClass]
 public class IPAddressRangeTest
 {
+    public TestContext TestContext { get; set; }
+
     [TestMethod]
     public void CtorTest()
     {
@@ -259,4 +261,24 @@ public class IPAddressRangeTest
 
     }
 
+
+    [TestMethod]
+    [TestCase("192.168.60.2", "192.168.60.2")]
+    [TestCase("192.168.60.2/24", "192.168.60.0-192.168.60.255")]
+    [TestCase("fe80::d503:4ee:3882:c586", "fe80::d503:4ee:3882:c586")]
+    [TestCase("fe80::d503:4ee:3882:c586/120", "fe80::d503:4ee:3882:c500-fe80::d503:4ee:3882:c5ff")]
+    public void ToString_Output()
+    {
+        TestContext.Run((string input, string expected) =>
+        {
+            Console.WriteLine("TestCase: \"{0}\", Expected: \"{1}\"", input, expected);
+            var output = IPAddressRange.Parse(input).ToString();
+            Console.WriteLine("  Result: \"{0}\"", output);
+            output.Is(expected);
+
+            var parsed = IPAddressRange.Parse(output).ToString();
+            parsed.Is(expected, "Output of ToString() should be usable by Parse() and result in the same output");
+        });
+    }
+    
 }
