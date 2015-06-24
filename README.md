@@ -4,7 +4,7 @@ IPAddressRange Class Library
 This library allows you to parse range of IP address string such as "192.168.0.0/24" and "192.168.0.0/255.255.255.0" and "192.168.0.0-192.168.0.255", and can conatins check.
 This library supports both IPv4 and IPv6.
 
-[![Build status](https://ci.appveyor.com/api/projects/status/rulil6d53996df2y?svg=true)](https://ci.appveyor.com/project/gregmac/ipaddressrange) [![NuGet Package](https://img.shields.io/nuget/v/IPAddressRange.svg)](https://www.nuget.org/packages/IPAddressRange/)
+[![Build status](https://ci.appveyor.com/api/projects/status/9xp7ahar7afcjk3l?svg=true)](https://ci.appveyor.com/project/jsakamoto/ipaddressrange) [![NuGet Package](https://img.shields.io/nuget/v/IPAddressRange.svg)](https://www.nuget.org/packages/IPAddressRange/)
 
 Example
 -------
