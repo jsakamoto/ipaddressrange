@@ -193,5 +193,15 @@ namespace NetTools
         {
             return GetEnumerator();
         }
+
+        /// <summary>
+        /// Returns the range in the format "begin-end", or 
+        /// as a single address if End is the same as Begin.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return Equals(Begin, End) ? Begin.ToString() : string.Format("{0}-{1}", Begin, End);
+        }
     }
 }
