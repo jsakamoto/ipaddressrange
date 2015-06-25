@@ -31,18 +31,14 @@ namespace NetTools
         }
 
         /// <summary>
-        /// Create a new range based on the first and last IPs in an array.
-        /// Throws an exception if the array is empty or null. All but the first and last values 
-        /// are ignored. Passing a single value is equivalent to a range of one address.
+        /// Create a new range from a begin and end address.
+        /// Throws an exception if Begin comes after End, or the
+        /// addresses are not in the same family.
         /// </summary>
-        /// <param name="beginEnd"></param>
-        public IPAddressRange(ICollection<IPAddress> beginEnd)
+        public IPAddressRange(IPAddress begin, IPAddress end)
         {
-            if (beginEnd == null) throw new ArgumentNullException("beginEnd");
-            if (beginEnd.Count == 0) throw new ArgumentOutOfRangeException("beginEnd", "Array contains no elements");
-            
-            Begin = beginEnd.First();
-            End = beginEnd.Last();
+            Begin = begin;
+            End = end;
 
             if (Begin.AddressFamily != End.AddressFamily) throw new ArgumentException("Elements must be of the same address family", "beginEnd");
 
@@ -51,8 +47,11 @@ namespace NetTools
             if (!Bits.LE(endBytes, beginBytes)) throw new ArgumentException("Begin must be smaller than the End", "beginEnd");
         }
 
+
         /// <summary>
-        /// Creates a range from a base address and mask bits 
+        /// Creates a range from a base address and mask bits.
+        /// This can also be used with <see cref="SubnetMaskLength"/> to create a
+        /// range based on a subnet mask.
         /// </summary>
         /// <param name="baseAddress"></param>
         /// <param name="maskLength"></param>
@@ -61,21 +60,6 @@ namespace NetTools
             var baseAdrBytes = baseAddress.GetAddressBytes();
             if (baseAdrBytes.Length * 8 < maskLength) throw new FormatException();
             var maskBytes = Bits.GetBitMask(baseAdrBytes.Length, maskLength);
-            baseAdrBytes = Bits.And(baseAdrBytes, maskBytes);
-            
-            Begin = new IPAddress(baseAdrBytes);
-            End = new IPAddress(Bits.Or(baseAdrBytes, Bits.Not(maskBytes)));
-        }
-        
-        /// <summary>
-        /// Creates a range from a base address and subnet mask.
-        /// </summary>
-        /// <param name="baseAddress"></param>
-        /// <param name="subnetMask"></param>
-        public IPAddressRange(IPAddress baseAddress, IPAddress subnetMask)
-        {
-            var baseAdrBytes = baseAddress.GetAddressBytes();
-            var maskBytes = subnetMask.GetAddressBytes();
             baseAdrBytes = Bits.And(baseAdrBytes, maskBytes);
             
             Begin = new IPAddress(baseAdrBytes);
@@ -155,17 +139,16 @@ namespace NetTools
                     return new IPAddressRange(IPAddress.Parse(match.Groups["singleAddr"].Value));
 
                 if (!string.IsNullOrEmpty(match.Groups["begin"].Value))
-                    return new IPAddressRange(new[]
-                    {
+                    return new IPAddressRange(
                         IPAddress.Parse(match.Groups["begin"].Value), 
                         IPAddress.Parse(match.Groups["end"].Value)
-                    });
+                    );
 
 
                 if (!string.IsNullOrEmpty(match.Groups["bitmaskAddr"].Value))
                     return new IPAddressRange(
                         IPAddress.Parse(match.Groups["bitmaskAddr"].Value),
-                        IPAddress.Parse(match.Groups["bitmaskMask"].Value));
+                        SubnetMaskLength(IPAddress.Parse(match.Groups["bitmaskMask"].Value)));
             }
 
             throw new FormatException("Unknown IP range string.");
@@ -183,6 +166,19 @@ namespace NetTools
                 ipRange = null;
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Takes a subnetmask (eg, "255.255.254.0") and returns the CIDR bit length of that
+        /// address. Throws an exception if the passed address is not valid as a subnet mask.
+        /// </summary>
+        /// <param name="subnetMask">The subnet mask to use</param>
+        /// <returns></returns>
+        public static int SubnetMaskLength(IPAddress subnetMask)
+        {
+            var length = Bits.GetBitMaskLength(subnetMask.GetAddressBytes());
+            if (length == null) throw new ArgumentException("Not a valid subnet mask", "subnetMask");
+            return length.Value;
         }
 
         public IEnumerator<IPAddress> GetEnumerator()
