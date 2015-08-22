@@ -40,4 +40,4 @@ foreach (var ip in IPAddressRange.Parse("192.168.0.1/23"))
 
 License
 -------
-[LGPL v.3](LICENSE)
+[Mozilla Public License 2.0](LICENSE)
