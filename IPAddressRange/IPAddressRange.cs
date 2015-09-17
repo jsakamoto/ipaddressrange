@@ -12,6 +12,12 @@ namespace NetTools
     [Serializable]
     public class IPAddressRange : ISerializable, IEnumerable<IPAddress>
     {
+		private static Regex m1_regex = new Regex(@"^(?<adr>[\da-f\.:]+)/(?<maskLen>\d+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+		private static Regex m2_regex = new Regex(@"^(?<adr>[\da-f\.:]+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+		private static Regex m3_regex = new Regex(@"^(?<begin>[\da-f\.:]+)[\-–](?<end>[\da-f\.:]+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+		private static Regex m4_regex = new Regex(@"^(?<adr>[\da-f\.:]+)/(?<bitmask>[\da-f\.:]+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+
         public IPAddress Begin { get; set; }
 
         public IPAddress End { get; set; }
@@ -29,7 +35,7 @@ namespace NetTools
             ipRangeString = ipRangeString.Replace(" ", "");
 
             // Pattern 1. CIDR range: "192.168.0.0/24", "fe80::/10"
-            var m1 = Regex.Match(ipRangeString, @"^(?<adr>[\da-f\.:]+)/(?<maskLen>\d+)$", RegexOptions.IgnoreCase);
+			var m1 = m1_regex.Match(ipRangeString); //Regex.Match(ipRangeString, @"^(?<adr>[\da-f\.:]+)/(?<maskLen>\d+)$", RegexOptions.IgnoreCase);
             if (m1.Success)
             {
                 var baseAdrBytes = IPAddress.Parse(m1.Groups["adr"].Value).GetAddressBytes();
@@ -43,7 +49,7 @@ namespace NetTools
             }
 
             // Pattern 2. Uni address: "127.0.0.1", ":;1"
-            var m2 = Regex.Match(ipRangeString, @"^(?<adr>[\da-f\.:]+)$", RegexOptions.IgnoreCase);
+			var m2 = m2_regex.Match(ipRangeString); //Regex.Match(ipRangeString, @"^(?<adr>[\da-f\.:]+)$", RegexOptions.IgnoreCase);
             if (m2.Success)
             {
                 this.Begin = this.End = IPAddress.Parse(ipRangeString);
@@ -51,7 +57,7 @@ namespace NetTools
             }
 
             // Pattern 3. Begin end range: "169.258.0.0-169.258.0.255"
-            var m3 = Regex.Match(ipRangeString, @"^(?<begin>[\da-f\.:]+)[\-–](?<end>[\da-f\.:]+)$", RegexOptions.IgnoreCase);
+			var m3 = m3_regex.Match(ipRangeString); // Regex.Match(ipRangeString, @"^(?<begin>[\da-f\.:]+)[\-–](?<end>[\da-f\.:]+)$", RegexOptions.IgnoreCase);
             if (m3.Success)
             {
                 this.Begin = IPAddress.Parse(m3.Groups["begin"].Value);
@@ -60,7 +66,7 @@ namespace NetTools
             }
 
             // Pattern 4. Bit mask range: "192.168.0.0/255.255.255.0"
-            var m4 = Regex.Match(ipRangeString, @"^(?<adr>[\da-f\.:]+)/(?<bitmask>[\da-f\.:]+)$", RegexOptions.IgnoreCase);
+			var m4 = m4_regex.Match(ipRangeString); //Regex.Match(ipRangeString, @"^(?<adr>[\da-f\.:]+)/(?<bitmask>[\da-f\.:]+)$", RegexOptions.IgnoreCase);
             if (m4.Success)
             {
                 var baseAdrBytes = IPAddress.Parse(m4.Groups["adr"].Value).GetAddressBytes();
