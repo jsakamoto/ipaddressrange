@@ -16,13 +16,33 @@ public class IPAddressRangeTest
     public TestContext TestContext { get; set; }
 
     [TestMethod]
-    public void CtorTest()
+    public void CtorTest_Empty()
     {
         var range = new IPAddressRange();
         range.Begin.AddressFamily.Is(AddressFamily.InterNetwork);
         range.Begin.ToString().Is("0.0.0.0");
         range.End.AddressFamily.Is(AddressFamily.InterNetwork);
         range.End.ToString().Is("0.0.0.0");
+    }
+
+    [TestMethod]
+    public void CtorTest_Single()
+    {
+        var range = new IPAddressRange(IPAddress.Parse("192.168.0.88"));
+        range.Begin.AddressFamily.Is(AddressFamily.InterNetwork);
+        range.Begin.ToString().Is("192.168.0.88");
+        range.End.AddressFamily.Is(AddressFamily.InterNetwork);
+        range.End.ToString().Is("192.168.0.88");
+    }
+
+    [TestMethod]
+    public void CtorTest_MaskLength()
+    {
+        var range = new IPAddressRange(IPAddress.Parse("192.168.0.80"), 24);
+        range.Begin.AddressFamily.Is(AddressFamily.InterNetwork);
+        range.Begin.ToString().Is("192.168.0.0");
+        range.End.AddressFamily.Is(AddressFamily.InterNetwork);
+        range.End.ToString().Is("192.168.0.255");
     }
 
     [TestMethod]
@@ -226,6 +246,20 @@ public class IPAddressRangeTest
         range3.End.ToString().Is("::6");
     }
 
+    [TestMethod]
+    public void SubnetMaskLengthTest_Valid()
+    {
+        var range = new IPAddressRange(IPAddress.Parse("192.168.75.23"), IPAddressRange.SubnetMaskLength(IPAddress.Parse("255.255.254.0")));
+        range.Begin.ToString().Is("192.168.74.0");
+        range.End.ToString().Is("192.168.75.255");
+    }
+
+    [TestMethod]
+    public void SubnetMaskLengthTest_Invalid()
+    {
+        AssertEx.Throws<ArgumentException>(() =>
+            new IPAddressRange(IPAddress.Parse("192.168.75.23"), IPAddressRange.SubnetMaskLength(IPAddress.Parse("255.255.54.0"))));
+    }
 
     [TestMethod]
     public void Enumerate_IPv4()

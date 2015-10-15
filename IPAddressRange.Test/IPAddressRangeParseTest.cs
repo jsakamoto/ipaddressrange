@@ -1,4 +1,6 @@
 ﻿using System;
+using System.CodeDom;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NetTools;
 
@@ -7,160 +9,111 @@ namespace IPRange.Test
     [TestClass]
     public class IPAddressRangeParseTest
     {
+        public TestContext TestContext { get; set; }
+
+
         [TestMethod]
-        public void ParseSucceeds_IPV4()
+        [TestCase("192.168.60.13", "192.168.60.13", "192.168.60.13")]
+        [TestCase("  192.168.60.13  ", "192.168.60.13", "192.168.60.13")]   
+        [TestCase("fe80::d503:4ee:3882:c586", "fe80::d503:4ee:3882:c586", "fe80::d503:4ee:3882:c586")]
+        [TestCase("  fe80::d503:4ee:3882:c586  ", "fe80::d503:4ee:3882:c586", "fe80::d503:4ee:3882:c586")]
+        [TestCase("3232252004", "192.168.64.100", "192.168.64.100")] // decimal - new 
+        [TestCase("  3232252004  ", "192.168.64.100", "192.168.64.100")] // decimal - new 
+
+        [TestCase("219.165.64.0/19", "219.165.64.0", "219.165.95.255")]
+        [TestCase("  219.165.64.0  /  19  ", "219.165.64.0", "219.165.95.255")]   
+        [TestCase("192.168.1.0/255.255.255.0", "192.168.1.0", "192.168.1.255")]
+        [TestCase("  192.168.1.0  /  255.255.255.0  ", "192.168.1.0", "192.168.1.255")]
+        [TestCase("3232252004/24", "192.168.64.0", "192.168.64.255")] // decimal - new 
+        [TestCase("  3232252004  /  24  ", "192.168.64.0", "192.168.64.255")] // decimal - new 
+
+        [TestCase("192.168.60.26–192.168.60.37", "192.168.60.26", "192.168.60.37")]
+        [TestCase("  192.168.60.26  –  192.168.60.37  ", "192.168.60.26", "192.168.60.37")]
+        [TestCase("fe80::c586-fe80::c600", "fe80::c586", "fe80::c600")]
+        [TestCase("  fe80::c586  -  fe80::c600  ", "fe80::c586", "fe80::c600")]
+        [TestCase("3232252004-3232252504", "192.168.64.100", "192.168.66.88")]
+        [TestCase("  3232252004  -  3232252504  ", "192.168.64.100", "192.168.66.88")]
+        
+        // with "dash (–)" (0x2013) is also support.
+        [TestCase("192.168.61.26–192.168.61.37", "192.168.61.26", "192.168.61.37")]
+        [TestCase("  192.168.61.26  –  192.168.61.37  ", "192.168.61.26", "192.168.61.37")]
+        [TestCase("fe80::c586–fe80::c600", "fe80::c586", "fe80::c600")]
+        [TestCase("  fe80::c586  –  fe80::c600  ", "fe80::c586", "fe80::c600")]
+        [TestCase("3232252004–3232252504", "192.168.64.100", "192.168.66.88")]
+        [TestCase("  3232252004  –  3232252504  ", "192.168.64.100", "192.168.66.88")]
+        public void ParseSucceeds()
         {
-            var range = IPAddressRange.Parse("192.168.60.13");
-            range.IsNotNull();
+            TestContext.Run((string input, string expectedBegin, string expectedEnd) =>
+            {
+                Console.WriteLine("TestCase: \"{0}\", Expected Begin: {1}, End: {2}", input, expectedBegin, expectedEnd);
+                var range = IPAddressRange.Parse(input);
+                range.IsNotNull();
+                Console.WriteLine("  Result: Begin: {0}, End: {1}", range.Begin, range.End);
+                range.Begin.ToString().Is(expectedBegin);
+                range.End.ToString().Is(expectedEnd);
+            });
         }
 
         [TestMethod]
-        public void ParseSucceeds_IPV6()
+        [TestCase(null, typeof(ArgumentNullException))] 
+        [TestCase("", typeof(FormatException))]
+        [TestCase(" ", typeof(FormatException))]
+        [TestCase("gvvdv", typeof(FormatException))]
+        [TestCase("192.168.0.10/48", typeof(FormatException))] // out of CIDR range 
+        [TestCase("192.168.0.10-192.168.0.5", typeof(ArgumentException))] // bigger to lower
+        [TestCase("10.256.1.1", typeof(FormatException))] // invalid ip
+        public void ParseFails()
         {
-            var range = IPAddressRange.Parse("fe80::d503:4ee:3882:c586");
-            range.IsNotNull();
+            TestContext.Run((string input, Type expectedException) =>
+            {
+                Console.WriteLine("TestCase: \"{0}\", Expected Exception: {1}", input, expectedException.Name);
+                try
+                {
+                    IPAddressRange.Parse(input);
+                    Assert.Fail("Expected exception of type {0} to be thrown for input \"{1}\"", expectedException.Name,input);
+                }
+                catch (AssertFailedException)
+                {
+                    throw; // allow Assert.Fail to pass through 
+                }
+                catch (Exception ex)
+                {
+                    ex.GetType().Is(expectedException);
+                }
+            });
         }
 
         [TestMethod]
-        public void ParseSucceeds_IPV4_Cipdr()
+        [TestCase(null, false)] // bug3
+        [TestCase("", false)]
+        [TestCase(" ", false)]
+        [TestCase("fdfv", false)]
+        [TestCase("192.168.0.10/48", false)] // CIDR out of range
+        [TestCase("192.168.60.26-192.168.60.22", false)] // big to lower
+
+        [TestCase("192.168.60.13", true)]
+        [TestCase("fe80::d503:4ee:3882:c586", true)]
+        [TestCase("219.165.64.0/19", true)]
+        [TestCase("219.165.64.73/32", true)]
+        [TestCase("192.168.1.0/255.255.255.0", true)]
+        [TestCase("192.168.60.26-192.168.60.37", true)]
+        public void TryParse()
         {
-            var range = IPAddressRange.Parse("219.165.64.0/19");
-            range.IsNotNull();
-        }
-
-        [TestMethod]
-        public void ParseSucceeds_IPV4_Cipdr_Max()
-        {
-            var range = IPAddressRange.Parse("219.165.64.73/32");
-            range.IsNotNull();
-        }
-
-        [TestMethod]
-        public void ParseSucceeds_IPV4_Cipdr_BitMask()
-        {
-            var range = IPAddressRange.Parse("192.168.1.0/255.255.255.0");
-            range.IsNotNull();
-        }
-
-        [TestMethod]
-        public void ParseSucceeds_IPV4_Cipdr_Begin_To_End()
-        {
-            var range = IPAddressRange.Parse("192.168.60.26-192.168.60.37");
-            range.IsNotNull();
-
-            // with "dash (–)" (0x2013) is also support.
-            var range2 = IPAddressRange.Parse("192.168.60.26–192.168.60.37");
-            range2.IsNotNull();
-            range2.Begin.ToString().Is("192.168.60.26");
-            range2.End.ToString().Is("192.168.60.37");
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(FormatException))]
-        public void Parse_EmptyString_Fails()
-        {
-            IPAddressRange.Parse("");
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(FormatException))]
-        public void Parse_InValidString_Fails()
-        {
-            IPAddressRange.Parse("gvvdv");
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(FormatException))]
-        public void Parse_CIDR_OutOfRange()
-        {
-            IPAddressRange.Parse("192.168.0.10/48");
-        }
-
-        [TestMethod]
-        public void TryParse_Empty_String()
-        {
-            IPAddressRange temp;
-            var result = IPAddressRange.TryParse("", out temp);
-            result.Is(false);
-            temp.IsNull();
-        }
-
-        [TestMethod]
-        public void TryParse_InValid_String()
-        {
-            IPAddressRange temp;
-            var result = IPAddressRange.TryParse("fdfv", out temp);
-            result.Is(false);
-            temp.IsNull();
-        }
-
-        [TestMethod]
-        public void TryParse_CIDR_OutOfRange()
-        {
-            var ipadr = default(IPAddressRange);
-            IPAddressRange.TryParse("192.168.0.10/48", out ipadr).Is(false);
-            ipadr.IsNull();
-        }
-
-        [TestMethod]
-        public void TryParse_IPV4()
-        {
-            IPAddressRange temp;
-            var result = IPAddressRange.TryParse("192.168.60.13", out temp);
-            result.Is(true);
-            temp.IsNotNull();
-        }
-
-        [TestMethod]
-        public void TryParse_IPV6()
-        {
-            IPAddressRange temp;
-            var result = IPAddressRange.TryParse("fe80::d503:4ee:3882:c586", out temp);
-            result.Is(true);
-            temp.IsNotNull();
-        }
-
-        [TestMethod]
-        public void TryParse_IPV4_Cipdr()
-        {
-            IPAddressRange temp;
-            var result = IPAddressRange.TryParse("219.165.64.0/19", out temp);
-            result.Is(true);
-            temp.IsNotNull();
-        }
-
-        [TestMethod]
-        public void TryParse_IPV4_Cipdr_Max()
-        {
-            IPAddressRange temp;
-            var result = IPAddressRange.TryParse("219.165.64.73/32", out temp);
-            result.Is(true);
-            temp.IsNotNull();
-        }
-
-        [TestMethod]
-        public void TryParse_IPV4_Cipdr_BitMask()
-        {
-            IPAddressRange temp;
-            var result = IPAddressRange.TryParse("192.168.1.0/255.255.255.0", out temp);
-            result.Is(true);
-            temp.IsNotNull();
-        }
-
-        [TestMethod]
-        public void TryParse_IPV4_Cipdr_Begin_To_End()
-        {
-            IPAddressRange temp;
-            var result = IPAddressRange.TryParse("192.168.60.26-192.168.60.37", out temp);
-            result.Is(true);
-            temp.IsNotNull();
-
-            IPAddressRange temp2;
-            var result2 = IPAddressRange.TryParse("192.168.60.26–192.168.60.37", out temp2);
-            result2.Is(true);
-            temp2.IsNotNull();
-            temp2.Begin.ToString().Is("192.168.60.26");
-            temp2.End.ToString().Is("192.168.60.37");
+            TestContext.Run((string input, bool expectedReturn) =>
+            {
+                Console.WriteLine("TestCase: \"{0}\", Expected: {1}", input, expectedReturn);
+                IPAddressRange temp;
+                var result = IPAddressRange.TryParse(input, out temp);
+                result.Is(expectedReturn);
+                if (expectedReturn)
+                {
+                    temp.IsNotNull();
+                }
+                else
+                {
+                    temp.IsNull();
+                }
+            });
         }
     }
 }
