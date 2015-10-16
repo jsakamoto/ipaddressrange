@@ -36,6 +36,17 @@ foreach (var ip in IPAddressRange.Parse("192.168.0.1/23"))
 {
     Console.WriteLine(ip);
 }
+
+// Constructors from IPAddress objects.
+var ipBegin = IPAddress.Parse("192.168.0.1");
+var ipEnd = IPAddress.Parse("192.168.0.128");
+var ipSubnet = IPAddress.Parse("255.255.255.0");
+
+var rangeE = new IPAddressRange(); // This means "0.0.0.0/0".
+var rangeF = new IPAddressRange(ipBegin, ipEnd);
+var rangeG = new IPAddressRange(ipBegin, maskLength: 24);
+var rangeH = new IPAddressRange(ipBegin, IPAddressRange.SubnetMaskLength(ipSubnet));
+
 ```
 
 License
