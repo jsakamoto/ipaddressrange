@@ -14,6 +14,7 @@
     <description>This library allows you to parse range of IP address string such as "192.168.0.0/24" and "192.168.0.0/255.255.255.0" and "192.168.0.0-192.168.0.255", and can conatins check. This library supports both IPv4 and IPv6.</description>
     <releaseNotes>
       <![CDATA[
+      v.1.5.0 - Enhance: Add constractors variation / Save memory usage.
       v.1.4.0 - Enhance: Add IEnumerable<IPAddress> support.
       v.1.3.0 - Enhance: support both "hyphen (-)" (0x002D) and "dash (–)" (0x2013) at begin-end format.
       v.1.2.1 - Fix: "Parse()" and "TryParse()" methods throw IndexOutOfRangeException when bit mask length is invalid at CIDR format.
