@@ -217,5 +217,40 @@ namespace NetTools
         {
             return Equals(Begin, End) ? Begin.ToString() : string.Format("{0}-{1}", Begin, End);
         }
+
+        public int PrefixLength()
+        {
+            byte[] byteBegin = Begin.GetAddressBytes();
+            byte[] byteEnd = End.GetAddressBytes();
+
+            // Handle single IP
+            if (Begin.Equals(End))
+            {
+                return byteBegin.Length * 8;
+            }
+
+            int length = byteBegin.Length * 8;
+
+            for (int i = 0; i < length; i++)
+            {
+                byte[] mask = Bits.GetBitMask(byteBegin.Length, i);
+                if (new IPAddress(Bits.And(byteBegin, mask)).Equals(Begin))
+                {
+                    if (new IPAddress(Bits.Or(byteBegin, Bits.Not(mask))).Equals(End))
+                    {
+                        return i;
+                    }
+                }
+            }
+            throw new FormatException(string.Format("{0} is not a CIDR Subnet", ToString()));
+        }
+
+        /// <summary>
+        /// Returns a Cidr String if this matches exactly a Cidr subnet
+        /// </summary>
+        public string ToCidrString()
+        {
+            return string.Format("{0}/{1}", Begin, PrefixLength());
+        }
     }
 }
