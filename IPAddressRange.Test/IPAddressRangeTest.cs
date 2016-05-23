@@ -323,12 +323,12 @@ public class IPAddressRangeTest
     [TestCase("fe80::", 128)]
     [TestCase("192.168.0.0-192.168.0.255", 24)]
     [TestCase("fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:ffff", 16)]
-    public void PrefixLength_Success()
+    public void GetPrefixLength_Success()
     {
         TestContext.Run((string input, int expected) =>
         {
             Console.WriteLine("TestCase: \"{0}\", Expected: \"{1}\"", input, expected);
-            var output = IPAddressRange.Parse(input).PrefixLength();
+            var output = IPAddressRange.Parse(input).GetPrefixLength();
             Console.WriteLine("  Result: \"{0}\"", output);
             output.Is(expected);
         });
@@ -337,14 +337,14 @@ public class IPAddressRangeTest
     [TestMethod]
     [TestCase("192.168.0.0-192.168.0.254", typeof(FormatException))]
     [TestCase("fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:fffe", typeof(FormatException))]
-    public void PrefixLength_Failures()
+    public void GetPrefixLength_Failures()
     {
         TestContext.Run((string input, Type expectedException) =>
         {
             Console.WriteLine("TestCase: \"{0}\", Expected Exception: {1}", input, expectedException.Name);
             try
             {
-                IPAddressRange.Parse(input).PrefixLength();
+                IPAddressRange.Parse(input).GetPrefixLength();
                 Assert.Fail("Expected exception of type {0} to be thrown for input \"{1}\"", expectedException.Name, input);
             }
             catch (AssertFailedException)

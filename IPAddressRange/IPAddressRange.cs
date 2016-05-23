@@ -218,7 +218,7 @@ namespace NetTools
             return Equals(Begin, End) ? Begin.ToString() : string.Format("{0}-{1}", Begin, End);
         }
 
-        public int PrefixLength()
+        public int GetPrefixLength()
         {
             byte[] byteBegin = Begin.GetAddressBytes();
             byte[] byteEnd = End.GetAddressBytes();
@@ -250,7 +250,7 @@ namespace NetTools
         /// </summary>
         public string ToCidrString()
         {
-            return string.Format("{0}/{1}", Begin, PrefixLength());
+            return string.Format("{0}/{1}", Begin, GetPrefixLength());
         }
     }
 }
