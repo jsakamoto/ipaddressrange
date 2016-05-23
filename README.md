@@ -16,6 +16,7 @@ using NetTools;
 var rangeA = IPAddressRange.Parse("192.168.0.0/255.255.255.0");
 rangeA.Contains(IPAddress.Parse("192.168.0.34")); // is True.
 rangeA.Contains(IPAddress.Parse("192.168.10.1")); // is False.
+rangeA.ToCidrString(); // is 192.168.0.0/24
 
 // rangeB.Begin is "192.168.0.10", and rangeB.End is "192.168.10.20".
 var rangeB = IPAddressRange.Parse("192.168.0.10 - 192.168.10.20");
@@ -47,6 +48,9 @@ var rangeF = new IPAddressRange(ipBegin, ipEnd);
 var rangeG = new IPAddressRange(ipBegin, maskLength: 24);
 var rangeH = new IPAddressRange(ipBegin, IPAddressRange.SubnetMaskLength(ipSubnet));
 
+// Calculates Cidr subnets
+var rangeI = IPAddressRange.Parse("192.168.0.0-192.168.0.254");
+rangeI.ToCidrString();  // is 192.168.0.0/24
 ```
 
 License

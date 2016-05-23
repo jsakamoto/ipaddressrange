@@ -314,5 +314,90 @@ public class IPAddressRangeTest
             parsed.Is(expected, "Output of ToString() should be usable by Parse() and result in the same output");
         });
     }
-    
+
+    [TestMethod]
+    [TestCase("fe80::/10", 10)]
+    [TestCase("192.168.0.0/24", 24)]
+    [TestCase("192.168.0.0", 32)]
+    [TestCase("192.168.0.0-192.168.0.0", 32)]
+    [TestCase("fe80::", 128)]
+    [TestCase("192.168.0.0-192.168.0.255", 24)]
+    [TestCase("fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:ffff", 16)]
+    public void GetPrefixLength_Success()
+    {
+        TestContext.Run((string input, int expected) =>
+        {
+            Console.WriteLine("TestCase: \"{0}\", Expected: \"{1}\"", input, expected);
+            var output = IPAddressRange.Parse(input).GetPrefixLength();
+            Console.WriteLine("  Result: \"{0}\"", output);
+            output.Is(expected);
+        });
+    }
+
+    [TestMethod]
+    [TestCase("192.168.0.0-192.168.0.254", typeof(FormatException))]
+    [TestCase("fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:fffe", typeof(FormatException))]
+    public void GetPrefixLength_Failures()
+    {
+        TestContext.Run((string input, Type expectedException) =>
+        {
+            Console.WriteLine("TestCase: \"{0}\", Expected Exception: {1}", input, expectedException.Name);
+            try
+            {
+                IPAddressRange.Parse(input).GetPrefixLength();
+                Assert.Fail("Expected exception of type {0} to be thrown for input \"{1}\"", expectedException.Name, input);
+            }
+            catch (AssertFailedException)
+            {
+                throw; // allow Assert.Fail to pass through 
+            }
+            catch (Exception ex)
+            {
+                ex.GetType().Is(expectedException);
+            }
+        });
+    }
+
+    [TestMethod]
+    [TestCase("fe80::/10", "fe80::/10")]
+    [TestCase("192.168.0.0/24", "192.168.0.0/24")]
+    [TestCase("192.168.0.0", "192.168.0.0/32")]
+    [TestCase("192.168.0.0-192.168.0.0", "192.168.0.0/32")]
+    [TestCase("fe80::", "fe80::/128")]
+    [TestCase("192.168.0.0-192.168.0.255", "192.168.0.0/24")]
+    [TestCase("fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:ffff", "fe80::/16")]
+    public void ToCidrString_Output()
+    {
+        TestContext.Run((string input, string expected) =>
+        {
+            Console.WriteLine("TestCase: \"{0}\", Expected: \"{1}\"", input, expected);
+            var output = IPAddressRange.Parse(input).ToCidrString();
+            Console.WriteLine("  Result: \"{0}\"", output);
+            output.Is(expected);
+        });
+    }
+
+    [TestMethod]
+    [TestCase("192.168.0.0-192.168.0.254", typeof(FormatException))]
+    [TestCase("fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:fffe", typeof(FormatException))]
+    public void ToCidrString_ThrowsOnNonCidr()
+    {
+        TestContext.Run((string input, Type expectedException) =>
+        {
+            Console.WriteLine("TestCase: \"{0}\", Expected Exception: {1}", input, expectedException.Name);
+            try
+            {
+                IPAddressRange.Parse(input).ToCidrString();
+                Assert.Fail("Expected exception of type {0} to be thrown for input \"{1}\"", expectedException.Name, input);
+            }
+            catch (AssertFailedException)
+            {
+                throw; // allow Assert.Fail to pass through 
+            }
+            catch (Exception ex)
+            {
+                ex.GetType().Is(expectedException);
+            }
+        });
+    }
 }
