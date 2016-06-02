@@ -56,3 +56,11 @@ rangeI.ToCidrString();  // is 192.168.0.0/24
 License
 -------
 [Mozilla Public License 2.0](LICENSE)
+
+Appendix
+--------
+
+### Signed Version
+
+If you have to use signed assembly, you can use [IPAddressRange.Signed](https://www.nuget.org/packages/IPAddressRange.Signed/) NuGet package instead of [IPAddressRange](https://www.nuget.org/packages/IPAddressRange/).
+

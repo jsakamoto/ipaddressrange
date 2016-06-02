@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <package >
   <metadata>
-    <id>IPAddressRange</id>
-    <version>$version$</version>
+    <id>IPAddressRange.Signed</id>
+    <version>$version$-rc1</version>
     <authors>J.Sakamoto</authors>
     <owners>J.Sakamoto</owners>
     <licenseUrl>https://github.com/jsakamoto/ipaddressrange/blob/master/LICENSE</licenseUrl>
@@ -11,7 +11,7 @@
     <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>
     -->
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>This library allows you to parse range of IP address string such as "192.168.0.0/24" and "192.168.0.0/255.255.255.0" and "192.168.0.0-192.168.0.255", and can conatins check. This library supports both IPv4 and IPv6.</description>
+    <description>This library allows you to parse range of IP address string such as "192.168.0.0/24" and "192.168.0.0/255.255.255.0" and "192.168.0.0-192.168.0.255", and can conatins check. This library supports both IPv4 and IPv6. [This is a signed assembly edition of "IPAddressRange" NuGet package.]</description>
     <releaseNotes>
       <![CDATA[
       v.1.6.0 - Enhance: Add "ToCidrString()" and "GetprefixLength()" method.
