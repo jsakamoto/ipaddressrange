@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>IPAddressRange.Signed</id>
-    <version>$version$</version>
+    <version>$version$-rc1</version>
     <authors>J.Sakamoto</authors>
     <owners>J.Sakamoto</owners>
     <licenseUrl>https://github.com/jsakamoto/ipaddressrange/blob/master/LICENSE</licenseUrl>
@@ -14,6 +14,7 @@
     <description>This library allows you to parse range of IP address string such as "192.168.0.0/24" and "192.168.0.0/255.255.255.0" and "192.168.0.0-192.168.0.255", and can conatins check. This library supports both IPv4 and IPv6. [This is a signed assembly edition of "IPAddressRange" NuGet package.]</description>
     <releaseNotes>
       <![CDATA[
+      v.1.6.0.1 - BREAKING CHANGE: Resigned by new private key. (see: http://j.mp/1t9gMQw )
       v.1.6.0 - Enhance: Add "ToCidrString()" and "GetprefixLength()" method.
       v.1.5.0 - Enhance: Add constructors variation / Save memory usage.
       v.1.4.0 - Enhance: Add IEnumerable<IPAddress> support.
