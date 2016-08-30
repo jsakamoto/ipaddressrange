@@ -116,7 +116,7 @@ namespace NetTools
             throw new NotImplementedException();
         }
 
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("Begin", this.Begin != null ? this.Begin.ToString() : "");
             info.AddValue("End", this.End != null ? this.End.ToString() : "");
@@ -175,7 +175,7 @@ namespace NetTools
                 ipRange = IPAddressRange.Parse(ipRangeString);
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex) when (ex is FormatException || ex is ArgumentException)
             {
                 ipRange = null;
                 return false;
