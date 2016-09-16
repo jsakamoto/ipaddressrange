@@ -40,7 +40,7 @@ namespace NetTools
         public IPAddressRange(IPAddress singleAddress)
         {
             if (singleAddress == null)
-                throw new ArgumentNullException("singleAddress");
+                throw new ArgumentNullException(nameof(singleAddress));
 
             Begin = End = singleAddress;
         }
@@ -53,10 +53,10 @@ namespace NetTools
         public IPAddressRange(IPAddress begin, IPAddress end)
         {
             if (begin == null)
-                throw new ArgumentNullException("begin");
+                throw new ArgumentNullException(nameof(begin));
 
             if (end == null)
-                throw new ArgumentNullException("end");
+                throw new ArgumentNullException(nameof(end));
 
             Begin = begin;
             End = end;
@@ -78,7 +78,7 @@ namespace NetTools
         public IPAddressRange(IPAddress baseAddress, int maskLength)
         {
             if (baseAddress == null)
-                throw new ArgumentNullException("baseAddress");
+                throw new ArgumentNullException(nameof(baseAddress));
 
             var baseAdrBytes = baseAddress.GetAddressBytes();
             if (baseAdrBytes.Length * 8 < maskLength) throw new FormatException();
@@ -113,7 +113,7 @@ namespace NetTools
         public bool Contains(IPAddress ipaddress)
         {
             if (ipaddress == null)
-                throw new ArgumentNullException("ipaddress");
+                throw new ArgumentNullException(nameof(ipaddress));
 
             if (ipaddress.AddressFamily != this.Begin.AddressFamily) return false;
             var adrBytes = ipaddress.GetAddressBytes();
@@ -123,7 +123,7 @@ namespace NetTools
         public bool Contains(IPAddressRange range)
         {
             if (range == null)
-                throw new ArgumentNullException("range");
+                throw new ArgumentNullException(nameof(range));
 
             if (this.Begin.AddressFamily != range.Begin.AddressFamily) return false;
 
@@ -209,7 +209,7 @@ namespace NetTools
         public static int SubnetMaskLength(IPAddress subnetMask)
         {
             if (subnetMask == null)
-                throw new ArgumentNullException("subnetMask");
+                throw new ArgumentNullException(nameof(subnetMask));
 
             var length = Bits.GetBitMaskLength(subnetMask.GetAddressBytes());
             if (length == null) throw new ArgumentException("Not a valid subnet mask", "subnetMask");
