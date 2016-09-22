@@ -39,6 +39,9 @@ namespace NetTools
         /// <param name="singleAddress"></param>
         public IPAddressRange(IPAddress singleAddress)
         {
+            if (singleAddress == null)
+                throw new ArgumentNullException(nameof(singleAddress));
+
             Begin = End = singleAddress;
         }
 
@@ -49,6 +52,12 @@ namespace NetTools
         /// </summary>
         public IPAddressRange(IPAddress begin, IPAddress end)
         {
+            if (begin == null)
+                throw new ArgumentNullException(nameof(begin));
+
+            if (end == null)
+                throw new ArgumentNullException(nameof(end));
+
             Begin = begin;
             End = end;
 
@@ -68,6 +77,9 @@ namespace NetTools
         /// <param name="maskLength"></param>
         public IPAddressRange(IPAddress baseAddress, int maskLength)
         {
+            if (baseAddress == null)
+                throw new ArgumentNullException(nameof(baseAddress));
+
             var baseAdrBytes = baseAddress.GetAddressBytes();
             if (baseAdrBytes.Length * 8 < maskLength) throw new FormatException();
             var maskBytes = Bits.GetBitMask(baseAdrBytes.Length, maskLength);
@@ -100,6 +112,9 @@ namespace NetTools
 
         public bool Contains(IPAddress ipaddress)
         {
+            if (ipaddress == null)
+                throw new ArgumentNullException(nameof(ipaddress));
+
             if (ipaddress.AddressFamily != this.Begin.AddressFamily) return false;
             var adrBytes = ipaddress.GetAddressBytes();
             return Bits.GE(this.Begin.GetAddressBytes(), adrBytes) && Bits.LE(this.End.GetAddressBytes(), adrBytes);
@@ -107,6 +122,9 @@ namespace NetTools
 
         public bool Contains(IPAddressRange range)
         {
+            if (range == null)
+                throw new ArgumentNullException(nameof(range));
+
             if (this.Begin.AddressFamily != range.Begin.AddressFamily) return false;
 
             return
@@ -118,6 +136,8 @@ namespace NetTools
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
+            if (info == null) throw new ArgumentNullException(nameof(info));
+
             info.AddValue("Begin", this.Begin != null ? this.Begin.ToString() : "");
             info.AddValue("End", this.End != null ? this.End.ToString() : "");
         }
@@ -190,6 +210,9 @@ namespace NetTools
         /// <returns></returns>
         public static int SubnetMaskLength(IPAddress subnetMask)
         {
+            if (subnetMask == null)
+                throw new ArgumentNullException(nameof(subnetMask));
+
             var length = Bits.GetBitMaskLength(subnetMask.GetAddressBytes());
             if (length == null) throw new ArgumentException("Not a valid subnet mask", "subnetMask");
             return length.Value;
