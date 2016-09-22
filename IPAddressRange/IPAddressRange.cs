@@ -136,6 +136,8 @@ namespace NetTools
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
+            if (info == null) throw new ArgumentNullException(nameof(info));
+
             info.AddValue("Begin", this.Begin != null ? this.Begin.ToString() : "");
             info.AddValue("End", this.End != null ? this.End.ToString() : "");
         }

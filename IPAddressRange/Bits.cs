@@ -58,6 +58,8 @@ namespace NetTools
         /// <returns></returns>
         public static int? GetBitMaskLength(byte[] bytes)
         {
+            if (bytes == null) throw new ArgumentNullException(nameof(bytes));
+
             var bitLength = 0;
             var idx = 0;
 
@@ -89,6 +91,8 @@ namespace NetTools
 
         public static byte[] Increment(byte[] bytes)
         {
+            if (bytes == null) throw new ArgumentNullException(nameof(bytes));
+
             var incrementIndex = Array.FindLastIndex(bytes, x => x < byte.MaxValue);
             if (incrementIndex < 0) throw new OverflowException();
             return bytes
