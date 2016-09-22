@@ -61,11 +61,11 @@ namespace NetTools
             Begin = begin;
             End = end;
 
-            if (Begin.AddressFamily != End.AddressFamily) throw new ArgumentException("Elements must be of the same address family", "beginEnd");
+            if (Begin.AddressFamily != End.AddressFamily) throw new ArgumentException("Elements must be of the same address family", nameof(end));
 
             var beginBytes = Begin.GetAddressBytes();
             var endBytes = End.GetAddressBytes();
-            if (!Bits.LE(endBytes, beginBytes)) throw new ArgumentException("Begin must be smaller than the End", "beginEnd");
+            if (!Bits.LE(endBytes, beginBytes)) throw new ArgumentException("Begin must be smaller than the End", nameof(begin));
         }
 
         /// <summary>
