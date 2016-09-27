@@ -195,7 +195,7 @@ namespace NetTools
                 ipRange = IPAddressRange.Parse(ipRangeString);
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex) when (ex is FormatException || ex is ArgumentException)
             {
                 ipRange = null;
                 return false;
