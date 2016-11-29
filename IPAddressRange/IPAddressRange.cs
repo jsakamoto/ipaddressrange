@@ -1,15 +1,21 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
+
+#if IPADDRESSRANGE_NETFX45
+using System.Runtime.Serialization;
+#endif
 
 namespace NetTools
 {
+#if IPADDRESSRANGE_NETFX45
     [Serializable]
     public class IPAddressRange : ISerializable, IEnumerable<IPAddress>
+#else
+    public class IPAddressRange : IEnumerable<IPAddress>
+#endif
     {
         // Pattern 1. CIDR range: "192.168.0.0/24", "fe80::/10"
         private static Regex m1_regex = new Regex(@"^(?<adr>[\da-f\.:]+)/(?<maskLen>\d+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
@@ -97,6 +103,7 @@ namespace NetTools
             End = parsed.End;
         }
 
+#if IPADDRESSRANGE_NETFX45
         protected IPAddressRange(SerializationInfo info, StreamingContext context)
         {
             var names = new List<string>();
@@ -109,6 +116,15 @@ namespace NetTools
             this.Begin = deserialize("Begin");
             this.End = deserialize("End");
         }
+
+        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            if (info == null) throw new ArgumentNullException(nameof(info));
+
+            info.AddValue("Begin", this.Begin != null ? this.Begin.ToString() : "");
+            info.AddValue("End", this.End != null ? this.End.ToString() : "");
+        }
+#endif
 
         public bool Contains(IPAddress ipaddress)
         {
@@ -132,14 +148,6 @@ namespace NetTools
                 Bits.LE(this.End.GetAddressBytes(), range.End.GetAddressBytes());
 
             throw new NotImplementedException();
-        }
-
-        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            if (info == null) throw new ArgumentNullException(nameof(info));
-
-            info.AddValue("Begin", this.Begin != null ? this.Begin.ToString() : "");
-            info.AddValue("End", this.End != null ? this.End.ToString() : "");
         }
 
         public static IPAddressRange Parse(string ipRangeString)
