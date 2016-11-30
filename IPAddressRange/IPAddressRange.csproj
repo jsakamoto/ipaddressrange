@@ -33,6 +33,9 @@
     <DocumentationFile>bin\Release\IPAddressRange.XML</DocumentationFile>
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
+  <PropertyGroup>
+    <ResolveNuGetPackages>false</ResolveNuGetPackages>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -56,12 +59,14 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>if "$(ConfigurationName)" == "Release" goto PACK
-goto END
-:PACK
-pushd "$(ProjectDir)"
-"$(SolutionDir).nuget\nuget.exe" pack "$(ProjectFileName)" -Prop Configuration=Release;Platform=AnyCPU -o $(OutDir)
-:END</PostBuildEvent>
+    <PostBuildEvent>
+      if "$(ConfigurationName)" == "Release" goto PACK
+      goto END
+      :PACK
+      pushd "$(ProjectDir)"
+      "$(SolutionDir).nuget\nuget.exe" pack "$(ProjectFileName)" -Prop Configuration=Release;Platform=AnyCPU -o $(OutDir)
+      :END
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
