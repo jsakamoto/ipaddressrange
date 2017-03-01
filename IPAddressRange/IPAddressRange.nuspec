@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>IPAddressRange</id>
-    <version>1.6.2.1-beta</version>
+    <version>1.6.2.2-beta</version>
     <authors>J.Sakamoto</authors>
     <owners>J.Sakamoto</owners>
     <licenseUrl>https://github.com/jsakamoto/ipaddressrange/blob/master/LICENSE</licenseUrl>
@@ -32,15 +32,15 @@
     <copyright>Copyright 2012-2016 J.Sakamoto, Mozilla Public License 2.0</copyright>
     <tags>IPAddress</tags>
     <dependencies>
-      <group targetFramework=".NETStandard1.6">
-        <dependency id="NETStandard.Library" version="1.6.0" exclude="Build,Analyzers" />
+      <group targetFramework=".NETStandard1.4">
+        <dependency id="NETStandard.Library" version="1.4.0" exclude="Build,Analyzers" />
       </group>
     </dependencies>
   </metadata>
   <files>
     <file src="bin\Release\IPAddressRange.dll" target="lib\net40" />
     <file src="bin\Release\IPAddressRange.XML" target="lib\net40" />
-    <file src="bin\Release\netstandard1.6\IPAddressRange.dll" target="lib\netstandard1.6" />
-    <file src="bin\Release\netstandard1.6\IPAddressRange.XML" target="lib\netstandard1.6" />
+    <file src="bin\Release\netstandard1.4\IPAddressRange.dll" target="lib\netstandard1.4" />
+    <file src="bin\Release\netstandard1.4\IPAddressRange.XML" target="lib\netstandard1.4" />
   </files>
 </package>
