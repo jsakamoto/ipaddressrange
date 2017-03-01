@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>IPAddressRange</id>
-    <version>1.6.2.2-beta</version>
+    <version>1.6.2.6-beta</version>
     <authors>J.Sakamoto</authors>
     <owners>J.Sakamoto</owners>
     <licenseUrl>https://github.com/jsakamoto/ipaddressrange/blob/master/LICENSE</licenseUrl>
@@ -14,7 +14,7 @@
     <description>This library allows you to parse range of IP address string such as "192.168.0.0/24" and "192.168.0.0/255.255.255.0" and "192.168.0.0-192.168.0.255", and can conatins check. This library supports both IPv4 and IPv6.</description>
     <releaseNotes>
       <![CDATA[
-      v.1.6.2 - Support: .NET Standard 1.4 (.NET Core)
+      v.1.6.2 - Support: .NET Standard 1.4 (.NET Core) and UWP
       v.1.6.1 - Fix: Add some parameter checks for throwing ArgumentNullException
       v.1.6.0 - Enhance: Add "ToCidrString()" and "GetprefixLength()" method.
       v.1.5.0 - Enhance: Add constructors variation / Save memory usage.
@@ -32,6 +32,7 @@
     <copyright>Copyright 2012-2017 J.Sakamoto, Mozilla Public License 2.0</copyright>
     <tags>IPAddress</tags>
     <dependencies>
+      <group targetFramework="uap" />
       <group targetFramework=".NETStandard1.4">
         <dependency id="NETStandard.Library" version="1.4.0" exclude="Build,Analyzers" />
       </group>
