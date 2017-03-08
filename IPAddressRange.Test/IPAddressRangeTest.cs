@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -14,6 +15,13 @@ using NetTools;
 public class IPAddressRangeTest
 {
     public TestContext TestContext { get; set; }
+
+
+    public void MyMethod()
+    {
+        IEnumerable<IPAddress> x = IPAddressRange.Parse("127.0.0.1/24");
+        var y = x.GetEnumerator();
+    }
 
     [TestMethod]
     public void CtorTest_Empty()
