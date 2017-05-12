@@ -1,7 +1,9 @@
 
-/TestResults
+TestResults/
 *.suo
-/IPAddressRange/bin
-/IPAddressRange/obj
-/IPAddressRange/IPAddressRange.Test/bin
-/IPAddressRange/IPAddressRange.Test/obj
+*.user
+*.snk
+bin/
+obj/
+packages/
+.vs/
