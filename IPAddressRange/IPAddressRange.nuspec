@@ -39,8 +39,8 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="bin\Release\IPAddressRange.dll" target="lib\net40" />
-    <file src="bin\Release\IPAddressRange.XML" target="lib\net40" />
+    <file src="bin\Release\IPAddressRange.dll" target="lib\net45" />
+    <file src="bin\Release\IPAddressRange.XML" target="lib\net45" />
     <file src="bin\Release\netstandard1.4\IPAddressRange.dll" target="lib\netstandard1.4" />
     <file src="bin\Release\netstandard1.4\IPAddressRange.XML" target="lib\netstandard1.4" />
   </files>
