@@ -1,10 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="IPAddressRange Rules" Description="These rules was optimized for building IPAddressRange Library." ToolsVersion="14.0">
+<RuleSet Name="IPAddressRange Rules" Description="These rules was optimized for building IPAddressRange Library." ToolsVersion="15.0">
   <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
     <Rule Id="CA1001" Action="Warning" />
     <Rule Id="CA1009" Action="Warning" />
     <Rule Id="CA1016" Action="Warning" />
-    <Rule Id="CA1033" Action="Warning" />
     <Rule Id="CA1049" Action="Warning" />
     <Rule Id="CA1060" Action="Warning" />
     <Rule Id="CA1061" Action="Warning" />
