@@ -12,6 +12,48 @@ using System.Runtime.Serialization;
 
 namespace NetTools
 {
+    // NOTE: Why implement IReadOnlyDictionary<TKey,TVal> interface? 
+    // =============================================================
+    // Problem
+    // ----------
+    // An IPAddressRange after v.1.4 object cann't serialize to/deserialize from JSON text by using JSON.NET.
+    //
+    // Details
+    // ----------
+    // JSON.NET detect IEnumerable<IPAddress> interface prior to ISerializable. 
+    // At a result, JSON.NET try to serialize IPAddressRange as array, such as "["192.168.0.1", "192.168.0.2"]".
+    // This is unexpected behavior. (We expect "{"Begin":"192.168.0.1", "End:"192.168.0.2"}" style JSON text that is same with DataContractJsonSerializer.)
+    // In addition, JSON serialization with JSON.NET crash due to IPAddress cann't serialize by JSON.NET.
+    //
+    // Work around
+    // -----------
+    // To avoid this JSON.NET behavior, IPAddressRange should implement more high priority interface than IEnumerable<T> in JSON.NET.
+    // Such interfaces include the following.
+    // - IDictionary
+    // - IDictionary<TKey,TVal>
+    // - IReadOnlyDictionary<TKey,TVal>
+    // But, when IPAddressRange implement IDictionay or IDictionary<TKey,TVal>, serialization by DataContractJsonSerializer was broken.
+    // (Implementation of DataContractJsonSerializer is special for IDictionay and IDictionary<TKey,TVal>)
+    // 
+    // So there is no way without implement IReadOnlyDictionary<TKey,TVal>.
+    //
+    // Trade off
+    // -------------
+    // IReadOnlyDictionary<TKey,TVal> interface doesn't exist in .NET Framework v.4.0 or before.
+    // In order to give priority to supporting serialization by JSON.NET, I had to truncate the support for .NET Framework 4.0.
+    // (.NET Standard 1.4 support IReadOnlyDictionary<TKey,TVal>, therefore there is no problem on .NET Core appliction.)
+    // 
+    // Binary level compatiblity
+    // -------------------------
+    // There is no problem even if IPAddressRange.dll is replaced with the latest version.
+    // 
+    // Source code level compatiblity
+    // -------------------------
+    // You cann't apply LINQ extension methods directory to IPAddressRange object.
+    // Because IPAddressRange implement two types of IEnumerable<T> (IEnumerable<IPaddress> and IEnumerable<KeyValuePair<K,V>>).
+    // It cause ambiguous syntax error.
+    // To avoid this error, you should use "AsEnumerable()" method before IEnumerable<IPAddressRange> access.
+
 #if IPADDRESSRANGE_NETFX45
     [Serializable]
     public class IPAddressRange : ISerializable, IEnumerable<IPAddress>, IReadOnlyDictionary<string, string>
