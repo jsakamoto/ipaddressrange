@@ -139,7 +139,7 @@ namespace NetTools
             End = new IPAddress(Bits.Or(baseAdrBytes, Bits.Not(maskBytes)));
         }
 
-        [Obsolete("Use IPAddressRange.Parse static method instead.")]
+        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Use IPAddressRange.Parse static method instead.")]
         public IPAddressRange(string ipRangeString)
         {
             var parsed = Parse(ipRangeString);
