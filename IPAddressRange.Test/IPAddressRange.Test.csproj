@@ -66,6 +66,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="BitsTest.cs" />
+    <Compile Include="IPAddressRangeDataContractSerializerTest.cs" />
     <Compile Include="IPAddressRangeParseTest.cs" />
     <Compile Include="IPAddressRangeJsonTest.cs" />
     <Compile Include="IPAddressRangeTest.cs" />
