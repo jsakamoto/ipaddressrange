@@ -38,6 +38,13 @@ foreach (var ip in IPAddressRange.Parse("192.168.0.1/23"))
     Console.WriteLine(ip);
 }
 
+// You can use LINQ via "AsEnumerable()" method.
+var longValues = IPAddressRange.Parse("192.168.0.1/23")
+  .AsEnumerable()
+  .Select(ip => BitConvert.ToInt32(ip.GetAddressBytes(), 0))
+  .Select(adr => adr.ToString("X8"));
+Console.WriteLine(string.Join(",", longValues);
+
 // Constructors from IPAddress objects.
 var ipBegin = IPAddress.Parse("192.168.0.1");
 var ipEnd = IPAddress.Parse("192.168.0.128");
