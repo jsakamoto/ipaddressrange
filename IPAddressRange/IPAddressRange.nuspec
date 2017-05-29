@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>IPAddressRange</id>
-    <version>2.0.0.0-beta</version>
+    <version>$version$-beta</version>
     <authors>J.Sakamoto</authors>
     <owners>J.Sakamoto</owners>
     <licenseUrl>https://github.com/jsakamoto/ipaddressrange/blob/master/LICENSE</licenseUrl>
@@ -34,6 +34,7 @@
     <copyright>Copyright 2012-2017 J.Sakamoto, Mozilla Public License 2.0</copyright>
     <tags>IPAddress</tags>
     <dependencies>
+      <group targetFramework=".NETFramework4.5" />
       <group targetFramework="uap" />
       <group targetFramework=".NETStandard1.4">
         <dependency id="NETStandard.Library" version="1.4.0" exclude="Build,Analyzers" />
