@@ -42,7 +42,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ChainingAssertion.MSTest, Version=1.8.1.3, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ChainingAssertion.Bin.1.8.1.3-beta\lib\net45\ChainingAssertion.MSTest.dll</HintPath>
+      <HintPath>..\packages\ChainingAssertion.Bin.1.8.1.3\lib\net45\ChainingAssertion.MSTest.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -52,7 +52,7 @@
       <HintPath>..\packages\MSTest.TestFramework.1.1.18\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
