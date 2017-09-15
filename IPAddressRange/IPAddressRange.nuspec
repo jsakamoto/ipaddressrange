@@ -37,7 +37,7 @@
       <group targetFramework=".NETFramework4.5" />
       <group targetFramework="uap" />
       <group targetFramework=".NETStandard1.4">
-        <dependency id="NETStandard.Library" version="1.4.0" exclude="Build,Analyzers" />
+        <dependency id="NETStandard.Library" version="1.6.1" exclude="Build,Analyzers" />
       </group>
     </dependencies>
   </metadata>
