@@ -8,17 +8,17 @@ public class BitsTest
     [TestMethod]
     public void NotTest()
     {
-        Bits.Not(new byte[] { 0xD6,  0x5E})
-            .Is(new byte[] { 0x29,  0xA1});
+        Bits.Not(new byte[] { 0xD6, 0x5E })
+            .Is(new byte[] { 0x29, 0xA1 });
     }
 
     [TestMethod]
     public void AndTest()
     {
         Bits.And(
-            new byte[] { 0xD6, 0x5E, 0xD6 }, 
+            new byte[] { 0xD6, 0x5E, 0xD6 },
             new byte[] { 0x00, 0xFF, 0x72 })
-            .Is(new byte[] {0x00, 0x5E, 0x52 });
+            .Is(new byte[] { 0x00, 0x5E, 0x52 });
     }
 
     [TestMethod]
@@ -99,6 +99,22 @@ public class BitsTest
     }
 
     [TestMethod]
+    public void IsEqualWithNullTest()
+    {
+        Bits.IsEqual(
+            new byte[] { 0x12, 0x3c, 0xA5 },
+            null).Is(false);
+
+        Bits.IsEqual(
+            null,
+            new byte[] { 0x12, 0x3c, 0xA5 }).Is(false);
+
+        Bits.IsEqual(
+            null,
+            null).Is(false);
+    }
+
+    [TestMethod]
     public void GetBitMaskTest()
     {
         Bits.GetBitMask(4, 15).Is(new byte[] { 0xff, 0xfe, 0x00, 0x00 });
@@ -124,10 +140,10 @@ public class BitsTest
         Bits.GetBitMaskLength(new byte[] { 255, 255, 128, 0 }).Is(17);
         Bits.GetBitMaskLength(new byte[] { 255, 255, 255, 254 }).Is(31);
         Bits.GetBitMaskLength(new byte[] { 255, 255, 255, 255 }).Is(32);
-                   
+
         Bits.GetBitMaskLength(new byte[] { 255, 1, 0, 0 }).Is((int?)null);
         Bits.GetBitMaskLength(new byte[] { 255, 127, 0, 0 }).Is((int?)null);
-                   
+
         Bits.GetBitMaskLength(new byte[] { 255, 0, 0, 128 }).Is((int?)null);
         Bits.GetBitMaskLength(new byte[] { 255, 192, 0, 255 }).Is((int?)null);
     }
@@ -143,7 +159,7 @@ public class BitsTest
         Bits.Increment(new byte[] { 0x0a, 0xff, 0xff, 0xff }).Is(new byte[] { 0x0b, 0x00, 0x00, 0x00 });
         Bits.Increment(new byte[] { 0xff, 0xff, 0xff, 0xfe }).Is(new byte[] { 0xff, 0xff, 0xff, 0xff });
 
-        AssertEx.Throws<OverflowException>(() => Bits.Increment(new byte[] {0xff, 0xff, 0xff, 0xff}));
+        AssertEx.Throws<OverflowException>(() => Bits.Increment(new byte[] { 0xff, 0xff, 0xff, 0xff }));
     }
 
     [TestMethod]

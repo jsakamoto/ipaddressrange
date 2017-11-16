@@ -39,6 +39,7 @@ namespace NetTools
 
         public static bool IsEqual(byte[] A, byte[] B)
         {
+            if (A == null || B == null) { return false; }
             if (A.Length != B.Length) { return false; }
             return A.Zip(B, (a, b) => a == b).All(x => x == true);
         }
@@ -70,8 +71,8 @@ namespace NetTools
             var idx = 0;
 
             // find beginning 0xFF
-            for (; idx < bytes.Length && bytes[idx] == 0xff; idx++);
-            bitLength = 8*idx;
+            for (; idx < bytes.Length && bytes[idx] == 0xff; idx++) ;
+            bitLength = 8 * idx;
 
             if (idx < bytes.Length)
             {
