@@ -37,6 +37,13 @@ namespace NetTools
                 .FirstOrDefault() <= 0;
         }
 
+        public static bool IsEqual(byte[] A, byte[] B)
+        {
+            if (A == null || B == null) { return false; }
+            if (A.Length != B.Length) { return false; }
+            return A.Zip(B, (a, b) => a == b).All(x => x == true);
+        }
+
         public static byte[] GetBitMask(int sizeOfBuff, int bitLen)
         {
             var maskBytes = new byte[sizeOfBuff];
@@ -64,8 +71,8 @@ namespace NetTools
             var idx = 0;
 
             // find beginning 0xFF
-            for (; idx < bytes.Length && bytes[idx] == 0xff; idx++);
-            bitLength = 8*idx;
+            for (; idx < bytes.Length && bytes[idx] == 0xff; idx++) ;
+            bitLength = 8 * idx;
 
             if (idx < bytes.Length)
             {
@@ -102,5 +109,28 @@ namespace NetTools
                 .ToArray();
         }
 
+        public static byte[] Decrement(byte[] bytes)
+        {
+            if (bytes == null) throw new ArgumentNullException(nameof(bytes));
+            if (bytes.All(x => x == byte.MinValue)) throw new OverflowException();
+
+            byte[] result = new byte[bytes.Length];
+            Array.Copy(bytes, result, bytes.Length);
+
+            for (int i = result.Length - 1; i >= 0; i--)
+            {
+                if (result[i] > byte.MinValue)
+                {
+                    result[i]--;
+                    break;
+                }
+                else
+                {
+                    result[i] = byte.MaxValue;
+                }
+            }
+
+            return result;
+        }
     }
 }
