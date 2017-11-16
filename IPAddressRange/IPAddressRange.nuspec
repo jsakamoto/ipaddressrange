@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>IPAddressRange</id>
-    <version>$version$-alpha</version>
+    <version>$version$</version>
     <authors>J.Sakamoto</authors>
     <owners>J.Sakamoto</owners>
     <licenseUrl>https://github.com/jsakamoto/ipaddressrange/blob/master/LICENSE</licenseUrl>
