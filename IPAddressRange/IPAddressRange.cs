@@ -61,17 +61,17 @@ namespace NetTools
     public class IPAddressRange : IEnumerable<IPAddress>, IReadOnlyDictionary<string, string>
 #endif
     {
-        // Pattern 1. CIDR range: "192.168.0.0/24", "fe80::/10"
-        private static Regex m1_regex = new Regex(@"^(?<adr>[\da-f\.:]+)/(?<maskLen>\d+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        // Pattern 1. CIDR range: "192.168.0.0/24", "fe80::%lo0/10"
+        private static Regex m1_regex = new Regex(@"^(?<adr>([\d.]+)|([\da-f:]+(%\w+)?))/(?<maskLen>\d+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
-        // Pattern 2. Uni address: "127.0.0.1", ":;1"
-        private static Regex m2_regex = new Regex(@"^(?<adr>[\da-f\.:]+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        // Pattern 2. Uni address: "127.0.0.1", "::1%eth0"
+        private static Regex m2_regex = new Regex(@"^(?<adr>([\d.]+)|([\da-f:]+(%\w+)?))$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
-        // Pattern 3. Begin end range: "169.258.0.0-169.258.0.255"
-        private static Regex m3_regex = new Regex(@"^(?<begin>[\da-f\.:]+)[\-–](?<end>[\da-f\.:]+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        // Pattern 3. Begin end range: "169.258.0.0-169.258.0.255", "fe80::1%23-fe80::ff%23"
+        private static Regex m3_regex = new Regex(@"^(?<begin>([\d.]+)|([\da-f:]+(%\w+)?))[\-–](?<end>([\d.]+)|([\da-f:]+(%\w+)?))$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         // Pattern 4. Bit mask range: "192.168.0.0/255.255.255.0"
-        private static Regex m4_regex = new Regex(@"^(?<adr>[\da-f\.:]+)/(?<bitmask>[\da-f\.:]+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static Regex m4_regex = new Regex(@"^(?<adr>([\d.]+)|([\da-f:]+(%\w+)?))/(?<bitmask>[\da-f\.:]+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
 
         public IPAddress Begin { get; set; }
@@ -108,8 +108,8 @@ namespace NetTools
             if (end == null)
                 throw new ArgumentNullException(nameof(end));
 
-            Begin = begin;
-            End = end;
+            Begin = new IPAddress(begin.GetAddressBytes());
+            End = new IPAddress(end.GetAddressBytes());
 
             if (Begin.AddressFamily != End.AddressFamily) throw new ArgumentException("Elements must be of the same address family", nameof(end));
 
@@ -201,11 +201,14 @@ namespace NetTools
             // remove all spaces.
             ipRangeString = ipRangeString.Replace(" ", String.Empty);
 
-            // Pattern 1. CIDR range: "192.168.0.0/24", "fe80::/10"
+            // define local funtion to strip scope id in ip address string.
+            string stripScopeId(string ipaddressString) => ipaddressString.Split('%')[0];
+
+            // Pattern 1. CIDR range: "192.168.0.0/24", "fe80::/10%eth0"
             var m1 = m1_regex.Match(ipRangeString);
             if (m1.Success)
             {
-                var baseAdrBytes = IPAddress.Parse(m1.Groups["adr"].Value).GetAddressBytes();
+                var baseAdrBytes = IPAddress.Parse(stripScopeId(m1.Groups["adr"].Value)).GetAddressBytes();
                 var maskLen = int.Parse(m1.Groups["maskLen"].Value);
                 if (baseAdrBytes.Length * 8 < maskLen) throw new FormatException();
                 var maskBytes = Bits.GetBitMask(baseAdrBytes.Length, maskLen);
@@ -217,21 +220,23 @@ namespace NetTools
             var m2 = m2_regex.Match(ipRangeString);
             if (m2.Success)
             {
-                return new IPAddressRange(IPAddress.Parse(ipRangeString));
+                return new IPAddressRange(IPAddress.Parse(stripScopeId(ipRangeString)));
             }
 
             // Pattern 3. Begin end range: "169.258.0.0-169.258.0.255"
             var m3 = m3_regex.Match(ipRangeString);
             if (m3.Success)
             {
-                return new IPAddressRange(IPAddress.Parse(m3.Groups["begin"].Value), IPAddress.Parse(m3.Groups["end"].Value));
+                return new IPAddressRange(
+                    begin: IPAddress.Parse(stripScopeId(m3.Groups["begin"].Value)),
+                    end: IPAddress.Parse(stripScopeId(m3.Groups["end"].Value)));
             }
 
             // Pattern 4. Bit mask range: "192.168.0.0/255.255.255.0"
             var m4 = m4_regex.Match(ipRangeString);
             if (m4.Success)
             {
-                var baseAdrBytes = IPAddress.Parse(m4.Groups["adr"].Value).GetAddressBytes();
+                var baseAdrBytes = IPAddress.Parse(stripScopeId(m4.Groups["adr"].Value)).GetAddressBytes();
                 var maskBytes = IPAddress.Parse(m4.Groups["bitmask"].Value).GetAddressBytes();
                 baseAdrBytes = Bits.And(baseAdrBytes, maskBytes);
                 return new IPAddressRange(new IPAddress(baseAdrBytes), new IPAddress(Bits.Or(baseAdrBytes, Bits.Not(maskBytes))));
