@@ -49,6 +49,30 @@ public class IPAddressRangeTest
     }
 
     [TestMethod]
+    public void CtorTest_IPv6_BeginEndAddresses()
+    {
+        var range = new IPAddressRange(
+            begin: IPAddress.Parse("ff80::1"),
+            end: IPAddress.Parse("ff80::34"));
+        range.Begin.AddressFamily.Is(AddressFamily.InterNetworkV6);
+        range.Begin.ToString().Is("ff80::1");
+        range.End.AddressFamily.Is(AddressFamily.InterNetworkV6);
+        range.End.ToString().Is("ff80::34");
+    }
+
+    [TestMethod]
+    public void CtorTest_IPv6_BeginEndAddresses_with_ScopeId()
+    {
+        var range = new IPAddressRange(
+            begin: IPAddress.Parse("ff80::56%23"),
+            end: IPAddress.Parse("ff80::789%23"));
+        range.Begin.AddressFamily.Is(AddressFamily.InterNetworkV6);
+        range.Begin.ToString().Is("ff80::56");
+        range.End.AddressFamily.Is(AddressFamily.InterNetworkV6);
+        range.End.ToString().Is("ff80::789");
+    }
+
+    [TestMethod]
     public void ParseTest_IPv4_Uniaddress()
     {
         var range = IPAddressRange.Parse("192.168.60.13");
@@ -178,6 +202,16 @@ public class IPAddressRangeTest
         range.Contains(IPAddress.Parse("::1")).Is(false);
         range.Contains(IPAddress.Parse("fe80::d503:4ee:3882:c586")).Is(true);
         range.Contains(IPAddress.Parse("fe80::d503:4ee:3882:c586%3")).Is(true);
+    }
+
+    [TestMethod]
+    public void ContainsTest_IPv6_with_ScopeId()
+    {
+        var range = IPAddressRange.Parse("FE80::%eth0/10");
+
+        range.Contains(IPAddress.Parse("::1")).Is(false);
+        range.Contains(IPAddress.Parse("fe80::d503:4ee:3882:c586")).Is(true);
+        range.Contains(IPAddress.Parse("fe80::d503:4ee:3882:c586%4")).Is(true);
     }
 
     [TestMethod]
