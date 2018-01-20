@@ -68,11 +68,11 @@ namespace NetTools
         private static Regex m2_regex = new Regex(@"^(?<adr>([\d.]+)|([\da-f:]+(%\w+)?))$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         // Pattern 3. Begin end range: "169.258.0.0-169.258.0.255", "fe80::1%23-fe80::ff%23"
+        //            also shortcut notation: "192.168.1.1-7" (IPv4 only)
         private static Regex m3_regex = new Regex(@"^(?<begin>([\d.]+)|([\da-f:]+(%\w+)?))[\-–](?<end>([\d.]+)|([\da-f:]+(%\w+)?))$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         // Pattern 4. Bit mask range: "192.168.0.0/255.255.255.0"
         private static Regex m4_regex = new Regex(@"^(?<adr>([\d.]+)|([\da-f:]+(%\w+)?))/(?<bitmask>[\da-f\.:]+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-
 
         public IPAddress Begin { get; set; }
 
@@ -227,9 +227,19 @@ namespace NetTools
             var m3 = m3_regex.Match(ipRangeString);
             if (m3.Success)
             {
+                // if the left part contains dot, but the right one does not, we treat it as a shortuct notation
+                // and simply copy the part before last dot from the left part as the prefix to the right one
+                var begin = m3.Groups["begin"].Value;
+                var end = m3.Groups["end"].Value;
+                if(begin.Contains('.') && !end.Contains('.'))
+                {
+                    var lastDotAt = begin.LastIndexOf('.');
+                    end = begin.Substring(0, lastDotAt + 1) + end;
+                }
+
                 return new IPAddressRange(
-                    begin: IPAddress.Parse(stripScopeId(m3.Groups["begin"].Value)),
-                    end: IPAddress.Parse(stripScopeId(m3.Groups["end"].Value)));
+                    begin: IPAddress.Parse(stripScopeId(begin)),
+                    end: IPAddress.Parse(stripScopeId(end)));
             }
 
             // Pattern 4. Bit mask range: "192.168.0.0/255.255.255.0"

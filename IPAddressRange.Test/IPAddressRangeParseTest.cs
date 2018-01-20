@@ -41,6 +41,7 @@ namespace IPRange.Test
         [TestCase("  fe80::c586  –  fe80::c600  ", "fe80::c586", "fe80::c600")]
         [TestCase("3232252004–3232252504", "192.168.64.100", "192.168.66.88")]
         [TestCase("  3232252004  –  3232252504  ", "192.168.64.100", "192.168.66.88")]
+        [TestCase("192.168.1.1-7", "192.168.1.1", "192.168.1.7")]
 
         // IPv6 with scope id (scope id should be stripped in begin/end properties.)
         [TestCase("fe80::0%eth0/112", "fe80::", "fe80::ffff")]
