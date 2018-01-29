@@ -70,6 +70,15 @@ namespace IPRange.Test
         [TestCase("fe80::2%eth1-fe80::1%eth1", typeof(ArgumentException))] // bigger to lower
         [TestCase("10.256.1.1", typeof(FormatException))] // invalid ip
         [TestCase("127.0.0.1%1", typeof(FormatException))] // ipv4, but with scope id
+        [TestCase("192.168.0.0-192.168.0.1%1", typeof(FormatException))] // ipv4, but with scope id at end of range
+        [TestCase("192.168.0.0%1-192.168.0.1", typeof(FormatException))] // ipv4, but with scope id at begin of range
+        [TestCase("192.168.0.0%1-192.168.0.1%1", typeof(FormatException))] // ipv4, but with scope id at both of begin and end
+        [TestCase("192.168.0.0%1/24", typeof(FormatException))] // CIDR ipv4, but with scope id
+        [TestCase("192.168.0.0%1/255.255.255.0", typeof(FormatException))] // ipv4 and subnet mask, but with scope id
+        [TestCase("192.168-::1", typeof(FormatException))] // Invalid comibination of IPv4 and IPv6
+        [TestCase("192.168.0.0-256", typeof(FormatException))] // shortcut notation, but out of range
+        [TestCase("192.168.0.0-1%1", typeof(FormatException))] // ipv4 shortcut, but with scope id at end of range
+        [TestCase("192.168.0.0%1-1", typeof(FormatException))] // ipv4 shortcut, but with scope id at begin of range
         public void ParseFails()
         {
             TestContext.Run((string input, Type expectedException) =>
