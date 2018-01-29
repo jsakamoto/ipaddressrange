@@ -231,8 +231,9 @@ namespace NetTools
                 // and simply copy the part before last dot from the left part as the prefix to the right one
                 var begin = m3.Groups["begin"].Value;
                 var end = m3.Groups["end"].Value;
-                if(begin.Contains('.') && !end.Contains('.'))
+                if (begin.Contains('.') && !end.Contains('.'))
                 {
+                    if (end.Contains('%')) throw new FormatException("The end of IPv4 range shortcut notation contains scope id.");
                     var lastDotAt = begin.LastIndexOf('.');
                     end = begin.Substring(0, lastDotAt + 1) + end;
                 }
