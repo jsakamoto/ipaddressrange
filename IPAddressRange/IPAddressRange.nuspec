@@ -14,6 +14,7 @@
     <description>This library allows you to parse range of IP address string such as "192.168.0.0/24" and "192.168.0.0/255.255.255.0" and "192.168.0.0-192.168.0.255", and can conatins check. This library supports both IPv4 and IPv6.</description>
     <releaseNotes>
       <![CDATA[
+      v.2.2.0 - Enhance: IPv4 shortcut notation support (like "192.168.0.0-255").
       v.2.1.1 - Fix: Error if parsing IP address with scope id in the end.
       v.2.1.0 - Enhance: Add "IsEqual" and "Decrement" methods to "Bits" utility class.
       v.2.0.0 - [BREAKING CHANGE] Truncate .NET 4.0 support.
