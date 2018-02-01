@@ -1,12 +1,19 @@
-version: 1.4.{build}
-assembly_info:
-  patch: true
-  file: '**\AssemblyInfo.*'
-  assembly_version: '{version}'
-  assembly_file_version: '{version}'
-  assembly_informational_version: '{version}'
+version: 1.0.{build}
+image: Visual Studio 2017
+configuration: Debug
+platform: Any CPU
+environment:
+  _SkipNearestTargetFrameworkResolution: true
+before_build:
+- cmd: nuget restore
 build:
-  publish_nuget: true
   verbosity: minimal
-artifacts:
-- path: ipaddressrange/*.nupkg
+test_script:
+- cmd: >-
+    cd IPAddressRange.Test.Core
+
+    dotnet test
+
+    cd ..\IPAddressRange.Test\bin\Debug
+
+    vstest.console /logger:Appveyor IPRange.Test.dll

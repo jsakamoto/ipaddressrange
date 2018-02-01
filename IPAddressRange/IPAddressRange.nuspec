@@ -14,6 +14,12 @@
     <description>This library allows you to parse range of IP address string such as "192.168.0.0/24" and "192.168.0.0/255.255.255.0" and "192.168.0.0-192.168.0.255", and can conatins check. This library supports both IPv4 and IPv6. [This is a signed assembly edition of "IPAddressRange" NuGet package.]</description>
     <releaseNotes>
       <![CDATA[
+      v.2.2.0 - Enhance: IPv4 shortcut notation support (like "192.168.0.0-255").
+      v.2.1.1 - Fix: Error if parsing IP address with scope id in the end.
+      v.2.1.0 - Enhance: Add "IsEqual" and "Decrement" methods to "Bits" utility class.
+      v.2.0.0 - [BREAKING CHANGE] Truncate .NET 4.0 support.
+              - Enhance: can serialize/deserialize json text by JSON.NET
+      v.1.6.2 - Support: .NET Standard 1.4 (.NET Core) and UWP
       v.1.6.1 - Fix: Add some parameter checks for throwing ArgumentNullException
       v.1.6.0.1 - BREAKING CHANGE: Resigned by new private key. (see: http://j.mp/1t9gMQw )
       v.1.6.0 - Enhance: Add "ToCidrString()" and "GetprefixLength()" method.
@@ -29,7 +35,20 @@
       v.1.0.3 - Fix: Can not parse the address which contains hex string.
       ]]>
     </releaseNotes>
-    <copyright>Copyright 2012-2016 J.Sakamoto, Mozilla Public License 2.0</copyright>
+    <copyright>Copyright 2012-2017 J.Sakamoto, Mozilla Public License 2.0</copyright>
     <tags>IPAddress</tags>
+    <dependencies>
+      <group targetFramework=".NETFramework4.5" />
+      <group targetFramework="uap" />
+      <group targetFramework=".NETStandard1.4">
+        <dependency id="NETStandard.Library" version="1.6.1" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
   </metadata>
+  <files>
+    <file src="bin\Release\IPAddressRange.dll" target="lib\net45" />
+    <file src="bin\Release\IPAddressRange.XML" target="lib\net45" />
+    <file src="bin\Release\netstandard1.4\IPAddressRange.dll" target="lib\netstandard1.4" />
+    <file src="bin\Release\netstandard1.4\IPAddressRange.XML" target="lib\netstandard1.4" />
+  </files>
 </package>

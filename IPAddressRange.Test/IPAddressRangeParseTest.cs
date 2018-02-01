@@ -14,14 +14,14 @@ namespace IPRange.Test
 
         [TestMethod]
         [TestCase("192.168.60.13", "192.168.60.13", "192.168.60.13")]
-        [TestCase("  192.168.60.13  ", "192.168.60.13", "192.168.60.13")]   
+        [TestCase("  192.168.60.13  ", "192.168.60.13", "192.168.60.13")]
         [TestCase("fe80::d503:4ee:3882:c586", "fe80::d503:4ee:3882:c586", "fe80::d503:4ee:3882:c586")]
         [TestCase("  fe80::d503:4ee:3882:c586  ", "fe80::d503:4ee:3882:c586", "fe80::d503:4ee:3882:c586")]
         [TestCase("3232252004", "192.168.64.100", "192.168.64.100")] // decimal - new 
         [TestCase("  3232252004  ", "192.168.64.100", "192.168.64.100")] // decimal - new 
 
         [TestCase("219.165.64.0/19", "219.165.64.0", "219.165.95.255")]
-        [TestCase("  219.165.64.0  /  19  ", "219.165.64.0", "219.165.95.255")]   
+        [TestCase("  219.165.64.0  /  19  ", "219.165.64.0", "219.165.95.255")]
         [TestCase("192.168.1.0/255.255.255.0", "192.168.1.0", "192.168.1.255")]
         [TestCase("  192.168.1.0  /  255.255.255.0  ", "192.168.1.0", "192.168.1.255")]
         [TestCase("3232252004/24", "192.168.64.0", "192.168.64.255")] // decimal - new 
@@ -33,7 +33,7 @@ namespace IPRange.Test
         [TestCase("  fe80::c586  -  fe80::c600  ", "fe80::c586", "fe80::c600")]
         [TestCase("3232252004-3232252504", "192.168.64.100", "192.168.66.88")]
         [TestCase("  3232252004  -  3232252504  ", "192.168.64.100", "192.168.66.88")]
-        
+
         // with "dash (–)" (0x2013) is also support.
         [TestCase("192.168.61.26–192.168.61.37", "192.168.61.26", "192.168.61.37")]
         [TestCase("  192.168.61.26  –  192.168.61.37  ", "192.168.61.26", "192.168.61.37")]
@@ -41,6 +41,12 @@ namespace IPRange.Test
         [TestCase("  fe80::c586  –  fe80::c600  ", "fe80::c586", "fe80::c600")]
         [TestCase("3232252004–3232252504", "192.168.64.100", "192.168.66.88")]
         [TestCase("  3232252004  –  3232252504  ", "192.168.64.100", "192.168.66.88")]
+        [TestCase("192.168.1.1-7", "192.168.1.1", "192.168.1.7")]
+
+        // IPv6 with scope id (scope id should be stripped in begin/end properties.)
+        [TestCase("fe80::0%eth0/112", "fe80::", "fe80::ffff")]
+        [TestCase("fe80::8000%12-fe80::80ff%12", "fe80::8000", "fe80::80ff")]
+        [TestCase("fe80::1%lo1", "fe80::1", "fe80::1")]
         public void ParseSucceeds()
         {
             TestContext.Run((string input, string expectedBegin, string expectedEnd) =>
@@ -55,13 +61,24 @@ namespace IPRange.Test
         }
 
         [TestMethod]
-        [TestCase(null, typeof(ArgumentNullException))] 
+        [TestCase(null, typeof(ArgumentNullException))]
         [TestCase("", typeof(FormatException))]
         [TestCase(" ", typeof(FormatException))]
         [TestCase("gvvdv", typeof(FormatException))]
         [TestCase("192.168.0.10/48", typeof(FormatException))] // out of CIDR range 
         [TestCase("192.168.0.10-192.168.0.5", typeof(ArgumentException))] // bigger to lower
+        [TestCase("fe80::2%eth1-fe80::1%eth1", typeof(ArgumentException))] // bigger to lower
         [TestCase("10.256.1.1", typeof(FormatException))] // invalid ip
+        [TestCase("127.0.0.1%1", typeof(FormatException))] // ipv4, but with scope id
+        [TestCase("192.168.0.0-192.168.0.1%1", typeof(FormatException))] // ipv4, but with scope id at end of range
+        [TestCase("192.168.0.0%1-192.168.0.1", typeof(FormatException))] // ipv4, but with scope id at begin of range
+        [TestCase("192.168.0.0%1-192.168.0.1%1", typeof(FormatException))] // ipv4, but with scope id at both of begin and end
+        [TestCase("192.168.0.0%1/24", typeof(FormatException))] // CIDR ipv4, but with scope id
+        [TestCase("192.168.0.0%1/255.255.255.0", typeof(FormatException))] // ipv4 and subnet mask, but with scope id
+        [TestCase("192.168-::1", typeof(FormatException))] // Invalid comibination of IPv4 and IPv6
+        [TestCase("192.168.0.0-256", typeof(FormatException))] // shortcut notation, but out of range
+        [TestCase("192.168.0.0-1%1", typeof(FormatException))] // ipv4 shortcut, but with scope id at end of range
+        [TestCase("192.168.0.0%1-1", typeof(FormatException))] // ipv4 shortcut, but with scope id at begin of range
         public void ParseFails()
         {
             TestContext.Run((string input, Type expectedException) =>
@@ -70,7 +87,7 @@ namespace IPRange.Test
                 try
                 {
                     IPAddressRange.Parse(input);
-                    Assert.Fail("Expected exception of type {0} to be thrown for input \"{1}\"", expectedException.Name,input);
+                    Assert.Fail("Expected exception of type {0} to be thrown for input \"{1}\"", expectedException.Name, input);
                 }
                 catch (AssertFailedException)
                 {
@@ -93,10 +110,13 @@ namespace IPRange.Test
 
         [TestCase("192.168.60.13", true)]
         [TestCase("fe80::d503:4ee:3882:c586", true)]
+        [TestCase("fe80:db8::dead:beaf%eth2", true)]
         [TestCase("219.165.64.0/19", true)]
         [TestCase("219.165.64.73/32", true)]
         [TestCase("192.168.1.0/255.255.255.0", true)]
         [TestCase("192.168.60.26-192.168.60.37", true)]
+        [TestCase("fe80:dead::beaf:a%eth2-fe80:dead::beaf:f%eth2", true)]
+        [TestCase("fe80:dead::beaf:f%eth2-fe80:dead::beaf:a%eth2", false)]
         public void TryParse()
         {
             TestContext.Run((string input, bool expectedReturn) =>
