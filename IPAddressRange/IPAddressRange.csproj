@@ -1,90 +1,83 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D3DEA965-247F-4C4C-B3B0-44A039C75A5C}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NetTools</RootNamespace>
+    <TargetFrameworks>netstandard1.4;net45</TargetFrameworks>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">true</GeneratePackageOnBuild>
     <AssemblyName>IPAddressRange</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <Title>IPAddressRange</Title>
+    <PackageId>IPAddressRange</PackageId>
+    <PackageTags>IPAddress</PackageTags>
+    <NetStandardImplicitPackageVersion>1.6.0</NetStandardImplicitPackageVersion>
+    <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
+    <NuspecFile>IPAddressRange.nuspec</NuspecFile>
+    <Copyright>Copyright © 2012-2018 J.Sakamoto, Mozilla Public License 2.0</Copyright>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
+    <Version>3.0.0.0-beta</Version>
+    <Authors>J.Sakamoto</Authors>
+    <Company />
+    <Product>IPAddressRange</Product>
+    <Summary>This library allows you to parse range of IP address string, and can conatins check.</Summary>
+    <Description>This library allows you to parse range of IP address string such as "192.168.0.0/24" and "192.168.0.0/255.255.255.0" and "192.168.0.0-192.168.0.255", and can conatins check. This library supports both IPv4 and IPv6.</Description>
+    <PackageLicenseUrl>https://github.com/jsakamoto/ipaddressrange/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/jsakamoto/ipaddressrange/</PackageProjectUrl>
+    <PackageReleaseNotes>v.2.2.0 - Enhance: IPv4 shortcut notation support (like "192.168.0.0-255").
+v.2.1.1 - Fix: Error if parsing IP address with scope id in the end.
+v.2.1.0 - Enhance: Add "IsEqual" and "Decrement" methods to "Bits" utility class.
+v.2.0.0 - [BREAKING CHANGE] Truncate .NET 4.0 support.
+        - Enhance: can serialize/deserialize json text by JSON.NET
+v.1.6.2 - Support: .NET Standard 1.4 (.NET Core) and UWP
+v.1.6.1 - Fix: Add some parameter checks for throwing ArgumentNullException
+v.1.6.0 - Enhance: Add "ToCidrString()" and "GetprefixLength()" method.
+v.1.5.0 - Enhance: Add constructors variation / Save memory usage.
+v.1.4.0 - Enhance: Add IEnumerable&lt;IPAddress&gt; support.
+v.1.3.0 - Enhance: support both "hyphen (-)" (0x002D) and "dash (–)" (0x2013) at begin-end format.
+v.1.2.1 - Fix: "Parse()" and "TryParse()" methods throw IndexOutOfRangeException when bit mask length is invalid at CIDR format.
+v.1.2.0 - Enhance: Add "Parse()" and "TryParse()" methods. (Instead, the constructor which has one string argument is obsoleted.)
+v.1.1.0 - Enhance: Add "Contains()" method overload version of IPAddressRange argument.
+v.1.0.6 - Fix Package: Repackage with Release build. (1.0.5 was Debug build)
+v.1.0.5 - Fix: IPv4 CIDR range ".../32" causes crush.
+v.1.0.4 - Enhance: support bit mask range not only CIDR range.
+v.1.0.3 - Fix: Can not parse the address which contains hex string.
+</PackageReleaseNotes>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS, IPADDRESSRANGE_NETFX45</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
-    <CodeAnalysisRuleSet>IPAddressRange.ruleset</CodeAnalysisRuleSet>
-    <NoWarn>1591</NoWarn>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;IPADDRESSRANGE_NETFX45</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\IPAddressRange.XML</DocumentationFile>
-    <NoWarn>1591</NoWarn>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
+
   <PropertyGroup>
-    <ResolveNuGetPackages>false</ResolveNuGetPackages>
+    <SharedNuspecProperties>packageId=$(PackageId);$(SharedNuspecProperties)</SharedNuspecProperties>
+    <SharedNuspecProperties>version=$(Version);$(SharedNuspecProperties)</SharedNuspecProperties>
+    <SharedNuspecProperties>authors=$(Authors);$(SharedNuspecProperties)</SharedNuspecProperties>
+    <SharedNuspecProperties>licenseUrl=$(PackageLicenseUrl);$(SharedNuspecProperties)</SharedNuspecProperties>
+    <SharedNuspecProperties>projectUrl=$(PackageProjectUrl);$(SharedNuspecProperties)</SharedNuspecProperties>
+    <SharedNuspecProperties>copyright=$(Copyright);$(SharedNuspecProperties)</SharedNuspecProperties>
+    <SharedNuspecProperties>tags=$(PackageTags);$(SharedNuspecProperties)</SharedNuspecProperties>
+    <SharedNuspecProperties>summary=$(Summary);$(SharedNuspecProperties)</SharedNuspecProperties>
+    <SharedNuspecProperties>releaseNotes=$(PackageReleaseNotes);$(SharedNuspecProperties)</SharedNuspecProperties>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Bits.cs" />
-    <Compile Include="IPAddressRange.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\README.md">
-      <Link>README.md</Link>
-    </None>
-    <None Include="IPAddressRange.nuspec">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="IPAddressRange.ruleset" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  
   <PropertyGroup>
-    <PostBuildEvent>if not "$(ConfigurationName)" == "Release" goto END
-pushd "$(ProjectDir)"
-
-"%25SystemRoot%25\system32\find" "AssemblyVersion" &lt; Properties\AssemblyInfo.cs &gt; ~version.txt
-set /p ver= &lt; ~version.txt
-del ~version.txt
-
-"%25SystemRoot%25\system32\find" "AssemblyTitle" &lt; Properties\AssemblyInfo.cs &gt; ~title.txt
-set /p title= &lt; ~title.txt
-del ~title.txt
-
-"$(SolutionDir).nuget\nuget.exe" pack "$(ProjectName).nuspec" -Prop version=%25ver:~28,-3%25 -Prop title="%25title:~26,-3%25" -o $(OutDir)
-:END</PostBuildEvent>
+    <NuspecProperties>title=$(Title);$(SharedNuspecProperties)</NuspecProperties>
+    <NuspecProperties>description=$(Description);$(NuspecProperties)</NuspecProperties>
   </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
+  
+  <!-- Build Signed Editon NuGet package -->
+  <Target Name="PackSignedEdition" AfterTargets="GenerateNuspec">
+    <PropertyGroup>
+      <NuspecFile>IPAddressRange.Signed.nuspec</NuspecFile>
+      <TitleForSignedEdition>[Superseded] IPAddressRange.Signed</TitleForSignedEdition>
+      <DescriptionForSignedEdition>[Superseded] This package became  only metadata package for installing "IPAddressRange" NuGet package, because "IPAddressRange" NuGet package became strong-named assembly.
+Please consider to installing "IPAddress" NuGet package directly instead of this package.
+----------------------------
+$(Description)</DescriptionForSignedEdition>
+      <NuspecProperties>title=$(TitleForSignedEdition);$(SharedNuspecProperties)</NuspecProperties>
+      <NuspecProperties>description=$(DescriptionForSignedEdition);$(NuspecProperties)</NuspecProperties>
+    </PropertyGroup>
+    <ConvertToAbsolutePath Paths="$(NuspecFile)">
+      <Output TaskParameter="AbsolutePaths" PropertyName="NuspecFileAbsolutePath" />
+    </ConvertToAbsolutePath>
+    <Message Text="PackProjectInputFile=[$(PackProjectInputFile)]" />
+    <PackTask PackItem="$(PackProjectInputFile)" PackageOutputPath="$(PackageOutputAbsolutePath)" NuspecOutputPath="$(NuspecOutputAbsolutePath)" NuspecFile="$(NuspecFileAbsolutePath)" NuspecBasePath="$(NuspecBasePath)" NuspecProperties="$(NuspecProperties)" />
   </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  
 </Project>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <package >
   <metadata>
-    <id>$packageId$</id>
+    <id>$packageId$.Signed</id>
     <title>$title$</title>
     <version>$version$</version>
     <authors>$authors$</authors>
@@ -19,17 +19,9 @@
     <copyright>$copyright$</copyright>
     <tags>$tags$</tags>
     <dependencies>
-      <group targetFramework=".NETFramework4.5" />
-      <group targetFramework="uap" />
-      <group targetFramework=".NETStandard1.4">
-        <dependency id="NETStandard.Library" version="1.6.1" exclude="Build,Analyzers" />
-      </group>
+      <dependency id="IPAddressRange" version="$version$"/>
     </dependencies>
   </metadata>
   <files>
-    <file src="bin\Release\net45\IPAddressRange.dll" target="lib\net45" />
-    <file src="bin\Release\net45\IPAddressRange.XML" target="lib\net45" />
-    <file src="bin\Release\netstandard1.4\IPAddressRange.dll" target="lib\netstandard1.4" />
-    <file src="bin\Release\netstandard1.4\IPAddressRange.XML" target="lib\netstandard1.4" />
   </files>
 </package>

@@ -27,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\IPAddressRange\IPAddressRange.Core.csproj" />
+    <ProjectReference Include="..\IPAddressRange\IPAddressRange.csproj" />
   </ItemGroup>
 
   <ItemGroup>
