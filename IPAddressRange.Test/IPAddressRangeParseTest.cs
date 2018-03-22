@@ -47,6 +47,12 @@ namespace IPRange.Test
         [TestCase("fe80::0%eth0/112", "fe80::", "fe80::ffff")]
         [TestCase("fe80::8000%12-fe80::80ff%12", "fe80::8000", "fe80::80ff")]
         [TestCase("fe80::1%lo1", "fe80::1", "fe80::1")]
+
+        // IPv4 mapped to IPv6
+        [TestCase("::ffff:10.0.0.0/120", "::ffff:10.0.0.0", "::ffff:10.0.0.255")]
+        [TestCase("::ffff:192.168.10.20-::ffff:192.168.11.20", "::ffff:192.168.10.20", "::ffff:192.168.11.20")]
+        [TestCase("::ffff:10.0.0.203", "::ffff:10.0.0.203", "::ffff:10.0.0.203")]
+        [TestCase("::ffff:10.0.2.0/ffff:ffff:ffff:ffff:ffff:ffff:ffff:ff00", "::ffff:10.0.2.0", "::ffff:10.0.2.255")]
         public void ParseSucceeds()
         {
             TestContext.Run((string input, string expectedBegin, string expectedEnd) =>
