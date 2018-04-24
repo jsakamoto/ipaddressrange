@@ -10,31 +10,53 @@ namespace NetTools
     {
         public static byte[] Not(byte[] bytes)
         {
-            return bytes.Select(b => (byte)~b).ToArray();
+            var result = (byte[])bytes.Clone();
+            for (var i = 0; i < result.Length; i++)
+            {
+                result[i] = (byte)~result[i];
+            }
+            return result;
+            //return bytes.Select(b => (byte)~b).ToArray();
         }
 
         public static byte[] And(byte[] A, byte[] B)
         {
-            return A.Zip(B, (a, b) => (byte)(a & b)).ToArray();
+            var result = (byte[])A.Clone();
+            for (var i = 0; i < A.Length; i++)
+            {
+                result[i] &= B[i];
+            }
+            return result;
+            //return A.Zip(B, (a, b) => (byte)(a & b)).ToArray();
         }
 
         public static byte[] Or(byte[] A, byte[] B)
         {
-            return A.Zip(B, (a, b) => (byte)(a | b)).ToArray();
+            var result = (byte[])A.Clone();
+            for (var i = 0; i < A.Length; i++)
+            {
+                result[i] |= B[i];
+            }
+            return result;
+            //return A.Zip(B, (a, b) => (byte)(a | b)).ToArray();
         }
 
-        public static bool GE(byte[] A, byte[] B)
+        public static bool GE(byte[] A, byte[] B, int offset = 0)
         {
-            return A.Zip(B, (a, b) => a == b ? 0 : a < b ? 1 : -1)
-                .SkipWhile(c => c == 0)
-                .FirstOrDefault() >= 0;
+            for (var i = 0; i < A.Length; i++)
+            {
+                if (A[i] != B[i]) return A[i] <= B[i];
+            }
+            return true;
         }
 
-        public static bool LE(byte[] A, byte[] B)
+        public static bool LE(byte[] A, byte[] B, int offset = 0)
         {
-            return A.Zip(B, (a, b) => a == b ? 0 : a < b ? 1 : -1)
-                .SkipWhile(c => c == 0)
-                .FirstOrDefault() <= 0;
+            for (var i = 0; i < A.Length; i++)
+            {
+                if (A[i] != B[i]) return A[i] >= B[i];
+            }
+            return true;
         }
 
         public static bool IsEqual(byte[] A, byte[] B)
