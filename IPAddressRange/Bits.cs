@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
+using System.ComponentModel;
 using System.Linq;
-using System.Text;
 
 namespace NetTools
 {
@@ -10,31 +8,65 @@ namespace NetTools
     {
         public static byte[] Not(byte[] bytes)
         {
-            return bytes.Select(b => (byte)~b).ToArray();
+            var result = (byte[])bytes.Clone();
+            for (var i = 0; i < result.Length; i++)
+            {
+                result[i] = (byte)~result[i];
+            }
+            return result;
+            //return bytes.Select(b => (byte)~b).ToArray();
         }
 
         public static byte[] And(byte[] A, byte[] B)
         {
-            return A.Zip(B, (a, b) => (byte)(a & b)).ToArray();
+            var result = (byte[])A.Clone();
+            for (var i = 0; i < A.Length; i++)
+            {
+                result[i] &= B[i];
+            }
+            return result;
+            //return A.Zip(B, (a, b) => (byte)(a & b)).ToArray();
         }
 
         public static byte[] Or(byte[] A, byte[] B)
         {
-            return A.Zip(B, (a, b) => (byte)(a | b)).ToArray();
+            var result = (byte[])A.Clone();
+            for (var i = 0; i < A.Length; i++)
+            {
+                result[i] |= B[i];
+            }
+            return result;
+            //return A.Zip(B, (a, b) => (byte)(a | b)).ToArray();
         }
 
-        public static bool GE(byte[] A, byte[] B)
+        // DON'T FIX this non-intuitive behavior that returns true when A <= B, 
+        // even if the method name means "A is Greater than or Equals B", for keeping backward compatibility.
+        // Fixed verison is in "NetTools.Internal" namespace "Bits" class.
+        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("This method returns true when A<=B, not A is greater than or equal (>=) B. use LtE method to check A<=B or not.")]
+        public static bool GE(byte[] A, byte[] B) => LtE(A, B);
+
+        // DON'T FIX this non-intuitive behavior that returns true when A >= B, 
+        // even if the method name means "A is Less than or Equals B", for keeping backward compatibility.
+        // Fixed verison is in "NetTools.Internal" namespace "Bits" class.
+        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("This method returns true when A>=B, not A is less than or equal (<=) B. use GtE method to check A>=B or not.")]
+        public static bool LE(byte[] A, byte[] B) => GtE(A, B);
+
+        public static bool LtE(byte[] A, byte[] B, int offset = 0)
         {
-            return A.Zip(B, (a, b) => a == b ? 0 : a < b ? 1 : -1)
-                .SkipWhile(c => c == 0)
-                .FirstOrDefault() >= 0;
+            for (var i = 0; i < A.Length; i++)
+            {
+                if (A[i] != B[i]) return A[i] <= B[i];
+            }
+            return true;
         }
 
-        public static bool LE(byte[] A, byte[] B)
+        public static bool GtE(byte[] A, byte[] B, int offset = 0)
         {
-            return A.Zip(B, (a, b) => a == b ? 0 : a < b ? 1 : -1)
-                .SkipWhile(c => c == 0)
-                .FirstOrDefault() <= 0;
+            for (var i = 0; i < A.Length; i++)
+            {
+                if (A[i] != B[i]) return A[i] >= B[i];
+            }
+            return true;
         }
 
         public static bool IsEqual(byte[] A, byte[] B)

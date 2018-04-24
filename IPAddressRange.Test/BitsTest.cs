@@ -31,7 +31,51 @@ public class BitsTest
     }
 
     [TestMethod]
-    public void GETest()
+    public void LtETest()
+    {
+        Bits.LtE(
+            new byte[] { 0x12, 0x3c, 0xA5 },
+            new byte[] { 0x12, 0x3c, 0xA5 }).Is(true);
+
+        Bits.LtE(
+            new byte[] { 0x12, 0x3c, 0xA5 },
+            new byte[] { 0x12, 0x4c, 0x00 }).Is(true);
+        Bits.LtE(
+            new byte[] { 0x12, 0x3c, 0xA5 },
+            new byte[] { 0x13, 0x00, 0xA5 }).Is(true);
+
+        Bits.LtE(
+            new byte[] { 0x12, 0x3d, 0xFF },
+            new byte[] { 0x12, 0x3c, 0xA5 }).Is(false);
+        Bits.LtE(
+            new byte[] { 0x11, 0xFF, 0xA5 },
+            new byte[] { 0x10, 0x3c, 0xA5 }).Is(false);
+    }
+
+    [TestMethod]
+    public void GtETest()
+    {
+        Bits.GtE(
+            new byte[] { 0x12, 0x3c, 0xA5 },
+            new byte[] { 0x12, 0x3c, 0xA5 }).Is(true);
+
+        Bits.GtE(
+            new byte[] { 0x12, 0x3c, 0xA5 },
+            new byte[] { 0x12, 0x4c, 0x00 }).Is(false);
+        Bits.GtE(
+            new byte[] { 0x12, 0x3c, 0xA5 },
+            new byte[] { 0x13, 0x00, 0xA5 }).Is(false);
+
+        Bits.GtE(
+            new byte[] { 0x12, 0x3d, 0xFF },
+            new byte[] { 0x12, 0x3c, 0xA5 }).Is(true);
+        Bits.GtE(
+            new byte[] { 0x11, 0xFF, 0xA5 },
+            new byte[] { 0x10, 0x3c, 0xA5 }).Is(true);
+    }
+
+    [TestMethod, Obsolete]
+    public void KeepingBackwardCompatibility_GETest()
     {
         Bits.GE(
             new byte[] { 0x12, 0x3c, 0xA5 },
@@ -52,8 +96,8 @@ public class BitsTest
             new byte[] { 0x10, 0x3c, 0xA5 }).Is(false);
     }
 
-    [TestMethod]
-    public void LETest()
+    [TestMethod, Obsolete]
+    public void KeepingBackwardCompatibility_LETest()
     {
         Bits.LE(
             new byte[] { 0x12, 0x3c, 0xA5 },

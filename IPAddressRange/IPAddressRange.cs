@@ -115,7 +115,7 @@ namespace NetTools
 
             var beginBytes = Begin.GetAddressBytes();
             var endBytes = End.GetAddressBytes();
-            if (!Bits.LE(endBytes, beginBytes)) throw new ArgumentException("Begin must be smaller than the End", nameof(begin));
+            if (!Bits.GtE(endBytes, beginBytes)) throw new ArgumentException("Begin must be smaller than the End", nameof(begin));
         }
 
         /// <summary>
@@ -176,8 +176,15 @@ namespace NetTools
                 throw new ArgumentNullException(nameof(ipaddress));
 
             if (ipaddress.AddressFamily != this.Begin.AddressFamily) return false;
+            
+            var offset = 0;
+            if (Begin.IsIPv4MappedToIPv6 && ipaddress.IsIPv4MappedToIPv6)
+            {
+                offset = 12; //ipv4 has prefix of 10 zero bytes and two 255 bytes. 
+            }
+
             var adrBytes = ipaddress.GetAddressBytes();
-            return Bits.GE(this.Begin.GetAddressBytes(), adrBytes) && Bits.LE(this.End.GetAddressBytes(), adrBytes);
+            return Bits.LtE(this.Begin.GetAddressBytes(), adrBytes, offset) && Bits.GtE(this.End.GetAddressBytes(), adrBytes, offset);
         }
 
         public bool Contains(IPAddressRange range)
@@ -186,10 +193,16 @@ namespace NetTools
                 throw new ArgumentNullException(nameof(range));
 
             if (this.Begin.AddressFamily != range.Begin.AddressFamily) return false;
+            
+            var offset = 0;
+            if (Begin.IsIPv4MappedToIPv6 && range.Begin.IsIPv4MappedToIPv6)
+            {
+                offset = 12; //ipv4 has prefix of 10 zero bytes and two 255 bytes. 
+            }
 
             return
-                Bits.GE(this.Begin.GetAddressBytes(), range.Begin.GetAddressBytes()) &&
-                Bits.LE(this.End.GetAddressBytes(), range.End.GetAddressBytes());
+                Bits.LtE(this.Begin.GetAddressBytes(), range.Begin.GetAddressBytes(), offset) &&
+                Bits.GtE(this.End.GetAddressBytes(), range.End.GetAddressBytes(), offset);
 
             throw new NotImplementedException();
         }
@@ -290,7 +303,7 @@ namespace NetTools
         {
             var first = Begin.GetAddressBytes();
             var last = End.GetAddressBytes();
-            for (var ip = first; Bits.GE(ip, last); ip = Bits.Increment(ip))
+            for (var ip = first; Bits.LtE(ip, last); ip = Bits.Increment(ip))
                 yield return new IPAddress(ip);
         }
 
