@@ -66,6 +66,12 @@ v.1.0.3 - Fix: Can not parse the address which contains hex string.
     <NuspecProperties>description=$(Description);$(NuspecProperties)</NuspecProperties>
   </PropertyGroup>
   
+  <ItemGroup>
+    <Compile Remove="Internal\**" />
+    <EmbeddedResource Remove="Internal\**" />
+    <None Remove="Internal\**" />
+  </ItemGroup>
+  
   <!-- Build Signed Editon NuGet package -->
   <Target Name="PackSignedEdition" AfterTargets="GenerateNuspec">
     <PropertyGroup>

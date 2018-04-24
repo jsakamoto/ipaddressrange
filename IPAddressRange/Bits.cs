@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
+using System.ComponentModel;
 using System.Linq;
-using System.Text;
 
 namespace NetTools
 {
@@ -41,7 +39,19 @@ namespace NetTools
             //return A.Zip(B, (a, b) => (byte)(a | b)).ToArray();
         }
 
-        public static bool GE(byte[] A, byte[] B, int offset = 0)
+        // DON'T FIX this non-intuitive behavior that returns true when A <= B, 
+        // even if the method name means "A is Greater than or Equals B", for keeping backward compatibility.
+        // Fixed verison is in "NetTools.Internal" namespace "Bits" class.
+        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("This method returns true when A<=B, not A is greater than or equal (>=) B. use LtE method to check A<=B or not.")]
+        public static bool GE(byte[] A, byte[] B) => LtE(A, B);
+
+        // DON'T FIX this non-intuitive behavior that returns true when A >= B, 
+        // even if the method name means "A is Less than or Equals B", for keeping backward compatibility.
+        // Fixed verison is in "NetTools.Internal" namespace "Bits" class.
+        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("This method returns true when A>=B, not A is less than or equal (<=) B. use GtE method to check A>=B or not.")]
+        public static bool LE(byte[] A, byte[] B) => GtE(A, B);
+
+        public static bool LtE(byte[] A, byte[] B, int offset = 0)
         {
             for (var i = 0; i < A.Length; i++)
             {
@@ -50,7 +60,7 @@ namespace NetTools
             return true;
         }
 
-        public static bool LE(byte[] A, byte[] B, int offset = 0)
+        public static bool GtE(byte[] A, byte[] B, int offset = 0)
         {
             for (var i = 0; i < A.Length; i++)
             {
