@@ -33,6 +33,8 @@ namespace IPRange.Test
         [TestCase("  fe80::c586  -  fe80::c600  ", "fe80::c586", "fe80::c600")]
         [TestCase("3232252004-3232252504", "192.168.64.100", "192.168.66.88")]
         [TestCase("  3232252004  -  3232252504  ", "192.168.64.100", "192.168.66.88")]
+        [TestCase("192.168.1- 192.168.1111", "192.168.0.1", "192.168.4.87")] // 3 part IPv4
+        [TestCase("173.1 -173.1111", "173.0.0.1", "173.0.4.87")] // 2 part IPv4
 
         // with "dash (–)" (0x2013) is also support.
         [TestCase("192.168.61.26–192.168.61.37", "192.168.61.26", "192.168.61.37")]
@@ -85,6 +87,8 @@ namespace IPRange.Test
         [TestCase("192.168.0.0-256", typeof(FormatException))] // shortcut notation, but out of range
         [TestCase("192.168.0.0-1%1", typeof(FormatException))] // ipv4 shortcut, but with scope id at end of range
         [TestCase("192.168.0.0%1-1", typeof(FormatException))] // ipv4 shortcut, but with scope id at begin of range
+        [TestCase("172. 13.0.0/24", typeof(FormatException))] // ipv4, but include spaces
+        [TestCase("fe80::0-fe80: :ffff", typeof(FormatException))] // ipv4, but include spaces
         public void ParseFails()
         {
             TestContext.Run((string input, Type expectedException) =>
