@@ -58,6 +58,11 @@ namespace NetTools
             if (offset < 0) throw new ArgumentException("offset must be greater than or equal 0.", nameof(offset));
             if (A.Length <= offset || B.Length <= offset) throw new ArgumentException("offset must be less than length of A and B.", nameof(offset));
 
+            return LtECore(A, B, offset);
+        }
+
+        internal static bool LtECore(byte[] A, byte[] B, int offset = 0)
+        {
             var length = A.Length;
             if (length > B.Length) length = B.Length;
             for (var i = offset; i < length; i++)
@@ -74,6 +79,11 @@ namespace NetTools
             if (offset < 0) throw new ArgumentException("offset must be greater than or equal 0.", nameof(offset));
             if (A.Length <= offset || B.Length <= offset) throw new ArgumentException("offset must be less than length of A and B.", nameof(offset));
 
+            return GtECore(A, B, offset);
+        }
+
+        internal static bool GtECore(byte[] A, byte[] B, int offset = 0)
+        {
             var length = A.Length;
             if (length > B.Length) length = B.Length;
             for (var i = offset; i < length; i++)
