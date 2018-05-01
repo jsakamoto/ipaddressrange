@@ -16,9 +16,9 @@
     <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
     <NuspecFile>IPAddressRange.nuspec</NuspecFile>
     <Copyright>Copyright © 2012-2018 J.Sakamoto, Mozilla Public License 2.0</Copyright>
-    <AssemblyVersion>3.1.1.0</AssemblyVersion>
-    <FileVersion>3.1.1.0</FileVersion>
-    <Version>3.1.1.0</Version>
+    <AssemblyVersion>3.2.0.0</AssemblyVersion>
+    <FileVersion>3.2.0.0</FileVersion>
+    <Version>3.2.0.0</Version>
     <Authors>J.Sakamoto</Authors>
     <Company />
     <Product>IPAddressRange</Product>
@@ -26,7 +26,10 @@
     <Description>This library allows you to parse range of IP address string such as "192.168.0.0/24" and "192.168.0.0/255.255.255.0" and "192.168.0.0-192.168.0.255", and can conatins check. This library supports both IPv4 and IPv6.</Description>
     <PackageLicenseUrl>https://github.com/jsakamoto/ipaddressrange/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/jsakamoto/ipaddressrange/</PackageProjectUrl>
-    <PackageReleaseNotes>v.3.1.1 - Fix: Error if parsing IP address includes some spaces.
+    <PackageReleaseNotes>v.3.2.0
+ - Fix: Bits.GE/LE operations are reversed.(use GtE/LtE instead.)
+ - Improve: Bts.GtE/LtE methods are more faster now.
+v.3.1.1 - Fix: Error if parsing IP address includes some spaces.
 v.3.1.0 - Support parsing for IPv4 mapped to IPv6 address range.
 v.3.0.0 - Sign the assembly. (make it to strong-named assembly.)
 v.2.2.0 - Enhance: IPv4 shortcut notation support (like "192.168.0.0-255").
