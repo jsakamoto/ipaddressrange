@@ -53,7 +53,7 @@ namespace NetTools
 
         public static bool LtE(byte[] A, byte[] B, int offset = 0)
         {
-            for (var i = 0; i < A.Length; i++)
+            for (var i = offset; i < A.Length; i++)
             {
                 if (A[i] != B[i]) return A[i] <= B[i];
             }
@@ -62,7 +62,7 @@ namespace NetTools
 
         public static bool GtE(byte[] A, byte[] B, int offset = 0)
         {
-            for (var i = 0; i < A.Length; i++)
+            for (var i = offset; i < A.Length; i++)
             {
                 if (A[i] != B[i]) return A[i] >= B[i];
             }

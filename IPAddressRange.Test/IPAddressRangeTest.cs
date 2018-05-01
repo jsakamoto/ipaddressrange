@@ -245,6 +245,31 @@ public class IPAddressRangeTest
     }
 
     [TestMethod]
+    public void ContainsTest_IPv4_mappedTo_IPv6()
+    {
+        var range = IPAddressRange.Parse("::ffff:192.168.10.20-::ffff:192.168.11.20");
+
+        range.Contains(IPAddress.Parse("::ffff:192.168.10.19")).Is(false);
+        range.Contains(IPAddress.Parse("::ffff:192.168.10.20")).Is(true);
+        range.Contains(IPAddress.Parse("::ffff:192.168.11.20")).Is(true);
+        range.Contains(IPAddress.Parse("::ffff:192.168.11.21")).Is(false);
+
+        range.Contains(IPAddress.Parse("fe80::d503:4ee:3882:c586")).Is(false);
+        range.Contains(IPAddress.Parse("192.168.10.20")).Is(false);
+
+        var range1_overLeft = IPAddressRange.Parse("::ffff:192.168.10.19-::ffff:192.168.10.21");
+        var range2_overRight = IPAddressRange.Parse("::ffff:192.168.11.19-::ffff:192.168.11.21");
+        var range3_outOfLeft = IPAddressRange.Parse("::ffff:192.168.10.18-::ffff:192.168.10.19");
+        var range4_outOfRight = IPAddressRange.Parse("::ffff:192.168.11.21-::ffff:192.168.11.22");
+        var range5_justInside = IPAddressRange.Parse("::ffff:192.168.10.20-::ffff:192.168.11.20");
+        range.Contains(range1_overLeft).Is(false);
+        range.Contains(range2_overRight).Is(false);
+        range.Contains(range3_outOfLeft).Is(false);
+        range.Contains(range4_outOfRight).Is(false);
+        range.Contains(range5_justInside).Is(true);
+    }
+
+    [TestMethod]
     public void SubnetMaskLengthTest_Valid()
     {
         var range = new IPAddressRange(IPAddress.Parse("192.168.75.23"), IPAddressRange.SubnetMaskLength(IPAddress.Parse("255.255.254.0")));
