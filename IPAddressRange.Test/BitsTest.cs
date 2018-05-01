@@ -50,6 +50,59 @@ public class BitsTest
         Bits.LtE(
             new byte[] { 0x11, 0xFF, 0xA5 },
             new byte[] { 0x10, 0x3c, 0xA5 }).Is(false);
+
+        // Unmatch bytes count / equal
+        Bits.LtE(
+            new byte[] { 0x12, 0x3c, 0xA5, 0x01 },
+            new byte[] { 0x12, 0x3c, 0xA5 }).Is(true);
+        Bits.LtE(
+            new byte[] { 0x12, 0x3c, 0xA5 },
+            new byte[] { 0x12, 0x3c, 0xA5, 0x01 }).Is(true);
+
+        // Unmatch bytes count / less
+        Bits.LtE(
+            new byte[] { 0x12, 0x3c, 0xA5 },
+            new byte[] { 0x12, 0x4c }).Is(true);
+        Bits.LtE(
+            new byte[] { 0x12, 0x3c },
+            new byte[] { 0x12, 0x4c, 0x00 }).Is(true);
+
+        // Unmatch bytes count / greater
+        Bits.LtE(
+            new byte[] { 0x12, 0x4c, 0x00 },
+            new byte[] { 0x12, 0x3c }).Is(false);
+        Bits.LtE(
+            new byte[] { 0x12, 0x4c },
+            new byte[] { 0x12, 0x3c, 0x00 }).Is(false);
+
+        // offset effect
+        Bits.LtE(
+            new byte[] { 0x00, 0x01 },
+            new byte[] { 0x02, 0x01, 0x03 }, offset: 1).Is(true);
+        Bits.LtE(
+            new byte[] { 0x00, 0x02 },
+            new byte[] { 0x02, 0x01, 0x03 }, offset: 1).Is(false);
+        Bits.LtE(
+            new byte[] { 0x03, 0x01, 0x04 },
+            new byte[] { 0x01, 0x02 }, offset: 1).Is(true);
+    }
+
+    [TestMethod]
+    public void LtE_InvalidParams_Test()
+    {
+        var testA = new byte[] { 0x01, 0x02 };
+        var testB = new byte[] { 0x01, 0x02, 0x03 };
+        var e1 = AssertEx.Throws<ArgumentNullException>(() => Bits.LtE(null, testA));
+        e1.ParamName.Is("A");
+
+        var e2 = AssertEx.Throws<ArgumentNullException>(() => Bits.LtE(testA, null));
+        e2.ParamName.Is("B");
+
+        var e3 = AssertEx.Throws<ArgumentException>(() => Bits.LtE(testA, testA, offset: -1));
+        e3.ParamName.Is("offset");
+
+        var e4 = AssertEx.Throws<ArgumentException>(() => Bits.LtE(testA, testB, offset: testA.Length));
+        e4.ParamName.Is("offset");
     }
 
     [TestMethod]
@@ -72,7 +125,61 @@ public class BitsTest
         Bits.GtE(
             new byte[] { 0x11, 0xFF, 0xA5 },
             new byte[] { 0x10, 0x3c, 0xA5 }).Is(true);
+
+        // Unmatch bytes count / equal
+        Bits.GtE(
+            new byte[] { 0x12, 0x3c, 0xA5, 0x01 },
+            new byte[] { 0x12, 0x3c, 0xA5 }).Is(true);
+        Bits.GtE(
+            new byte[] { 0x12, 0x3c, 0xA5 },
+            new byte[] { 0x12, 0x3c, 0xA5, 0x01 }).Is(true);
+
+        // Unmatch bytes count / less
+        Bits.GtE(
+            new byte[] { 0x12, 0x3c, 0xA5 },
+            new byte[] { 0x12, 0x4c }).Is(false);
+        Bits.GtE(
+            new byte[] { 0x12, 0x3c },
+            new byte[] { 0x12, 0x4c, 0x00 }).Is(false);
+
+        // Unmatch bytes count / greater
+        Bits.GtE(
+            new byte[] { 0x12, 0x4c, 0x00 },
+            new byte[] { 0x12, 0x3c }).Is(true);
+        Bits.GtE(
+            new byte[] { 0x12, 0x4c },
+            new byte[] { 0x12, 0x3c, 0x00 }).Is(true);
+
+        // offset effect
+        Bits.GtE(
+            new byte[] { 0x00, 0x01 },
+            new byte[] { 0x02, 0x01, 0x03 }, offset: 1).Is(true);
+        Bits.GtE(
+            new byte[] { 0x00, 0x02 },
+            new byte[] { 0x02, 0x01, 0x03 }, offset: 1).Is(true);
+        Bits.GtE(
+            new byte[] { 0x03, 0x01, 0x04 },
+            new byte[] { 0x01, 0x02 }, offset: 1).Is(false);
     }
+
+    [TestMethod]
+    public void GtE_InvalidParams_Test()
+    {
+        var testA = new byte[] { 0x01, 0x02 };
+        var testB = new byte[] { 0x01, 0x02, 0x03 };
+        var e1 = AssertEx.Throws<ArgumentNullException>(() => Bits.GtE(null, testA));
+        e1.ParamName.Is("A");
+
+        var e2 = AssertEx.Throws<ArgumentNullException>(() => Bits.GtE(testA, null));
+        e2.ParamName.Is("B");
+
+        var e3 = AssertEx.Throws<ArgumentException>(() => Bits.GtE(testA, testA, offset: -1));
+        e3.ParamName.Is("offset");
+
+        var e4 = AssertEx.Throws<ArgumentException>(() => Bits.GtE(testB, testA, offset: testA.Length));
+        e4.ParamName.Is("offset");
+    }
+
 
     [TestMethod, Obsolete]
     public void KeepingBackwardCompatibility_GETest()

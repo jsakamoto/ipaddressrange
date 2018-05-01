@@ -53,7 +53,14 @@ namespace NetTools
 
         public static bool LtE(byte[] A, byte[] B, int offset = 0)
         {
-            for (var i = offset; i < A.Length; i++)
+            if (A == null) throw new ArgumentNullException(nameof(A));
+            if (B == null) throw new ArgumentNullException(nameof(B));
+            if (offset < 0) throw new ArgumentException("offset must be greater than or equal 0.", nameof(offset));
+            if (A.Length <= offset || B.Length <= offset) throw new ArgumentException("offset must be less than length of A and B.", nameof(offset));
+
+            var length = A.Length;
+            if (length > B.Length) length = B.Length;
+            for (var i = offset; i < length; i++)
             {
                 if (A[i] != B[i]) return A[i] <= B[i];
             }
@@ -62,7 +69,14 @@ namespace NetTools
 
         public static bool GtE(byte[] A, byte[] B, int offset = 0)
         {
-            for (var i = offset; i < A.Length; i++)
+            if (A == null) throw new ArgumentNullException(nameof(A));
+            if (B == null) throw new ArgumentNullException(nameof(B));
+            if (offset < 0) throw new ArgumentException("offset must be greater than or equal 0.", nameof(offset));
+            if (A.Length <= offset || B.Length <= offset) throw new ArgumentException("offset must be less than length of A and B.", nameof(offset));
+
+            var length = A.Length;
+            if (length > B.Length) length = B.Length;
+            for (var i = offset; i < length; i++)
             {
                 if (A[i] != B[i]) return A[i] >= B[i];
             }
