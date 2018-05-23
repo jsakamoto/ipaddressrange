@@ -203,8 +203,6 @@ namespace NetTools
             return
                 Bits.LtECore(this.Begin.GetAddressBytes(), range.Begin.GetAddressBytes(), offset) &&
                 Bits.GtECore(this.End.GetAddressBytes(), range.End.GetAddressBytes(), offset);
-
-            throw new NotImplementedException();
         }
 
         public static IPAddressRange Parse(string ipRangeString)
