@@ -67,7 +67,7 @@ namespace NetTools
         // Pattern 2. Uni address: "127.0.0.1", "::1%eth0"
         private static Regex m2_regex = new Regex(@"^(?<adr>([\d.]+)|([\da-f:]+(:[\d.]+)?(%\w+)?))$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
-        // Pattern 3. Begin end range: "169.258.0.0-169.258.0.255", "fe80::1%23-fe80::ff%23"
+        // Pattern 3. Begin end range: "169.254.0.0-169.254.0.255", "fe80::1%23-fe80::ff%23"
         //            also shortcut notation: "192.168.1.1-7" (IPv4 only)
         private static Regex m3_regex = new Regex(@"^(?<begin>([\d.]+)|([\da-f:]+(:[\d.]+)?(%\w+)?))[ \t]*[\-–][ \t]*(?<end>([\d.]+)|([\da-f:]+(:[\d.]+)?(%\w+)?))$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
@@ -234,7 +234,7 @@ namespace NetTools
                 return new IPAddressRange(IPAddress.Parse(stripScopeId(ipRangeString)));
             }
 
-            // Pattern 3. Begin end range: "169.258.0.0-169.258.0.255"
+            // Pattern 3. Begin end range: "169.254.0.0-169.254.0.255"
             var m3 = m3_regex.Match(ipRangeString);
             if (m3.Success)
             {
