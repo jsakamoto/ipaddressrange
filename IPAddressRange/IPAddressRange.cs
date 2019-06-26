@@ -108,13 +108,13 @@ namespace NetTools
             if (end == null)
                 throw new ArgumentNullException(nameof(end));
 
-            Begin = new IPAddress(begin.GetAddressBytes());
-            End = new IPAddress(end.GetAddressBytes());
+            var beginBytes = begin.GetAddressBytes();
+            var endBytes = end.GetAddressBytes();
+            Begin = new IPAddress(beginBytes);
+            End = new IPAddress(endBytes);
 
             if (Begin.AddressFamily != End.AddressFamily) throw new ArgumentException("Elements must be of the same address family", nameof(end));
 
-            var beginBytes = Begin.GetAddressBytes();
-            var endBytes = End.GetAddressBytes();
             if (!Bits.GtECore(endBytes, beginBytes)) throw new ArgumentException("Begin must be smaller than the End", nameof(begin));
         }
 
