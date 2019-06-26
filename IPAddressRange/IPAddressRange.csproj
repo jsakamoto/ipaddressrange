@@ -15,18 +15,20 @@
     <NetStandardImplicitPackageVersion>1.6.0</NetStandardImplicitPackageVersion>
     <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
     <NuspecFile>IPAddressRange.nuspec</NuspecFile>
-    <Copyright>Copyright © 2012-2018 J.Sakamoto, Mozilla Public License 2.0</Copyright>
+    <Copyright>Copyright © 2012-2019 J.Sakamoto, Mozilla Public License 2.0</Copyright>
     <AssemblyVersion>3.2.0.0</AssemblyVersion>
     <FileVersion>3.2.0.0</FileVersion>
-    <Version>3.2.0.0</Version>
+    <Version>3.2.1.0</Version>
     <Authors>J.Sakamoto</Authors>
     <Company />
     <Product>IPAddressRange</Product>
     <Summary>This library allows you to parse range of IP address string, and can conatins check.</Summary>
     <Description>This library allows you to parse range of IP address string such as "192.168.0.0/24" and "192.168.0.0/255.255.255.0" and "192.168.0.0-192.168.0.255", and can conatins check. This library supports both IPv4 and IPv6.</Description>
-    <PackageLicenseUrl>https://github.com/jsakamoto/ipaddressrange/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/jsakamoto/ipaddressrange/</PackageProjectUrl>
-    <PackageReleaseNotes>v.3.2.0
+    <PackageReleaseNotes>v.3.2.1
+- Fix implementation problem (Remove useless GetAddressBytes)
+v.3.2.0
  - Fix: Bits.GE/LE operations are reversed.(use GtE/LtE instead.)
  - Improve: Bts.GtE/LtE methods are more faster now.
 v.3.1.1 - Fix: Error if parsing IP address includes some spaces.
@@ -49,15 +51,14 @@ v.1.1.0 - Enhance: Add "Contains()" method overload version of IPAddressRange ar
 v.1.0.6 - Fix Package: Repackage with Release build. (1.0.5 was Debug build)
 v.1.0.5 - Fix: IPv4 CIDR range ".../32" causes crush.
 v.1.0.4 - Enhance: support bit mask range not only CIDR range.
-v.1.0.3 - Fix: Can not parse the address which contains hex string.
-</PackageReleaseNotes>
+v.1.0.3 - Fix: Can not parse the address which contains hex string.</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup>
     <SharedNuspecProperties>packageId=$(PackageId);$(SharedNuspecProperties)</SharedNuspecProperties>
     <SharedNuspecProperties>version=$(Version);$(SharedNuspecProperties)</SharedNuspecProperties>
     <SharedNuspecProperties>authors=$(Authors);$(SharedNuspecProperties)</SharedNuspecProperties>
-    <SharedNuspecProperties>licenseUrl=$(PackageLicenseUrl);$(SharedNuspecProperties)</SharedNuspecProperties>
+    <SharedNuspecProperties>licenseExpression=$(PackageLicenseExpression);$(SharedNuspecProperties)</SharedNuspecProperties>
     <SharedNuspecProperties>projectUrl=$(PackageProjectUrl);$(SharedNuspecProperties)</SharedNuspecProperties>
     <SharedNuspecProperties>copyright=$(Copyright);$(SharedNuspecProperties)</SharedNuspecProperties>
     <SharedNuspecProperties>tags=$(PackageTags);$(SharedNuspecProperties)</SharedNuspecProperties>
@@ -86,7 +87,7 @@ $(Description)</DescriptionForSignedEdition>
       <Output TaskParameter="AbsolutePaths" PropertyName="NuspecFileAbsolutePath" />
     </ConvertToAbsolutePath>
     <Message Text="PackProjectInputFile=[$(PackProjectInputFile)]" />
-    <PackTask PackItem="$(PackProjectInputFile)" PackageOutputPath="$(PackageOutputAbsolutePath)" NuspecOutputPath="$(NuspecOutputAbsolutePath)" NuspecFile="$(NuspecFileAbsolutePath)" NuspecBasePath="$(NuspecBasePath)" NuspecProperties="$(NuspecProperties)" />
+    <PackTask PackItem="$(PackProjectInputFile)" PackageOutputPath="$(PackageOutputAbsolutePath)" NuspecOutputPath="$(NuspecOutputAbsolutePath)" NuspecFile="$(NuspecFileAbsolutePath)" NuspecBasePath="$(NuspecBasePath)" NuspecProperties="$(NuspecProperties)" SymbolPackageFormat="snupkg" />
   </Target>
   
 </Project>
