@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.ComponentModel;
+using System.Net.Sockets;
 
 #if NET45
 using System.Runtime.Serialization;
@@ -299,8 +300,15 @@ namespace NetTools
 
         public IEnumerator<IPAddress> GetEnumerator()
         {
+            if(Begin.Equals(End))
+            {
+                yield return Begin;
+                yield break;
+            }
+
             var first = Begin.GetAddressBytes();
             var last = End.GetAddressBytes();
+
             for (var ip = first; Bits.LtECore(ip, last); ip = Bits.Increment(ip))
                 yield return new IPAddress(ip);
         }
@@ -345,6 +353,24 @@ namespace NetTools
                 }
             }
             throw new FormatException(string.Format("{0} is not a CIDR Subnet", ToString()));
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 17;
+                hash = hash * 31 + End.GetHashCode();
+                hash = hash * 31 + Begin.GetHashCode();
+                return hash;
+            }
+        }
+
+        public override bool Equals(object comparand)
+        {
+            return comparand is IPAddressRange range
+                ? range.GetHashCode() == this.GetHashCode()
+                : false;
         }
 
         /// <summary>

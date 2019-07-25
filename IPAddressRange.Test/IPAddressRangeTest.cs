@@ -423,4 +423,12 @@ public class IPAddressRangeTest
             }
         });
     }
+
+    [TestMethod]
+    public void EqualsTest()
+    {
+        var range1 = new IPAddressRange(IPAddress.Parse("192.168.0.80"), 24);
+        var range2 = new IPAddressRange(IPAddress.Parse("192.168.0.80"), 24);
+        range1.Is(range2);
+    }
 }
