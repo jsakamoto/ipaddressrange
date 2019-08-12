@@ -260,11 +260,36 @@ namespace NetTools
             {
                 var baseAdrBytes = IPAddress.Parse(stripScopeId(m4.Groups["adr"].Value)).GetAddressBytes();
                 var maskBytes = IPAddress.Parse(m4.Groups["bitmask"].Value).GetAddressBytes();
+                ValidateSubnetMaskIsLinear(maskBytes);
                 baseAdrBytes = Bits.And(baseAdrBytes, maskBytes);
                 return new IPAddressRange(new IPAddress(baseAdrBytes), new IPAddress(Bits.Or(baseAdrBytes, Bits.Not(maskBytes))));
             }
 
             throw new FormatException("Unknown IP range string.");
+        }
+
+        private static void ValidateSubnetMaskIsLinear(byte[] maskBytes)
+        {
+            var f = maskBytes[0] & 0x80; // 0x00: The bit should be 0, 0x80: The bit should be 1
+            for (var i = 0; i < maskBytes.Length; i++)
+            {
+                var maskByte = maskBytes[i];
+                for (var b = 0; b < 8; b++)
+                {
+                    var bit = maskByte & 0x80;
+                    switch (f)
+                    {
+                        case 0x00:
+                            if (bit != 0x00) throw new FormatException("The subnet mask is not linear.");
+                            break;
+                        case 0x80:
+                            if (bit == 0x00) f = 0x00;
+                            break;
+                        default: throw new Exception();
+                    }
+                    maskByte <<= 1;
+                }
+            }
         }
 
         public static bool TryParse(string ipRangeString, out IPAddressRange ipRange)

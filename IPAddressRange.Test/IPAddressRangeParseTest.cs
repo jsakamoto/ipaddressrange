@@ -78,6 +78,7 @@ namespace IPRange.Test
         [TestCase("fe80::2%eth1-fe80::1%eth1", typeof(ArgumentException))] // bigger to lower
         [TestCase("10.256.1.1", typeof(FormatException))] // invalid ip
         [TestCase("127.0.0.1%1", typeof(FormatException))] // ipv4, but with scope id
+        [TestCase("192.168.0.10/2.3.4", typeof(FormatException))] // ipv4, but subnet mask isn't linear 
         [TestCase("192.168.0.0-192.168.0.1%1", typeof(FormatException))] // ipv4, but with scope id at end of range
         [TestCase("192.168.0.0%1-192.168.0.1", typeof(FormatException))] // ipv4, but with scope id at begin of range
         [TestCase("192.168.0.0%1-192.168.0.1%1", typeof(FormatException))] // ipv4, but with scope id at both of begin and end
