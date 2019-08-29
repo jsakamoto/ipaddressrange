@@ -345,6 +345,25 @@ namespace NetTools
             return Equals(Begin, End) ? Begin.ToString() : string.Format("{0}-{1}", Begin, End);
         }
 
+        private bool Equals(IPAddressRange other)
+        {
+            return Begin.Equals(other.Begin) && End.Equals(other.End);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+
+            return Equals((IPAddressRange)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return new {Begin, End}.GetHashCode();
+        }
+
         public int GetPrefixLength()
         {
             byte[] byteBegin = Begin.GetAddressBytes();

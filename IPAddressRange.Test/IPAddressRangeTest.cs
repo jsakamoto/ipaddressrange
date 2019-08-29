@@ -423,4 +423,60 @@ public class IPAddressRangeTest
             }
         });
     }
+
+    [TestMethod]
+    [TestCase("192.168.0.0-192.168.0.254")]
+    [TestCase("fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:fffe")]
+    public void GetHashCode_SameRange_HashCodesAreSame()
+    {
+        TestContext.Run((string input) =>
+        {
+            Console.WriteLine("TestCase: \"{0}\"", input);
+            var range1 = IPAddressRange.Parse(input);
+            var range2 = IPAddressRange.Parse(input);
+            range1.GetHashCode().Is(range2.GetHashCode());
+        });
+    }
+
+    [TestMethod]
+    [TestCase("192.168.0.0-192.168.0.254", "192.168.0.1-192.168.0.254")]
+    [TestCase("fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:fffe", "fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:fffd")]
+    public void GetHashCode_DifferentRanges_HashCodesAreDifferent()
+    {
+        TestContext.Run((string input1, string input2) =>
+        {
+            Console.WriteLine("TestCase: \"{0}\" and \"{1}\"", input1, input2);
+            var range1 = IPAddressRange.Parse(input1);
+            var range2 = IPAddressRange.Parse(input2);
+            range1.GetHashCode().IsNot(range2.GetHashCode());
+        });
+    }
+
+    [TestMethod]
+    [TestCase("192.168.0.0-192.168.0.254")]
+    [TestCase("fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:fffe")]
+    public void Equals_SameRange_ReturnsTrue()
+    {
+        TestContext.Run((string input) =>
+        {
+            Console.WriteLine("TestCase: \"{0}\"", input);
+            var range1 = IPAddressRange.Parse(input);
+            var range2 = IPAddressRange.Parse(input);
+            range1.Equals(range2).IsTrue();
+        });
+    }
+
+    [TestMethod]
+    [TestCase("192.168.0.0-192.168.0.254", "192.168.0.1-192.168.0.254")]
+    [TestCase("fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:fffe", "fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:fffd")]
+    public void Equals_SameRange_ReturnsFalse()
+    {
+        TestContext.Run((string input1, string input2) =>
+        {
+            Console.WriteLine("TestCase: \"{0}\" and \"{1}\"", input1, input2);
+            var range1 = IPAddressRange.Parse(input1);
+            var range2 = IPAddressRange.Parse(input2);
+            range1.Equals(range2).IsFalse();
+        });
+    }
 }
