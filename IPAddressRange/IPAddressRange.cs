@@ -56,9 +56,9 @@ namespace NetTools
 
 #if NET45
     [Serializable]
-    public class IPAddressRange : ISerializable, IEnumerable<IPAddress>, IReadOnlyDictionary<string, string>
+    public class IPAddressRange : ISerializable, IEnumerable<IPAddress>, IReadOnlyDictionary<string, string>, IEquatable<IPAddressRange>
 #else
-    public class IPAddressRange : IEnumerable<IPAddress>, IReadOnlyDictionary<string, string>
+    public class IPAddressRange : IEnumerable<IPAddress>, IReadOnlyDictionary<string, string>, IEquatable<IPAddressRange>
 #endif
     {
         // Pattern 1. CIDR range: "192.168.0.0/24", "fe80::%lo0/10"
@@ -345,7 +345,7 @@ namespace NetTools
             return Equals(Begin, End) ? Begin.ToString() : string.Format("{0}-{1}", Begin, End);
         }
 
-        private bool Equals(IPAddressRange other)
+        public bool Equals(IPAddressRange other)
         {
             return Begin.Equals(other.Begin) && End.Equals(other.End);
         }
