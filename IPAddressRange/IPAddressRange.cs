@@ -361,7 +361,10 @@ namespace NetTools
 
         public override int GetHashCode()
         {
-            return new {Begin, End}.GetHashCode();
+            var hashCode = 1903003160;
+            hashCode = hashCode * -1521134295 + EqualityComparer<IPAddress>.Default.GetHashCode(Begin);
+            hashCode = hashCode * -1521134295 + EqualityComparer<IPAddress>.Default.GetHashCode(End);
+            return hashCode;
         }
 
         public int GetPrefixLength()
