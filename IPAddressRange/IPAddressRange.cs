@@ -347,7 +347,7 @@ namespace NetTools
 
         public bool Equals(IPAddressRange other)
         {
-            return Begin.Equals(other.Begin) && End.Equals(other.End);
+            return other != null && Begin.Equals(other.Begin) && End.Equals(other.End);
         }
 
         public override bool Equals(object obj)

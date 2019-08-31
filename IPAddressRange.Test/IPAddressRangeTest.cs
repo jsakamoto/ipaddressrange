@@ -479,4 +479,12 @@ public class IPAddressRangeTest
             range1.Equals(range2).IsFalse();
         });
     }
+
+    [TestMethod]
+    public void Equals_WithNull_ReturnsFalse()
+    {
+        var range1 = IPAddressRange.Parse("192.168.0.0/24");
+        var range2 = default(IPAddressRange);
+        range1.Equals(range2).IsFalse();
+    }
 }
