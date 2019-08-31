@@ -16,7 +16,7 @@
     <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
     <NuspecFile>IPAddressRange.nuspec</NuspecFile>
     <Copyright>Copyright © 2012-2019 J.Sakamoto, Mozilla Public License 2.0</Copyright>
-    <Version>3.2.2.0</Version>
+    <Version>4.0.0.0</Version>
     <Authors>J.Sakamoto</Authors>
     <Company />
     <Product>IPAddressRange</Product>
@@ -24,7 +24,9 @@
     <Description>This library allows you to parse range of IP address string such as "192.168.0.0/24" and "192.168.0.0/255.255.255.0" and "192.168.0.0-192.168.0.255", and can conatins check. This library supports both IPv4 and IPv6.</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/jsakamoto/ipaddressrange/</PackageProjectUrl>
-    <PackageReleaseNotes>v.3.2.2
+    <PackageReleaseNotes>v.4.0.0
+- Implement "IEquatable&lt;T&gt;" interface and "GetHashCode()".
+v.3.2.2
 - Fix: Parsing non-linear subnet mask should be failed.
 v.3.2.1
 - Fix implementation problem (Remove useless GetAddressBytes)

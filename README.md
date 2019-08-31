@@ -65,6 +65,8 @@ rangeI.ToCidrString();  // is 192.168.0.0/24
 
 Release Note
 ------------
+
+- **v.4.0.0** - Implement "IEquatable&lt;T&gt;" interface and "GetHashCode()".
 - **v.3.2.2** - Fix: Parsing non-linear subnet mask should be failed.
 - **v.3.2.1** - Fix implementation problem (Remove useless GetAddressBytes)
 - **v.3.2.0**
