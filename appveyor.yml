@@ -1,5 +1,5 @@
 version: 1.0.{build}
-image: Visual Studio 2017
+image: Visual Studio 2019
 configuration: Debug
 platform: Any CPU
 environment:
@@ -10,10 +10,10 @@ build:
   verbosity: minimal
 test_script:
 - cmd: >-
-    cd IPAddressRange.Test.Core
+    cd IPAddressRange.Test
 
     dotnet test
 
-    cd ..\IPAddressRange.Test\bin\Debug
+    cd ..\IPAddressRange.Test\bin\Debug\net45
 
-    vstest.console /logger:Appveyor IPRange.Test.dll
+    vstest.console /logger:Appveyor IPAddressRange.Test.dll
