@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2027
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30404.54
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IPAddressRange", "IPAddressRange\IPAddressRange.csproj", "{D3DEA965-247F-4C4C-B3B0-44A039C75A5C}"
 EndProject
@@ -13,6 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "README", "README", "{237703
 	ProjectSection(SolutionItems) = preProject
 		LICENSE = LICENSE
 		README.md = README.md
+		RELEASE-NOTES.txt = RELEASE-NOTES.txt
 	EndProjectSection
 EndProject
 Global
