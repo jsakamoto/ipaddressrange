@@ -5,13 +5,12 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.ComponentModel;
-using NetTools.Internals;
 
 #if NET45
 using System.Runtime.Serialization;
 #endif
 
-namespace NetTools
+namespace NetTools.PrevVersion
 {
     // NOTE: Why implement IReadOnlyDictionary<TKey,TVal> interface? 
     // =============================================================
@@ -79,8 +78,6 @@ namespace NetTools
 
         public IPAddress End { get; set; }
 
-        private IRangeOperator Operator { get; set; }
-
         /// <summary>
         /// Creates an empty range object, equivalent to "0.0.0.0/0".
         /// </summary>
@@ -96,7 +93,6 @@ namespace NetTools
                 throw new ArgumentNullException(nameof(singleAddress));
 
             Begin = End = singleAddress;
-            Operator = RangeOperatorFactory.Create(this);
         }
 
         /// <summary>
@@ -120,8 +116,6 @@ namespace NetTools
             if (Begin.AddressFamily != End.AddressFamily) throw new ArgumentException("Elements must be of the same address family", nameof(end));
 
             if (!Bits.GtECore(endBytes, beginBytes)) throw new ArgumentException("Begin must be smaller than the End", nameof(begin));
-
-            Operator = RangeOperatorFactory.Create(this);
         }
 
         /// <summary>
@@ -151,7 +145,6 @@ namespace NetTools
             var parsed = Parse(ipRangeString);
             Begin = parsed.Begin;
             End = parsed.End;
-            Operator = RangeOperatorFactory.Create(this);
         }
 
 #if NET45
@@ -166,7 +159,6 @@ namespace NetTools
 
             this.Begin = deserialize("Begin");
             this.End = deserialize("End");
-            Operator = RangeOperatorFactory.Create(this);
         }
 
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -185,7 +177,14 @@ namespace NetTools
 
             if (ipaddress.AddressFamily != this.Begin.AddressFamily) return false;
 
-            return Operator.Contains(ipaddress);
+            var offset = 0;
+            if (Begin.IsIPv4MappedToIPv6 && ipaddress.IsIPv4MappedToIPv6)
+            {
+                offset = 12; //ipv4 has prefix of 10 zero bytes and two 255 bytes. 
+            }
+
+            var adrBytes = ipaddress.GetAddressBytes();
+            return Bits.LtECore(this.Begin.GetAddressBytes(), adrBytes, offset) && Bits.GtECore(this.End.GetAddressBytes(), adrBytes, offset);
         }
 
         public bool Contains(IPAddressRange range)
@@ -195,7 +194,15 @@ namespace NetTools
 
             if (this.Begin.AddressFamily != range.Begin.AddressFamily) return false;
 
-            return Operator.Contains(range);
+            var offset = 0;
+            if (Begin.IsIPv4MappedToIPv6 && range.Begin.IsIPv4MappedToIPv6)
+            {
+                offset = 12; //ipv4 has prefix of 10 zero bytes and two 255 bytes. 
+            }
+
+            return
+                Bits.LtECore(this.Begin.GetAddressBytes(), range.Begin.GetAddressBytes(), offset) &&
+                Bits.GtECore(this.End.GetAddressBytes(), range.End.GetAddressBytes(), offset);
         }
 
         public static IPAddressRange Parse(string ipRangeString)
@@ -317,7 +324,10 @@ namespace NetTools
 
         public IEnumerator<IPAddress> GetEnumerator()
         {
-            return Operator.GetEnumerator();
+            var first = Begin.GetAddressBytes();
+            var last = End.GetAddressBytes();
+            for (var ip = first; Bits.LtECore(ip, last); ip = Bits.Increment(ip))
+                yield return new IPAddress(ip);
         }
 
         IEnumerator IEnumerable.GetEnumerator()
