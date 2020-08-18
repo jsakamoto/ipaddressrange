@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Net;
 
 namespace NetTools.Internals
@@ -44,5 +45,7 @@ namespace NetTools.Internals
             for (var ip = first; Bits.LtECore(ip, last); ip = Bits.Increment(ip))
                 yield return new IPAddress(ip);
         }
+
+        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
     }
 }

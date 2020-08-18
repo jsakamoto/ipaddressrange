@@ -404,7 +404,7 @@ namespace NetTools
         /// <summary>
         /// Returns the input typed as IEnumerable&lt;IPAddress&gt;
         /// </summary>
-        public IEnumerable<IPAddress> AsEnumerable() => (this as IEnumerable<IPAddress>);
+        public IEnumerable<IPAddress> AsEnumerable() => Operator;
 
         private IEnumerable<KeyValuePair<string, string>> GetDictionaryItems()
         {

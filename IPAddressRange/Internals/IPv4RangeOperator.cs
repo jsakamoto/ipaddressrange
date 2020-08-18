@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 
 namespace NetTools.Internals
 {
-    internal class IPv4RangeOperator : IRangeOperator
+    internal class IPv4RangeOperator : IRangeOperator, ICollection<IPAddress>
     {
         private UInt32 Begin { get; }
 
@@ -36,5 +37,32 @@ namespace NetTools.Internals
                 yield return adr.ToIPv4Address();
             }
         }
+
+        int ICollection<IPAddress>.Count => (int)((End - Begin) + 1);
+
+        bool ICollection<IPAddress>.IsReadOnly => true;
+
+        void ICollection<IPAddress>.Add(IPAddress item) => throw new InvalidOperationException();
+
+        void ICollection<IPAddress>.Clear() => throw new InvalidOperationException();
+
+        bool ICollection<IPAddress>.Contains(IPAddress item)
+        {
+            return this.Contains(item);
+        }
+
+        void ICollection<IPAddress>.CopyTo(IPAddress[] array, int arrayIndex)
+        {
+            if ((array.Length - arrayIndex) < (this as ICollection<IPAddress>).Count) throw new ArgumentException();
+
+            foreach (var ipAddress in this)
+            {
+                array[arrayIndex++] = ipAddress;
+            }
+        }
+
+        bool ICollection<IPAddress>.Remove(IPAddress item) => throw new InvalidOperationException();
+
+        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
     }
 }
