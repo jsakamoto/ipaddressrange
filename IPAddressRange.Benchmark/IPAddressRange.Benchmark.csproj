@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\IPAddressRange.PrevVersion\IPAddressRange.PrevVersion.csproj" />
     <ProjectReference Include="..\IPAddressRange\IPAddressRange.csproj" />
   </ItemGroup>
 
