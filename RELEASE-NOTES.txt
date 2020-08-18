@@ -1,3 +1,6 @@
+v.4.1.0-Preview1
+- Improved operation performance for IPv4 address range.
+
 v.4.0.0
 - Implement "IEquatable<T>" interface and "GetHashCode()".
 
