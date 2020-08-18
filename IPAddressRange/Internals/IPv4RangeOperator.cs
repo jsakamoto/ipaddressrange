@@ -1,48 +1,40 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 
 namespace NetTools.Internals
 {
     internal class IPv4RangeOperator : IRangeOperator
     {
-        private IPAddressRange Range { get; }
+        private UInt32 Begin { get; }
+
+        private UInt32 End { get; }
 
         public IPv4RangeOperator(IPAddressRange range)
         {
-            this.Range = range;
+            Begin = range.Begin.ToUInt32();
+            End = range.End.ToUInt32();
         }
 
         public bool Contains(IPAddress ipaddress)
         {
-            var offset = 0;
-            if (Range.Begin.IsIPv4MappedToIPv6 && ipaddress.IsIPv4MappedToIPv6)
-            {
-                offset = 12; //ipv4 has prefix of 10 zero bytes and two 255 bytes. 
-            }
-
-            var adrBytes = ipaddress.GetAddressBytes();
-            return Bits.LtECore(this.Range.Begin.GetAddressBytes(), adrBytes, offset) && Bits.GtECore(this.Range.End.GetAddressBytes(), adrBytes, offset);
+            var address = ipaddress.ToUInt32();
+            return Begin <= address && address <= End;
         }
 
         public bool Contains(IPAddressRange range)
         {
-            var offset = 0;
-            if (Range.Begin.IsIPv4MappedToIPv6 && range.Begin.IsIPv4MappedToIPv6)
-            {
-                offset = 12; //ipv4 has prefix of 10 zero bytes and two 255 bytes. 
-            }
-
-            return
-                Bits.LtECore(Range.Begin.GetAddressBytes(), range.Begin.GetAddressBytes(), offset) &&
-                Bits.GtECore(Range.End.GetAddressBytes(), range.End.GetAddressBytes(), offset);
+            var rangeBegin = range.Begin.ToUInt32();
+            var rangeEnd = range.End.ToUInt32();
+            return Begin <= rangeBegin && rangeEnd <= End;
         }
 
         public IEnumerator<IPAddress> GetEnumerator()
         {
-            var first = Range.Begin.GetAddressBytes();
-            var last = Range.End.GetAddressBytes();
-            for (var ip = first; Bits.LtECore(ip, last); ip = Bits.Increment(ip))
-                yield return new IPAddress(ip);
+            for (UInt32 adr = Begin; adr <= End; adr++)
+            {
+                yield return adr.ToIPv4Address();
+            }
         }
     }
 }
