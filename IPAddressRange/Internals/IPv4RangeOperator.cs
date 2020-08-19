@@ -5,7 +5,7 @@ using System.Net;
 
 namespace NetTools.Internals
 {
-    internal class IPv4RangeOperator : IRangeOperator, ICollection<IPAddress>
+    internal class IPv4RangeOperator : IRangeOperator
     {
         private UInt32 Begin { get; }
 

@@ -3,9 +3,8 @@ using System.Net;
 
 namespace NetTools.Internals
 {
-    internal interface IRangeOperator : IEnumerable<IPAddress>
+    internal interface IRangeOperator : ICollection<IPAddress>
     {
-        bool Contains(IPAddress ipaddress);
         bool Contains(IPAddressRange range);
     }
 }
