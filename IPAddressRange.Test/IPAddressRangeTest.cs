@@ -11,13 +11,6 @@ public class IPAddressRangeTest
 {
     public TestContext TestContext { get; set; }
 
-
-    public void MyMethod()
-    {
-        IEnumerable<IPAddress> x = IPAddressRange.Parse("127.0.0.1/24");
-        var y = x.GetEnumerator();
-    }
-
     [TestMethod]
     public void CtorTest_Empty()
     {
@@ -486,5 +479,19 @@ public class IPAddressRangeTest
         var range1 = IPAddressRange.Parse("192.168.0.0/24");
         var range2 = default(IPAddressRange);
         range1.Equals(range2).IsFalse();
+    }
+
+    [TestMethod]
+    public void Count_IPv4_Test()
+    {
+        var ipAddressRange = IPAddressRange.Parse("10.0.0.0/8");
+        ipAddressRange.AsEnumerable().Count().Is(16777216);
+    }
+
+    [TestMethod]
+    public void Count_IPv6_Test()
+    {
+        var ipAddressRange = IPAddressRange.Parse("fe80::0000:0000-fe80::0100:0001");
+        ipAddressRange.AsEnumerable().Count().Is(16777218);
     }
 }
