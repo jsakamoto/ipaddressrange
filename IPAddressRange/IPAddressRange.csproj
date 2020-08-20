@@ -16,7 +16,7 @@
     <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
     <NuspecFile>IPAddressRange.nuspec</NuspecFile>
     <Copyright>Copyright © 2012-2020 J.Sakamoto, Mozilla Public License 2.0</Copyright>
-    <Version>4.1.0.0-preview1</Version>
+    <Version>4.1.0</Version>
     <Authors>J.Sakamoto</Authors>
     <Company />
     <Product>IPAddressRange</Product>
