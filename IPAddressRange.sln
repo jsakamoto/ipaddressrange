@@ -12,7 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "README", "README", "{237703
 		RELEASE-NOTES.txt = RELEASE-NOTES.txt
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IPAddressRange.Test", "IPAddressRange.Test\IPAddressRange.Test.csproj", "{9A01AF46-6AE0-425A-BD1E-6575122C6BAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IPAddressRange.Test", "IPAddressRange.Test\IPAddressRange.Test.csproj", "{9A01AF46-6AE0-425A-BD1E-6575122C6BAB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
