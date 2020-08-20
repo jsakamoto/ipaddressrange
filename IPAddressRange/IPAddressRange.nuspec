@@ -18,6 +18,7 @@
     </releaseNotes>
     <copyright>$copyright$</copyright>
     <tags>$tags$</tags>
+    <icon>nupkg-icon.png</icon>
     <dependencies>
       <group targetFramework=".NETFramework4.5" />
       <group targetFramework="uap" />
@@ -31,5 +32,6 @@
     <file src="bin\Release\net45\IPAddressRange.XML" target="lib\net45" />
     <file src="bin\Release\netstandard1.4\IPAddressRange.dll" target="lib\netstandard1.4" />
     <file src="bin\Release\netstandard1.4\IPAddressRange.XML" target="lib\netstandard1.4" />
+    <file src="..\.assets\nupkg-icon.png" target="nupkg-icon.png" />
   </files>
 </package>

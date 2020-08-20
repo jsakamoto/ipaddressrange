@@ -28,6 +28,17 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <PackageIcon>nupkg-icon.png</PackageIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\.assets\nupkg-icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+      <Visible>false</Visible>
+    </None>
+  </ItemGroup>
+
+  <PropertyGroup>
     <SharedNuspecProperties>packageId=$(PackageId);$(SharedNuspecProperties)</SharedNuspecProperties>
     <SharedNuspecProperties>version=$(Version);$(SharedNuspecProperties)</SharedNuspecProperties>
     <SharedNuspecProperties>authors=$(Authors);$(SharedNuspecProperties)</SharedNuspecProperties>

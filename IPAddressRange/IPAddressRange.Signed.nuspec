@@ -18,10 +18,12 @@
     </releaseNotes>
     <copyright>$copyright$</copyright>
     <tags>$tags$</tags>
+    <icon>nupkg-icon.png</icon>
     <dependencies>
       <dependency id="IPAddressRange" version="$version$"/>
     </dependencies>
   </metadata>
   <files>
+    <file src="..\.assets\nupkg-icon.png" target="nupkg-icon.png" />
   </files>
 </package>
