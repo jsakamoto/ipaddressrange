@@ -60,13 +60,10 @@
       <NuspecFile>IPAddressRange.Signed.nuspec</NuspecFile>
       <TitleForSignedEdition>[Superseded] IPAddressRange.Signed</TitleForSignedEdition>
       <DescriptionForSignedEdition>
-        [Superseded] This package became  only metadata package for installing "IPAddressRange" NuGet package, because "IPAddressRange" NuGet package became strong-named assembly.
-
-        Please consider to installing "IPAddress" NuGet package directly instead of this package.
-
-        ----------------------------
-
-        $(Description)
+        <![CDATA[[Superseded] This package became  only metadata package for installing "IPAddressRange" NuGet package, because "IPAddressRange" NuGet package became strong-named assembly.
+Please consider to installing "IPAddress" NuGet package directly instead of this package.
+----------------------------
+$(Description)]]>
       </DescriptionForSignedEdition>
       <NuspecProperties>title=$(TitleForSignedEdition);$(SharedNuspecProperties)</NuspecProperties>
       <NuspecProperties>description=$(DescriptionForSignedEdition);$(NuspecProperties)</NuspecProperties>
