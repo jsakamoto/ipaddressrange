@@ -195,6 +195,9 @@ public class IPAddressRangeTest
         range.Contains(IPAddress.Parse("::1")).Is(false);
         range.Contains(IPAddress.Parse("fe80::d503:4ee:3882:c586")).Is(true);
         range.Contains(IPAddress.Parse("fe80::d503:4ee:3882:c586%3")).Is(true);
+
+        range = IPAddressRange.Parse("::/0");
+        range.Contains(IPAddress.Parse("::1")).Is(false);
     }
 
     [TestMethod]
