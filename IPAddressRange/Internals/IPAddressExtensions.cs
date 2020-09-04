@@ -17,6 +17,7 @@ namespace NetTools.Internals
         {
             var addressBytes = ipAddress.GetAddressBytes();
             Array.Reverse(addressBytes);
+            Array.Resize(ref addressBytes, addressBytes.Length + 1);
             return new BigInteger(addressBytes);
         }
 
@@ -30,6 +31,7 @@ namespace NetTools.Internals
         public static IPAddress ToIPv6Address(ref this BigInteger value)
         {
             var addressBytes = value.ToByteArray();
+            Array.Resize(ref addressBytes, 16);
             Array.Reverse(addressBytes);
             return new IPAddress(addressBytes);
         }

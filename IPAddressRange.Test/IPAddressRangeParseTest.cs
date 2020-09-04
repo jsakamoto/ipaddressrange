@@ -1,6 +1,4 @@
 ﻿using System;
-using System.CodeDom;
-using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NetTools;
 
@@ -17,7 +15,7 @@ namespace IPRange.Test
         [TestCase("  192.168.60.13  ", "192.168.60.13", "192.168.60.13")]
         [TestCase("fe80::d503:4ee:3882:c586", "fe80::d503:4ee:3882:c586", "fe80::d503:4ee:3882:c586")]
         [TestCase("  fe80::d503:4ee:3882:c586  ", "fe80::d503:4ee:3882:c586", "fe80::d503:4ee:3882:c586")]
-        [TestCase("::", "::", "::")]
+        [TestCase("::/0", "::", "ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff")]
         [TestCase("3232252004", "192.168.64.100", "192.168.64.100")] // decimal - new 
         [TestCase("  3232252004  ", "192.168.64.100", "192.168.64.100")] // decimal - new 
 
