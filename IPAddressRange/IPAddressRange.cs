@@ -143,6 +143,8 @@ namespace NetTools
 
             Begin = new IPAddress(baseAdrBytes);
             End = new IPAddress(Bits.Or(baseAdrBytes, Bits.Not(maskBytes)));
+
+            Operator = RangeOperatorFactory.Create(this);
         }
 
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Use IPAddressRange.Parse static method instead.")]

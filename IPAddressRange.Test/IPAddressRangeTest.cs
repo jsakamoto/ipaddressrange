@@ -29,6 +29,7 @@ public class IPAddressRangeTest
         range.Begin.ToString().Is("192.168.0.88");
         range.End.AddressFamily.Is(AddressFamily.InterNetwork);
         range.End.ToString().Is("192.168.0.88");
+        range.Contains(range.Begin).Is(true);
     }
 
     [TestMethod]
@@ -39,6 +40,7 @@ public class IPAddressRangeTest
         range.Begin.ToString().Is("192.168.0.0");
         range.End.AddressFamily.Is(AddressFamily.InterNetwork);
         range.End.ToString().Is("192.168.0.255");
+        range.Contains(range.Begin).Is(true);
     }
 
     [TestMethod]
@@ -51,6 +53,7 @@ public class IPAddressRangeTest
         range.Begin.ToString().Is("ff80::1");
         range.End.AddressFamily.Is(AddressFamily.InterNetworkV6);
         range.End.ToString().Is("ff80::34");
+        range.Contains(range.Begin).Is(true);
     }
 
     [TestMethod]
@@ -63,6 +66,7 @@ public class IPAddressRangeTest
         range.Begin.ToString().Is("ff80::56");
         range.End.AddressFamily.Is(AddressFamily.InterNetworkV6);
         range.End.ToString().Is("ff80::789");
+        range.Contains(range.Begin).Is(true);
     }
 
     [TestMethod]
