@@ -1,3 +1,6 @@
+v.4.1.2
+- Fix: "Contains()" method was broken when using the mask length constructor.
+
 v.4.1.1
 - Fix: "Contains()" method of IPv6 range returns an invalid result in some cases.
 
