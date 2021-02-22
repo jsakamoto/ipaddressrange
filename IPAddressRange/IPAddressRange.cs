@@ -75,9 +75,28 @@ namespace NetTools
         // Pattern 4. Bit mask range: "192.168.0.0/255.255.255.0"
         private static Regex m4_regex = new Regex(@"^(?<adr>([\d.]+)|([\da-f:]+(:[\d.]+)?(%\w+)?))[ \t]*/[ \t]*(?<bitmask>[\da-f\.:]+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
-        public IPAddress Begin { get; set; }
+        private IPAddress BeginValue;
+        public IPAddress Begin
+        {
+            get => BeginValue;
+            set
+            {
+                if (BeginValue == value) return;
+                BeginValue = value;
+                if (Operator != null) Operator = RangeOperatorFactory.Create(this);
+            }
+        }
 
-        public IPAddress End { get; set; }
+        private IPAddress EndValue;
+        public IPAddress End {
+            get => EndValue;
+            set
+            {
+                if (EndValue == value) return;
+                EndValue = value;
+                if (Operator != null) Operator = RangeOperatorFactory.Create(this);
+            }
+        }
 
         private IRangeOperator Operator { get; set; }
 
