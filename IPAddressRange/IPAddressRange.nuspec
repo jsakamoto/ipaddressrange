@@ -21,7 +21,6 @@
     <icon>nupkg-icon.png</icon>
     <dependencies>
       <group targetFramework=".NETFramework4.5" />
-      <group targetFramework="uap" />
       <group targetFramework=".NETStandard1.4">
         <dependency id="NETStandard.Library" version="1.6.1" exclude="Build,Analyzers" />
       </group>

@@ -15,8 +15,8 @@
     <NetStandardImplicitPackageVersion>1.6.0</NetStandardImplicitPackageVersion>
     <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
     <NuspecFile>IPAddressRange.nuspec</NuspecFile>
-    <Copyright>Copyright © 2012-2020 J.Sakamoto, Mozilla Public License 2.0</Copyright>
-    <Version>4.1.2</Version>
+    <Copyright>Copyright © 2012-2021 J.Sakamoto, Mozilla Public License 2.0</Copyright>
+    <Version>4.1.3</Version>
     <Authors>J.Sakamoto</Authors>
     <Company />
     <Product>IPAddressRange</Product>
@@ -72,7 +72,15 @@ $(Description)]]>
       <Output TaskParameter="AbsolutePaths" PropertyName="NuspecFileAbsolutePath" />
     </ConvertToAbsolutePath>
     <Message Text="PackProjectInputFile=[$(PackProjectInputFile)]" />
-    <PackTask PackItem="$(PackProjectInputFile)" PackageOutputPath="$(PackageOutputAbsolutePath)" NuspecOutputPath="$(NuspecOutputAbsolutePath)" NuspecFile="$(NuspecFileAbsolutePath)" NuspecBasePath="$(NuspecBasePath)" NuspecProperties="$(NuspecProperties)" SymbolPackageFormat="snupkg" />
+    <PackTask PackItem="$(PackProjectInputFile)"
+              PackageOutputPath="$(PackageOutputAbsolutePath)"
+              NuspecOutputPath="$(NuspecOutputAbsolutePath)"
+              NuspecFile="$(NuspecFileAbsolutePath)"
+              NuspecBasePath="$(NuspecBasePath)"
+              NuspecProperties="$(NuspecProperties)"
+              SymbolPackageFormat="snupkg"
+              RestoreOutputPath="$(RestoreOutputAbsolutePath)"
+    />
   </Target>
 
   <Target Name="PreparePackageReleaseNoteFromFile" BeforeTargets="GenerateNuspec">
