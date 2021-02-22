@@ -63,17 +63,17 @@ namespace NetTools
 #endif
     {
         // Pattern 1. CIDR range: "192.168.0.0/24", "fe80::%lo0/10"
-        private static Regex m1_regex = new Regex(@"^(?<adr>([\d.]+)|([\da-f:]+(:[\d.]+)?(%\w+)?))[ \t]*/[ \t]*(?<maskLen>\d+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static readonly Regex m1_regex = new Regex(@"^(?<adr>([\d.]+)|([\da-f:]+(:[\d.]+)?(%\w+)?))[ \t]*/[ \t]*(?<maskLen>\d+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         // Pattern 2. Uni address: "127.0.0.1", "::1%eth0"
-        private static Regex m2_regex = new Regex(@"^(?<adr>([\d.]+)|([\da-f:]+(:[\d.]+)?(%\w+)?))$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static readonly Regex m2_regex = new Regex(@"^(?<adr>([\d.]+)|([\da-f:]+(:[\d.]+)?(%\w+)?))$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         // Pattern 3. Begin end range: "169.254.0.0-169.254.0.255", "fe80::1%23-fe80::ff%23"
         //            also shortcut notation: "192.168.1.1-7" (IPv4 only)
-        private static Regex m3_regex = new Regex(@"^(?<begin>([\d.]+)|([\da-f:]+(:[\d.]+)?(%\w+)?))[ \t]*[\-–][ \t]*(?<end>([\d.]+)|([\da-f:]+(:[\d.]+)?(%\w+)?))$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static readonly Regex m3_regex = new Regex(@"^(?<begin>([\d.]+)|([\da-f:]+(:[\d.]+)?(%\w+)?))[ \t]*[\-–][ \t]*(?<end>([\d.]+)|([\da-f:]+(:[\d.]+)?(%\w+)?))$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         // Pattern 4. Bit mask range: "192.168.0.0/255.255.255.0"
-        private static Regex m4_regex = new Regex(@"^(?<adr>([\d.]+)|([\da-f:]+(:[\d.]+)?(%\w+)?))[ \t]*/[ \t]*(?<bitmask>[\da-f\.:]+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static readonly Regex m4_regex = new Regex(@"^(?<adr>([\d.]+)|([\da-f:]+(:[\d.]+)?(%\w+)?))[ \t]*/[ \t]*(?<bitmask>[\da-f\.:]+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         private IPAddress _Begin;
 
@@ -169,7 +169,7 @@ namespace NetTools
             var names = new List<string>();
             foreach (var item in info) names.Add(item.Name);
 
-            Func<string, IPAddress> deserialize = (name) => names.Contains(name) ?
+            IPAddress deserialize(string name) => names.Contains(name) ?
                  IPAddress.Parse(info.GetValue(name, typeof(object)).ToString()) :
                  new IPAddress(0L);
 
@@ -348,7 +348,7 @@ namespace NetTools
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
+            if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
 
@@ -365,20 +365,16 @@ namespace NetTools
 
         public int GetPrefixLength()
         {
-            byte[] byteBegin = Begin.GetAddressBytes();
-            byte[] byteEnd = End.GetAddressBytes();
+            var byteBegin = Begin.GetAddressBytes();
 
             // Handle single IP
-            if (Begin.Equals(End))
-            {
-                return byteBegin.Length * 8;
-            }
+            if (Begin.Equals(End)) return byteBegin.Length * 8;
 
-            int length = byteBegin.Length * 8;
+            var length = byteBegin.Length * 8;
 
-            for (int i = 0; i < length; i++)
+            for (var i = 0; i < length; i++)
             {
-                byte[] mask = Bits.GetBitMask(byteBegin.Length, i);
+                var mask = Bits.GetBitMask(byteBegin.Length, i);
                 if (new IPAddress(Bits.And(byteBegin, mask)).Equals(Begin))
                 {
                     if (new IPAddress(Bits.Or(byteBegin, Bits.Not(mask))).Equals(End))
