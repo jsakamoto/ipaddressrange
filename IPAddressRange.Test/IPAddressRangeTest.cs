@@ -215,6 +215,88 @@ public class IPAddressRangeTest
     }
 
     [TestMethod]
+    public void ContainsTest_RewriteProperties_IPv4tov6()
+    {
+        var range = new IPAddressRange();
+        ContainsTest_RewriteProperties_IPv4(range);
+        ContainsTest_RewriteProperties_IPv6(range);
+    }
+
+    [TestMethod]
+    public void ContainsTest_RewriteProperties_IPv6tov4()
+    {
+        var range = new IPAddressRange();
+        ContainsTest_RewriteProperties_IPv4(range);
+        ContainsTest_RewriteProperties_IPv6(range);
+    }
+
+    private static void ContainsTest_RewriteProperties_IPv4(IPAddressRange range)
+    {
+        range.Begin = IPAddress.Parse("192.168.60.26");
+        range.End = IPAddress.Parse("192.168.60.37");
+
+        range.Contains(IPAddress.Parse("192.168.60.25")).Is(false);
+        range.Contains(IPAddress.Parse("192.168.60.26")).Is(true);
+        range.Contains(IPAddress.Parse("192.168.60.27")).Is(true);
+
+        range.Contains(IPAddress.Parse("192.168.60.36")).Is(true);
+        range.Contains(IPAddress.Parse("192.168.60.37")).Is(true);
+        range.Contains(IPAddress.Parse("192.168.60.38")).Is(false);
+    }
+
+    private static void ContainsTest_RewriteProperties_IPv6(IPAddressRange range)
+    {
+        range.Begin = IPAddress.Parse("fe80::");
+        range.End = IPAddress.Parse("fe80::d503:4ee:3882:c586");
+
+        range.Contains(IPAddress.Parse("::1")).Is(false);
+        range.Contains(IPAddress.Parse("fe80::d503:4ee:3882:c586")).Is(true);
+        range.Contains(IPAddress.Parse("fe80::d503:4ee:3882:c586%3")).Is(true);
+
+        range = IPAddressRange.Parse("::/0");
+        range.Contains(IPAddress.Parse("::1")).Is(true);
+    }
+
+    [TestMethod]
+    public void ContainsTest_RewriteProperties_Different_AddressFamily()
+    {
+        var ipv4 = IPAddress.Parse("192.168.60.26");
+        var ipv6 = IPAddress.Parse("fe80::d503:4ee:3882:c586");
+
+        AssertEx.Throws<InvalidOperationException>(() =>
+        {
+            new IPAddressRange { Begin = ipv4, End = ipv6 }
+                .Contains(IPAddress.Parse("192.168.60.25"));
+        }).Message.Is("Both Begin and End properties must be of the same address family");
+
+        AssertEx.Throws<InvalidOperationException>(() =>
+        {
+            new IPAddressRange { Begin = ipv6, End = ipv4 }
+                .Contains(IPAddress.Parse("192.168.60.25"));
+        }).Message.Is("Both Begin and End properties must be of the same address family");
+    }
+
+    [TestMethod]
+    public void ContainsTest_RewriteProperties_BeginIsEnd()
+    {
+        var beginIPv4 = IPAddress.Parse("192.168.60.26");
+        var endIPv4 = IPAddress.Parse("192.168.60.37");
+        AssertEx.Throws<InvalidOperationException>(() =>
+        {
+            new IPAddressRange { Begin = endIPv4, End = beginIPv4 }
+                .Contains(IPAddress.Parse("192.168.60.25"));
+        }).Message.Is("Begin must be smaller than the End");
+
+        var beginIPv6 = IPAddress.Parse("fe80::");
+        var endIPv6 = IPAddress.Parse("fe80::d503:4ee:3882:c586");
+        AssertEx.Throws<InvalidOperationException>(() =>
+        {
+            new IPAddressRange { Begin = endIPv6, End = beginIPv6 }
+                .Contains(IPAddress.Parse("192.168.60.25"));
+        }).Message.Is("Begin must be smaller than the End");
+    }
+
+    [TestMethod]
     public void ContainsTest_Range_is_True_IPv6()
     {
         var range = IPAddressRange.Parse("fe80::/10");

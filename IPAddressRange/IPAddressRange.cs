@@ -75,11 +75,24 @@ namespace NetTools
         // Pattern 4. Bit mask range: "192.168.0.0/255.255.255.0"
         private static Regex m4_regex = new Regex(@"^(?<adr>([\d.]+)|([\da-f:]+(:[\d.]+)?(%\w+)?))[ \t]*/[ \t]*(?<bitmask>[\da-f\.:]+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
-        public IPAddress Begin { get; set; }
+        private IPAddress _Begin;
 
-        public IPAddress End { get; set; }
+        public IPAddress Begin { get { return _Begin; } set { _Begin = value; _Operator = null; } }
 
-        private IRangeOperator Operator { get; set; }
+        private IPAddress _End;
+
+        public IPAddress End { get { return _End; } set { _End = value; _Operator = null; } }
+
+        private IRangeOperator _Operator;
+
+        private IRangeOperator Operator
+        {
+            get
+            {
+                if (_Operator == null) _Operator = RangeOperatorFactory.Create(this);
+                return _Operator;
+            }
+        }
 
         /// <summary>
         /// Creates an empty range object, equivalent to "0.0.0.0/0".
@@ -96,7 +109,6 @@ namespace NetTools
                 throw new ArgumentNullException(nameof(singleAddress));
 
             Begin = End = singleAddress;
-            Operator = RangeOperatorFactory.Create(this);
         }
 
         /// <summary>
@@ -120,8 +132,6 @@ namespace NetTools
             if (Begin.AddressFamily != End.AddressFamily) throw new ArgumentException("Elements must be of the same address family", nameof(end));
 
             if (!Bits.GtECore(endBytes, beginBytes)) throw new ArgumentException("Begin must be smaller than the End", nameof(begin));
-
-            Operator = RangeOperatorFactory.Create(this);
         }
 
         /// <summary>
@@ -143,8 +153,6 @@ namespace NetTools
 
             Begin = new IPAddress(baseAdrBytes);
             End = new IPAddress(Bits.Or(baseAdrBytes, Bits.Not(maskBytes)));
-
-            Operator = RangeOperatorFactory.Create(this);
         }
 
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Use IPAddressRange.Parse static method instead.")]
@@ -153,7 +161,6 @@ namespace NetTools
             var parsed = Parse(ipRangeString);
             Begin = parsed.Begin;
             End = parsed.End;
-            Operator = RangeOperatorFactory.Create(this);
         }
 
 #if NET45
@@ -168,7 +175,6 @@ namespace NetTools
 
             this.Begin = deserialize("Begin");
             this.End = deserialize("End");
-            Operator = RangeOperatorFactory.Create(this);
         }
 
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -182,22 +188,20 @@ namespace NetTools
 
         public bool Contains(IPAddress ipaddress)
         {
-            if (ipaddress == null)
-                throw new ArgumentNullException(nameof(ipaddress));
+            if (ipaddress == null) throw new ArgumentNullException(nameof(ipaddress));
 
+            var rangeOperator = this.Operator;
             if (ipaddress.AddressFamily != this.Begin.AddressFamily) return false;
-
-            return Operator.Contains(ipaddress);
+            return rangeOperator.Contains(ipaddress);
         }
 
         public bool Contains(IPAddressRange range)
         {
-            if (range == null)
-                throw new ArgumentNullException(nameof(range));
+            if (range == null) throw new ArgumentNullException(nameof(range));
 
+            var rangeOperator = this.Operator;
             if (this.Begin.AddressFamily != range.Begin.AddressFamily) return false;
-
-            return Operator.Contains(range);
+            return rangeOperator.Contains(range);
         }
 
         public static IPAddressRange Parse(string ipRangeString)
