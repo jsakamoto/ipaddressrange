@@ -44,6 +44,30 @@ public class IPAddressRangeTest
     }
 
     [TestMethod]
+    public void CtorTest_IPv4_BeginEndAddresses()
+    {
+        var range = new IPAddressRange(
+            begin: IPAddress.Parse("192.168.0.0"),
+            end: IPAddress.Parse("192.168.0.255"));
+
+        range.Contains(IPAddress.Parse("192.168.0.10")).Is(true);
+        range.Contains(IPAddress.Parse("192.169.0.10")).Is(false);
+    }
+
+    [TestMethod]
+    public void CtorTest_IPv4_BeginEndAddresses_ObjectInitializer()
+    {
+        var range = new IPAddressRange
+        {
+            Begin = IPAddress.Parse("192.168.0.0"),
+            End = IPAddress.Parse("192.168.0.255")
+        };
+
+        range.Contains(IPAddress.Parse("192.168.0.10")).Is(true);
+        range.Contains(IPAddress.Parse("192.169.0.10")).Is(false);
+    }
+
+    [TestMethod]
     public void CtorTest_IPv6_BeginEndAddresses()
     {
         var range = new IPAddressRange(
