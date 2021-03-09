@@ -94,6 +94,9 @@ namespace NetTools
             }
         }
 
+        private int _prefixLenght = -1;
+
+
         /// <summary>
         /// Creates an empty range object, equivalent to "0.0.0.0/0".
         /// </summary>
@@ -363,7 +366,7 @@ namespace NetTools
             return hashCode;
         }
 
-        public int GetPrefixLength()
+        private int getPrefixLength()
         {
             var byteBegin = Begin.GetAddressBytes();
 
@@ -384,6 +387,15 @@ namespace NetTools
                 }
             }
             throw new FormatException(string.Format("{0} is not a CIDR Subnet", ToString()));
+        }
+
+        public int GetPrefixLength()
+        {
+            if (_prefixLenght == -1)
+            {
+                _prefixLenght = getPrefixLength();
+            }
+            return _prefixLenght;
         }
 
         /// <summary>
