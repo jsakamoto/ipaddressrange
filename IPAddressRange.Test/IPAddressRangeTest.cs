@@ -440,6 +440,28 @@ public class IPAddressRangeTest
     }
 
     [TestMethod]
+    [TestCase("fe80::", "febf:ffff:ffff:ffff:ffff:ffff:ffff:ffff", 10)]
+    [TestCase("192.168.0.0", "192.168.0.255", 24)]
+    [TestCase("192.168.0.0", "192.168.0.0", 32)]
+    [TestCase("192.168.0.0", "192.168.0.0", 32)]
+    [TestCase("fe80::", "fe80::", 128)]
+    [TestCase("192.168.0.0", "192.168.0.255", 24)]
+    [TestCase("fe80::", "fe80:ffff:ffff:ffff:ffff:ffff:ffff:ffff", 16)]
+    public void GetPrefixLength_with_RewriteBeginEndProperties_Success()
+    {
+        var range = new IPAddressRange();
+        TestContext.Run((string begin, string end, int expected) =>
+        {
+            range.Begin = IPAddress.Parse(begin);
+            range.End = IPAddress.Parse(end);
+            Console.WriteLine($"TestCase: \"{begin}\"~\"{end}\", Expected: \"{expected}\"");
+            var output = range.GetPrefixLength();
+            Console.WriteLine($"  Result: \"{output}\"");
+            output.Is(expected);
+        });
+    }
+
+    [TestMethod]
     [TestCase("192.168.0.0-192.168.0.254", typeof(FormatException))]
     [TestCase("fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:fffe", typeof(FormatException))]
     public void GetPrefixLength_Failures()
@@ -460,6 +482,41 @@ public class IPAddressRangeTest
             {
                 ex.GetType().Is(expectedException);
             }
+        });
+    }
+
+    [TestMethod]
+    [TestCase("192.168.0.0", "192.168.0.254", typeof(FormatException), "fe80::", "fe80::", 128)]
+    [TestCase("fe80::", "fe80:ffff:ffff:ffff:ffff:ffff:ffff:fffe", typeof(FormatException), "192.168.0.0", "192.168.0.255", 24)]
+    public void GetPrefixLength_with_RewriteBeginEndProperties_Failures()
+    {
+        var range = new IPAddressRange();
+        TestContext.Run((string begin, string end, Type expectedException, string begin2, string end2, int expected) =>
+        {
+            Console.WriteLine($"TestCase: \"{begin}\"~\"{end}\", Expected Exception: \"{expectedException.Name}\"");
+            try
+            {
+                range.Begin = IPAddress.Parse(begin);
+                range.End = IPAddress.Parse(end);
+                range.GetPrefixLength();
+                Assert.Fail($"Expected exception of type {expectedException.Name} to be thrown for input \"{begin}\"~\"{end}\"");
+            }
+            catch (AssertFailedException)
+            {
+                throw; // allow Assert.Fail to pass through 
+            }
+            catch (Exception ex)
+            {
+                ex.GetType().Is(expectedException);
+            }
+
+            // Once it was failed, but it will be recovered with valid begin/end property.
+            Console.WriteLine($"TestCase: \"{begin2}\"~\"{end2}\", Expected: \"{expected}\"");
+            range.Begin = IPAddress.Parse(begin2);
+            range.End = IPAddress.Parse(end2);
+            var output = range.GetPrefixLength();
+            Console.WriteLine($"  Result: \"{output}\"");
+            output.Is(expected);
         });
     }
 
