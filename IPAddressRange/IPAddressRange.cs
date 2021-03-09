@@ -62,6 +62,9 @@ namespace NetTools
     public class IPAddressRange : IEnumerable<IPAddress>, IReadOnlyDictionary<string, string>, IEquatable<IPAddressRange>
 #endif
     {
+        // constant that meaning prefix length hasn't computed yet
+        private const int EMPTYPREFIXLENGTH = -1;
+        
         // Pattern 1. CIDR range: "192.168.0.0/24", "fe80::%lo0/10"
         private static readonly Regex m1_regex = new Regex(@"^(?<adr>([\d.]+)|([\da-f:]+(:[\d.]+)?(%\w+)?))[ \t]*/[ \t]*(?<maskLen>\d+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
@@ -77,11 +80,11 @@ namespace NetTools
 
         private IPAddress _Begin;
 
-        public IPAddress Begin { get { return _Begin; } set { _Begin = value; _Operator = null; } }
+        public IPAddress Begin { get { return _Begin; } set { _Begin = value; _Operator = null; _prefixLength = EMPTYPREFIXLENGTH; } }
 
         private IPAddress _End;
 
-        public IPAddress End { get { return _End; } set { _End = value; _Operator = null; } }
+        public IPAddress End { get { return _End; } set { _End = value; _Operator = null; _prefixLength = EMPTYPREFIXLENGTH; } }
 
         private IRangeOperator _Operator;
 
@@ -94,7 +97,8 @@ namespace NetTools
             }
         }
 
-        private int _prefixLenght = -1;
+        // variable for store prefix length
+        private int _prefixLength = EMPTYPREFIXLENGTH;
 
 
         /// <summary>
@@ -391,11 +395,11 @@ namespace NetTools
 
         public int GetPrefixLength()
         {
-            if (_prefixLenght == -1)
+            if (_prefixLength == EMPTYPREFIXLENGTH)
             {
-                _prefixLenght = getPrefixLength();
+                _prefixLength = getPrefixLength();
             }
-            return _prefixLenght;
+            return _prefixLength;
         }
 
         /// <summary>
