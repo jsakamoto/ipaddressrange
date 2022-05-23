@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.4;net45</TargetFrameworks>
+    <TargetFrameworks>net6.0</TargetFrameworks>
     <NoWarn>$(NoWarn);1591</NoWarn>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">true</GeneratePackageOnBuild>
@@ -12,11 +12,9 @@
     <Title>IPAddressRange</Title>
     <PackageId>IPAddressRange</PackageId>
     <PackageTags>IPAddress</PackageTags>
-    <NetStandardImplicitPackageVersion>1.6.0</NetStandardImplicitPackageVersion>
-    <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
     <NuspecFile>IPAddressRange.nuspec</NuspecFile>
     <Copyright>Copyright © 2012-2021 J.Sakamoto, Mozilla Public License 2.0</Copyright>
-    <Version>4.2.0</Version>
+    <Version>5.0.0</Version>
     <Authors>J.Sakamoto</Authors>
     <Company />
     <Product>IPAddressRange</Product>

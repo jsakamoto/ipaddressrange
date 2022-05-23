@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NetTools;
 
-namespace IPRange.Test
+namespace IPAddressRange.Test
 {
     [TestClass]
     public class IPAddressRangeParseTest
@@ -16,15 +16,15 @@ namespace IPRange.Test
         [TestCase("fe80::d503:4ee:3882:c586", "fe80::d503:4ee:3882:c586", "fe80::d503:4ee:3882:c586")]
         [TestCase("  fe80::d503:4ee:3882:c586  ", "fe80::d503:4ee:3882:c586", "fe80::d503:4ee:3882:c586")]
         [TestCase("::/0", "::", "ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff")]
-        [TestCase("3232252004", "192.168.64.100", "192.168.64.100")] // decimal - new 
-        [TestCase("  3232252004  ", "192.168.64.100", "192.168.64.100")] // decimal - new 
+        [TestCase("3232252004", "192.168.64.100", "192.168.64.100")] // decimal - new
+        [TestCase("  3232252004  ", "192.168.64.100", "192.168.64.100")] // decimal - new
 
         [TestCase("219.165.64.0/19", "219.165.64.0", "219.165.95.255")]
         [TestCase("  219.165.64.0  /  19  ", "219.165.64.0", "219.165.95.255")]
         [TestCase("192.168.1.0/255.255.255.0", "192.168.1.0", "192.168.1.255")]
         [TestCase("  192.168.1.0  /  255.255.255.0  ", "192.168.1.0", "192.168.1.255")]
-        [TestCase("3232252004/24", "192.168.64.0", "192.168.64.255")] // decimal - new 
-        [TestCase("  3232252004  /  24  ", "192.168.64.0", "192.168.64.255")] // decimal - new 
+        [TestCase("3232252004/24", "192.168.64.0", "192.168.64.255")] // decimal - new
+        [TestCase("  3232252004  /  24  ", "192.168.64.0", "192.168.64.255")] // decimal - new
 
         [TestCase("192.168.60.26–192.168.60.37", "192.168.60.26", "192.168.60.37")]
         [TestCase("  192.168.60.26  –  192.168.60.37  ", "192.168.60.26", "192.168.60.37")]
@@ -59,7 +59,7 @@ namespace IPRange.Test
             TestContext.Run((string input, string expectedBegin, string expectedEnd) =>
             {
                 Console.WriteLine("TestCase: \"{0}\", Expected Begin: {1}, End: {2}", input, expectedBegin, expectedEnd);
-                var range = IPAddressRange.Parse(input);
+                var range = NetTools.IPAddressRange.Parse(input);
                 range.IsNotNull();
                 Console.WriteLine("  Result: Begin: {0}, End: {1}", range.Begin, range.End);
                 range.Begin.ToString().Is(expectedBegin);
@@ -72,12 +72,12 @@ namespace IPRange.Test
         [TestCase("", typeof(FormatException))]
         [TestCase(" ", typeof(FormatException))]
         [TestCase("gvvdv", typeof(FormatException))]
-        [TestCase("192.168.0.10/48", typeof(FormatException))] // out of CIDR range 
+        [TestCase("192.168.0.10/48", typeof(FormatException))] // out of CIDR range
         [TestCase("192.168.0.10-192.168.0.5", typeof(ArgumentException))] // bigger to lower
         [TestCase("fe80::2%eth1-fe80::1%eth1", typeof(ArgumentException))] // bigger to lower
         [TestCase("10.256.1.1", typeof(FormatException))] // invalid ip
         [TestCase("127.0.0.1%1", typeof(FormatException))] // ipv4, but with scope id
-        [TestCase("192.168.0.10/2.3.4", typeof(FormatException))] // ipv4, but subnet mask isn't linear 
+        [TestCase("192.168.0.10/2.3.4", typeof(FormatException))] // ipv4, but subnet mask isn't linear
         [TestCase("192.168.0.0-192.168.0.1%1", typeof(FormatException))] // ipv4, but with scope id at end of range
         [TestCase("192.168.0.0%1-192.168.0.1", typeof(FormatException))] // ipv4, but with scope id at begin of range
         [TestCase("192.168.0.0%1-192.168.0.1%1", typeof(FormatException))] // ipv4, but with scope id at both of begin and end
@@ -96,12 +96,12 @@ namespace IPRange.Test
                 Console.WriteLine("TestCase: \"{0}\", Expected Exception: {1}", input, expectedException.Name);
                 try
                 {
-                    IPAddressRange.Parse(input);
+                    NetTools.IPAddressRange.Parse(input);
                     Assert.Fail("Expected exception of type {0} to be thrown for input \"{1}\"", expectedException.Name, input);
                 }
                 catch (AssertFailedException)
                 {
-                    throw; // allow Assert.Fail to pass through 
+                    throw; // allow Assert.Fail to pass through
                 }
                 catch (Exception ex)
                 {
@@ -132,8 +132,8 @@ namespace IPRange.Test
             TestContext.Run((string input, bool expectedReturn) =>
             {
                 Console.WriteLine("TestCase: \"{0}\", Expected: {1}", input, expectedReturn);
-                IPAddressRange temp;
-                var result = IPAddressRange.TryParse(input, out temp);
+                NetTools.IPAddressRange temp;
+                var result = NetTools.IPAddressRange.TryParse(input, out temp);
                 result.Is(expectedReturn);
                 if (expectedReturn)
                 {

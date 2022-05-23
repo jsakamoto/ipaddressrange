@@ -7,13 +7,13 @@ using System.Text.RegularExpressions;
 using System.ComponentModel;
 using NetTools.Internals;
 
-#if NET45
+
 using System.Runtime.Serialization;
-#endif
+
 
 namespace NetTools
 {
-    // NOTE: Why implement IReadOnlyDictionary<TKey,TVal> interface? 
+    // NOTE: Why implement IReadOnlyDictionary<TKey,TVal> interface?
     // =============================================================
     // Problem
     // ----------
@@ -21,7 +21,7 @@ namespace NetTools
     //
     // Details
     // ----------
-    // JSON.NET detect IEnumerable<IPAddress> interface prior to ISerializable. 
+    // JSON.NET detect IEnumerable<IPAddress> interface prior to ISerializable.
     // At a result, JSON.NET try to serialize IPAddressRange as array, such as "["192.168.0.1", "192.168.0.2"]".
     // This is unexpected behavior. (We expect "{"Begin":"192.168.0.1", "End:"192.168.0.2"}" style JSON text that is same with DataContractJsonSerializer.)
     // In addition, JSON serialization with JSON.NET crash due to IPAddress cann't serialize by JSON.NET.
@@ -35,7 +35,7 @@ namespace NetTools
     // - IReadOnlyDictionary<TKey,TVal>
     // But, when IPAddressRange implement IDictionay or IDictionary<TKey,TVal>, serialization by DataContractJsonSerializer was broken.
     // (Implementation of DataContractJsonSerializer is special for IDictionay and IDictionary<TKey,TVal>)
-    // 
+    //
     // So there is no way without implement IReadOnlyDictionary<TKey,TVal>.
     //
     // Trade off
@@ -43,11 +43,11 @@ namespace NetTools
     // IReadOnlyDictionary<TKey,TVal> interface doesn't exist in .NET Framework v.4.0 or before.
     // In order to give priority to supporting serialization by JSON.NET, I had to truncate the support for .NET Framework 4.0.
     // (.NET Standard 1.4 support IReadOnlyDictionary<TKey,TVal>, therefore there is no problem on .NET Core appliction.)
-    // 
+    //
     // Binary level compatiblity
     // -------------------------
     // There is no problem even if IPAddressRange.dll is replaced with the latest version.
-    // 
+    //
     // Source code level compatiblity
     // -------------------------
     // You cann't apply LINQ extension methods directory to IPAddressRange object.
@@ -55,16 +55,13 @@ namespace NetTools
     // It cause ambiguous syntax error.
     // To avoid this error, you should use "AsEnumerable()" method before IEnumerable<IPAddressRange> access.
 
-#if NET45
+
     [Serializable]
     public class IPAddressRange : ISerializable, IEnumerable<IPAddress>, IReadOnlyDictionary<string, string>, IEquatable<IPAddressRange>
-#else
-    public class IPAddressRange : IEnumerable<IPAddress>, IReadOnlyDictionary<string, string>, IEquatable<IPAddressRange>
-#endif
     {
         // constant that meaning prefix length hasn't computed yet
         private const int EMPTYPREFIXLENGTH = -1;
-        
+
         // Pattern 1. CIDR range: "192.168.0.0/24", "fe80::%lo0/10"
         private static readonly Regex m1_regex = new Regex(@"^(?<adr>([\d.]+)|([\da-f:]+(:[\d.]+)?(%\w+)?))[ \t]*/[ \t]*(?<maskLen>\d+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
@@ -170,7 +167,6 @@ namespace NetTools
             End = parsed.End;
         }
 
-#if NET45
         protected IPAddressRange(SerializationInfo info, StreamingContext context)
         {
             var names = new List<string>();
@@ -191,7 +187,6 @@ namespace NetTools
             info.AddValue("Begin", this.Begin != null ? this.Begin.ToString() : "");
             info.AddValue("End", this.End != null ? this.End.ToString() : "");
         }
-#endif
 
         public bool Contains(IPAddress ipaddress)
         {
@@ -339,7 +334,7 @@ namespace NetTools
         }
 
         /// <summary>
-        /// Returns the range in the format "begin-end", or 
+        /// Returns the range in the format "begin-end", or
         /// as a single address if End is the same as Begin.
         /// </summary>
         /// <returns></returns>

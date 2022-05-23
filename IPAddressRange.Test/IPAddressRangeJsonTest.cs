@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NetTools;
 using Newtonsoft.Json;
 
-namespace IPRange.Test
+namespace IPAddressRange.Test
 {
     [TestClass]
     public class IPAddressRangeJsonTest
@@ -13,21 +13,21 @@ namespace IPRange.Test
         [TestMethod]
         public void ConvertToJson_IPv4()
         {
-            var range = IPAddressRange.Parse("192.168.0.0/24");
+            var range = NetTools.IPAddressRange.Parse("192.168.0.0/24");
             JsonConvert.SerializeObject(range).Is(@"{""Begin"":""192.168.0.0"",""End"":""192.168.0.255""}");
         }
 
         [TestMethod]
         public void ConvertToJson_IPv6()
         {
-            var range = IPAddressRange.Parse("fe80::/10");
+            var range = NetTools.IPAddressRange.Parse("fe80::/10");
             JsonConvert.SerializeObject(range).Is(@"{""Begin"":""fe80::"",""End"":""febf:ffff:ffff:ffff:ffff:ffff:ffff:ffff""}");
         }
 
         [TestMethod]
         public void ConvertFromJson_IPv4()
         {
-            var range = JsonConvert.DeserializeObject<IPAddressRange>(@"{""Begin"":""219.165.64.0"",""End"":""219.165.95.255""}");
+            var range = JsonConvert.DeserializeObject<NetTools.IPAddressRange>(@"{""Begin"":""219.165.64.0"",""End"":""219.165.95.255""}");
             range.Begin.AddressFamily.Is(AddressFamily.InterNetwork);
             range.Begin.ToString().Is("219.165.64.0");
             range.End.AddressFamily.Is(AddressFamily.InterNetwork);
@@ -37,7 +37,7 @@ namespace IPRange.Test
         [TestMethod]
         public void ConvertFromJson_IPv6()
         {
-            var range = JsonConvert.DeserializeObject<IPAddressRange>(@"{""Begin"":""fe80::"",""End"":""febf:ffff:ffff:ffff:ffff:ffff:ffff:ffff""}");
+            var range = JsonConvert.DeserializeObject<NetTools.IPAddressRange>(@"{""Begin"":""fe80::"",""End"":""febf:ffff:ffff:ffff:ffff:ffff:ffff:ffff""}");
             range.Begin.AddressFamily.Is(AddressFamily.InterNetworkV6);
             range.Begin.ToString().Is("fe80::");
             range.End.AddressFamily.Is(AddressFamily.InterNetworkV6);
