@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using System.ComponentModel;
 using NetTools.Internals;
 
-#if NET45
+#if NETFRAMEWORK
 using System.Runtime.Serialization;
 #endif
 
@@ -55,7 +55,7 @@ namespace NetTools
     // It cause ambiguous syntax error.
     // To avoid this error, you should use "AsEnumerable()" method before IEnumerable<IPAddressRange> access.
 
-#if NET45
+#if NETFRAMEWORK
     [Serializable]
     public class IPAddressRange : ISerializable, IEnumerable<IPAddress>, IReadOnlyDictionary<string, string>, IEquatable<IPAddressRange>
 #else
@@ -170,7 +170,7 @@ namespace NetTools
             End = parsed.End;
         }
 
-#if NET45
+#if NETFRAMEWORK
         protected IPAddressRange(SerializationInfo info, StreamingContext context)
         {
             var names = new List<string>();
