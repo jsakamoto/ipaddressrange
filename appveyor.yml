@@ -14,6 +14,6 @@ test_script:
 
     dotnet test
 
-    cd ..\IPAddressRange.Test\bin\Debug\net45
+    cd ..\IPAddressRange.Test\bin\Debug\net452
 
     vstest.console /logger:Appveyor IPAddressRange.Test.dll
