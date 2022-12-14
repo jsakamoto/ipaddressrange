@@ -20,17 +20,21 @@
     <tags>$tags$</tags>
     <icon>nupkg-icon.png</icon>
     <dependencies>
-      <group targetFramework=".NETFramework4.5" />
+      <group targetFramework=".NETFramework4.5.2" />
       <group targetFramework=".NETStandard1.4">
         <dependency id="NETStandard.Library" version="1.6.1" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETStandard2.1">
       </group>
     </dependencies>
   </metadata>
   <files>
-    <file src="bin\Release\net45\IPAddressRange.dll" target="lib\net45" />
-    <file src="bin\Release\net45\IPAddressRange.XML" target="lib\net45" />
+    <file src="bin\Release\net452\IPAddressRange.dll" target="lib\net452" />
+    <file src="bin\Release\net452\IPAddressRange.XML" target="lib\net452" />
     <file src="bin\Release\netstandard1.4\IPAddressRange.dll" target="lib\netstandard1.4" />
     <file src="bin\Release\netstandard1.4\IPAddressRange.XML" target="lib\netstandard1.4" />
+    <file src="bin\Release\netstandard2.1\IPAddressRange.dll" target="lib\netstandard2.1" />
+    <file src="bin\Release\netstandard2.1\IPAddressRange.XML" target="lib\netstandard2.1" />
     <file src="..\.assets\nupkg-icon.png" target="nupkg-icon.png" />
   </files>
 </package>

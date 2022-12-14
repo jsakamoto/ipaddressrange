@@ -1,3 +1,6 @@
+v.5.0.0
+- Update the target frameworks (Drop the support for .NET4.5)
+
 v.4.2.0
 - Improved the performance of the "GetPrefixLength ()" method.
 
