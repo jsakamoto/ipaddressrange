@@ -1,0 +1,24 @@
+name: tests
+
+on:
+  push:
+    branches:
+      - '*'
+jobs:
+  deploy:
+    runs-on: windows-latest
+    steps:
+      # Checkout the code
+      - uses: actions/checkout@v3
+
+      # Install .NET Core SDK
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v3
+        with:
+           dotnet-version: '8.0.x'
+           dotnet-quality: 'preview'
+
+      # Perform unit tests
+      - name: Perform unit tests
+        run: dotnet test IPAddressRange.Test -l "console;verbosity=normal" -v:q --nologo
+
