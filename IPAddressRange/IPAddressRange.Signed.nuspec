@@ -19,11 +19,13 @@
     <copyright>$copyright$</copyright>
     <tags>$tags$</tags>
     <icon>nupkg-icon.png</icon>
+    <readme>README.md</readme>
     <dependencies>
       <dependency id="IPAddressRange" version="$version$"/>
     </dependencies>
   </metadata>
   <files>
     <file src="..\.assets\nupkg-icon.png" target="nupkg-icon.png" />
+    <file src="..\README.md" target="README.md" />
   </files>
 </package>

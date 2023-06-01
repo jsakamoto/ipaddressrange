@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.4;netstandard2.1;net452</TargetFrameworks>
+    <TargetFrameworks>netstandard1.4;netstandard2.1;net462;net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
     <NoWarn>$(NoWarn);1591</NoWarn>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">true</GeneratePackageOnBuild>
@@ -24,6 +24,7 @@
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/jsakamoto/ipaddressrange/</PackageProjectUrl>
     <PackageReleaseNotes>(Please write the package release notes in "RELEASE-NOTES.txt".)</PackageReleaseNotes>
+    <PackageOutputPath>..\_dist\</PackageOutputPath>
   </PropertyGroup>
 
   <PropertyGroup>
