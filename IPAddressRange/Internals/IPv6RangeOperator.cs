@@ -33,9 +33,10 @@ namespace NetTools.Internals
 
         public IEnumerator<IPAddress> GetEnumerator()
         {
-            for (BigInteger adr = Begin; adr <= End; adr++)
+            for (var adr = Begin; ; adr++)
             {
                 yield return adr.ToIPv6Address();
+                if (adr == End) break;
             }
         }
 
@@ -49,7 +50,7 @@ namespace NetTools.Internals
 
         bool ICollection<IPAddress>.Contains(IPAddress item)
         {
-            return this.Contains(item);
+            return Contains(item);
         }
 
         void ICollection<IPAddress>.CopyTo(IPAddress[] array, int arrayIndex)
@@ -64,6 +65,6 @@ namespace NetTools.Internals
 
         bool ICollection<IPAddress>.Remove(IPAddress item) => throw new InvalidOperationException();
 
-        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

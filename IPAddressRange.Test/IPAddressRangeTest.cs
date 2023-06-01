@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using NetTools;
 
 namespace IPRange.Test
@@ -640,6 +643,42 @@ namespace IPRange.Test
         {
             var ipAddressRange = IPAddressRange.Parse("fe80::0000:0000-fe80::0100:0001");
             ipAddressRange.AsEnumerable().Count().Is(16777218);
+        }
+
+        [TestMethod]
+        public void CopyTo_IPv4_Test()
+        {
+            // Given
+            var ipAddressRange = IPAddressRange
+                .Parse("255.255.255.254 - 255.255.255.255")
+                .AsEnumerable() as ICollection<IPAddress>;
+
+            // When
+            var ipaddresses = new IPAddress[2];
+            ipAddressRange.CopyTo(ipaddresses, 0);
+
+            // Then
+            ipaddresses.Select(ipadr => ipadr.ToString())
+                .Is("255.255.255.254",
+                    "255.255.255.255");
+        }
+
+        [TestMethod]
+        public void CopyTo_IPv6_Test()
+        {
+            // Given
+            var ipAddressRange = IPAddressRange
+                .Parse("ffff:ffff:ffff:ffff:ffff:ffff:ffff:fffe - ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff")
+                .AsEnumerable() as ICollection<IPAddress>;
+
+            // When
+            var ipaddresses = new IPAddress[2];
+            ipAddressRange.CopyTo(ipaddresses, 0);
+
+            // Then
+            ipaddresses.Select(ipadr => ipadr.ToString())
+                .Is("ffff:ffff:ffff:ffff:ffff:ffff:ffff:fffe",
+                    "ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff");
         }
     }
 }
