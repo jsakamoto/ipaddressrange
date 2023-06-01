@@ -14,8 +14,8 @@
     <PackageTags>IPAddress</PackageTags>
     <NetStandardImplicitPackageVersion>1.6.0</NetStandardImplicitPackageVersion>
     <NuspecFile>IPAddressRange.nuspec</NuspecFile>
-    <Copyright>Copyright © 2012-2022 J.Sakamoto, Mozilla Public License 2.0</Copyright>
-    <Version>5.0.0</Version>
+    <Copyright>Copyright © 2012-2023 J.Sakamoto, Mozilla Public License 2.0</Copyright>
+    <Version>6.0.0</Version>
     <Authors>J.Sakamoto</Authors>
     <Company />
     <Product>IPAddressRange</Product>
@@ -90,6 +90,7 @@ $(Description)]]>
     <PropertyGroup>
       <PackageReleaseNotes>@(ReleaseNoteLines, '%0a')</PackageReleaseNotes>
       <PackageReleaseNotes>$([System.Text.RegularExpressions.Regex]::Match($(PackageReleaseNotes), "^(v\.[\d\.]+.+?)v\.[\d\.]+", System.Text.RegularExpressions.RegexOptions.Singleline).Groups[1].Value)</PackageReleaseNotes>
+      <PackageReleaseNotes>$(PackageReleaseNotes)%0a%0aTo see all the change logs, please visit the following URL.%0a- https://github.com/jsakamoto/IPAddressRange/blob/master/RELEASE-NOTES.txt</PackageReleaseNotes>
       <NuspecProperties>releaseNotes=$(PackageReleaseNotes);$(NuspecProperties)</NuspecProperties>
       <SharedNuspecProperties>releaseNotes=$(PackageReleaseNotes);$(SharedNuspecProperties)</SharedNuspecProperties>
     </PropertyGroup>
