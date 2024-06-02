@@ -13,33 +13,33 @@ namespace NetTools.Internals
 
         public IPv4RangeOperator(IPAddressRange range)
         {
-            Begin = range.Begin.ToUInt32();
-            End = range.End.ToUInt32();
+            this.Begin = range.Begin.ToUInt32();
+            this.End = range.End.ToUInt32();
         }
 
         public bool Contains(IPAddress ipaddress)
         {
             var address = ipaddress.ToUInt32();
-            return Begin <= address && address <= End;
+            return this.Begin <= address && address <= this.End;
         }
 
         public bool Contains(IPAddressRange range)
         {
             var rangeBegin = range.Begin.ToUInt32();
             var rangeEnd = range.End.ToUInt32();
-            return Begin <= rangeBegin && rangeEnd <= End;
+            return this.Begin <= rangeBegin && rangeEnd <= this.End;
         }
 
         public IEnumerator<IPAddress> GetEnumerator()
         {
-            for (var adr = Begin; ; adr++)
+            for (var adr = this.Begin; ; adr++)
             {
                 yield return adr.ToIPv4Address();
-                if (adr == End) break;
+                if (adr == this.End) break;
             }
         }
 
-        int ICollection<IPAddress>.Count => (int)((End - Begin) + 1);
+        int ICollection<IPAddress>.Count => (int)((this.End - this.Begin) + 1);
 
         bool ICollection<IPAddress>.IsReadOnly => true;
 
@@ -49,7 +49,7 @@ namespace NetTools.Internals
 
         bool ICollection<IPAddress>.Contains(IPAddress item)
         {
-            return Contains(item);
+            return this.Contains(item);
         }
 
         void ICollection<IPAddress>.CopyTo(IPAddress[] array, int arrayIndex)
@@ -64,6 +64,6 @@ namespace NetTools.Internals
 
         bool ICollection<IPAddress>.Remove(IPAddress item) => throw new InvalidOperationException();
 
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
     }
 }

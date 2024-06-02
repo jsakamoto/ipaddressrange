@@ -412,7 +412,7 @@ namespace IPRange.Test
         [TestCase("fe80::d503:4ee:3882:c586/120", "fe80::d503:4ee:3882:c500-fe80::d503:4ee:3882:c5ff")]
         public void ToString_Output()
         {
-            TestContext.Run((string input, string expected) =>
+            this.TestContext.Run((string input, string expected) =>
             {
                 Console.WriteLine("TestCase: \"{0}\", Expected: \"{1}\"", input, expected);
                 var output = IPAddressRange.Parse(input).ToString();
@@ -434,7 +434,7 @@ namespace IPRange.Test
         [TestCase("fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:ffff", 16)]
         public void GetPrefixLength_Success()
         {
-            TestContext.Run((string input, int expected) =>
+            this.TestContext.Run((string input, int expected) =>
             {
                 Console.WriteLine("TestCase: \"{0}\", Expected: \"{1}\"", input, expected);
                 var output = IPAddressRange.Parse(input).GetPrefixLength();
@@ -454,7 +454,7 @@ namespace IPRange.Test
         public void GetPrefixLength_with_RewriteBeginEndProperties_Success()
         {
             var range = new IPAddressRange();
-            TestContext.Run((string begin, string end, int expected) =>
+            this.TestContext.Run((string begin, string end, int expected) =>
             {
                 range.Begin = IPAddress.Parse(begin);
                 range.End = IPAddress.Parse(end);
@@ -470,7 +470,7 @@ namespace IPRange.Test
         [TestCase("fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:fffe", typeof(FormatException))]
         public void GetPrefixLength_Failures()
         {
-            TestContext.Run((string input, Type expectedException) =>
+            this.TestContext.Run((string input, Type expectedException) =>
             {
                 Console.WriteLine("TestCase: \"{0}\", Expected Exception: {1}", input, expectedException.Name);
                 try
@@ -495,7 +495,7 @@ namespace IPRange.Test
         public void GetPrefixLength_with_RewriteBeginEndProperties_Failures()
         {
             var range = new IPAddressRange();
-            TestContext.Run((string begin, string end, Type expectedException, string begin2, string end2, int expected) =>
+            this.TestContext.Run((string begin, string end, Type expectedException, string begin2, string end2, int expected) =>
             {
                 Console.WriteLine($"TestCase: \"{begin}\"~\"{end}\", Expected Exception: \"{expectedException.Name}\"");
                 try
@@ -534,7 +534,7 @@ namespace IPRange.Test
         [TestCase("fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:ffff", "fe80::/16")]
         public void ToCidrString_Output()
         {
-            TestContext.Run((string input, string expected) =>
+            this.TestContext.Run((string input, string expected) =>
             {
                 Console.WriteLine("TestCase: \"{0}\", Expected: \"{1}\"", input, expected);
                 var output = IPAddressRange.Parse(input).ToCidrString();
@@ -548,7 +548,7 @@ namespace IPRange.Test
         [TestCase("fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:fffe", typeof(FormatException))]
         public void ToCidrString_ThrowsOnNonCidr()
         {
-            TestContext.Run((string input, Type expectedException) =>
+            this.TestContext.Run((string input, Type expectedException) =>
             {
                 Console.WriteLine("TestCase: \"{0}\", Expected Exception: {1}", input, expectedException.Name);
                 try
@@ -572,7 +572,7 @@ namespace IPRange.Test
         [TestCase("fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:fffe")]
         public void GetHashCode_SameRange_HashCodesAreSame()
         {
-            TestContext.Run((string input) =>
+            this.TestContext.Run((string input) =>
             {
                 Console.WriteLine("TestCase: \"{0}\"", input);
                 var range1 = IPAddressRange.Parse(input);
@@ -586,7 +586,7 @@ namespace IPRange.Test
         [TestCase("fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:fffe", "fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:fffd")]
         public void GetHashCode_DifferentRanges_HashCodesAreDifferent()
         {
-            TestContext.Run((string input1, string input2) =>
+            this.TestContext.Run((string input1, string input2) =>
             {
                 Console.WriteLine("TestCase: \"{0}\" and \"{1}\"", input1, input2);
                 var range1 = IPAddressRange.Parse(input1);
@@ -600,7 +600,7 @@ namespace IPRange.Test
         [TestCase("fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:fffe")]
         public void Equals_SameRange_ReturnsTrue()
         {
-            TestContext.Run((string input) =>
+            this.TestContext.Run((string input) =>
             {
                 Console.WriteLine("TestCase: \"{0}\"", input);
                 var range1 = IPAddressRange.Parse(input);
@@ -614,7 +614,7 @@ namespace IPRange.Test
         [TestCase("fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:fffe", "fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:fffd")]
         public void Equals_SameRange_ReturnsFalse()
         {
-            TestContext.Run((string input1, string input2) =>
+            this.TestContext.Run((string input1, string input2) =>
             {
                 Console.WriteLine("TestCase: \"{0}\" and \"{1}\"", input1, input2);
                 var range1 = IPAddressRange.Parse(input1);

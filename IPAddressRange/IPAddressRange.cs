@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
-using System.ComponentModel;
 using NetTools.Internals;
 
 #if NETFRAMEWORK
@@ -64,7 +64,7 @@ namespace NetTools
     {
         // constant that meaning prefix length hasn't computed yet
         private const int EMPTYPREFIXLENGTH = -1;
-        
+
         // Pattern 1. CIDR range: "192.168.0.0/24", "fe80::%lo0/10"
         private static readonly Regex m1_regex = new Regex(@"^(?<adr>([\d.]+)|([\da-f:]+(:[\d.]+)?(%\w+)?))[ \t]*/[ \t]*(?<maskLen>\d+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
@@ -115,7 +115,7 @@ namespace NetTools
             if (singleAddress == null)
                 throw new ArgumentNullException(nameof(singleAddress));
 
-            Begin = End = singleAddress;
+            this.Begin = this.End = singleAddress;
         }
 
         /// <summary>
@@ -133,10 +133,10 @@ namespace NetTools
 
             var beginBytes = begin.GetAddressBytes();
             var endBytes = end.GetAddressBytes();
-            Begin = new IPAddress(beginBytes);
-            End = new IPAddress(endBytes);
+            this.Begin = new IPAddress(beginBytes);
+            this.End = new IPAddress(endBytes);
 
-            if (Begin.AddressFamily != End.AddressFamily) throw new ArgumentException("Elements must be of the same address family", nameof(end));
+            if (this.Begin.AddressFamily != this.End.AddressFamily) throw new ArgumentException("Elements must be of the same address family", nameof(end));
 
             if (!Bits.GtECore(endBytes, beginBytes)) throw new ArgumentException("Begin must be smaller than the End", nameof(begin));
         }
@@ -158,16 +158,16 @@ namespace NetTools
             var maskBytes = Bits.GetBitMask(baseAdrBytes.Length, maskLength);
             baseAdrBytes = Bits.And(baseAdrBytes, maskBytes);
 
-            Begin = new IPAddress(baseAdrBytes);
-            End = new IPAddress(Bits.Or(baseAdrBytes, Bits.Not(maskBytes)));
+            this.Begin = new IPAddress(baseAdrBytes);
+            this.End = new IPAddress(Bits.Or(baseAdrBytes, Bits.Not(maskBytes)));
         }
 
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Use IPAddressRange.Parse static method instead.")]
         public IPAddressRange(string ipRangeString)
         {
             var parsed = Parse(ipRangeString);
-            Begin = parsed.Begin;
-            End = parsed.End;
+            this.Begin = parsed.Begin;
+            this.End = parsed.End;
         }
 
 #if NETFRAMEWORK
@@ -330,12 +330,12 @@ namespace NetTools
 
         public IEnumerator<IPAddress> GetEnumerator()
         {
-            return Operator.GetEnumerator();
+            return this.Operator.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return GetEnumerator();
+            return this.GetEnumerator();
         }
 
         /// <summary>
@@ -345,12 +345,12 @@ namespace NetTools
         /// <returns></returns>
         public override string ToString()
         {
-            return Equals(Begin, End) ? Begin.ToString() : string.Format("{0}-{1}", Begin, End);
+            return Equals(this.Begin, this.End) ? this.Begin.ToString() : string.Format("{0}-{1}", this.Begin, this.End);
         }
 
         public bool Equals(IPAddressRange other)
         {
-            return other != null && Begin.Equals(other.Begin) && End.Equals(other.End);
+            return other != null && this.Begin.Equals(other.Begin) && this.End.Equals(other.End);
         }
 
         public override bool Equals(object obj)
@@ -359,45 +359,45 @@ namespace NetTools
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
 
-            return Equals((IPAddressRange)obj);
+            return this.Equals((IPAddressRange)obj);
         }
 
         public override int GetHashCode()
         {
             var hashCode = 1903003160;
-            hashCode = hashCode * -1521134295 + EqualityComparer<IPAddress>.Default.GetHashCode(Begin);
-            hashCode = hashCode * -1521134295 + EqualityComparer<IPAddress>.Default.GetHashCode(End);
+            hashCode = hashCode * -1521134295 + EqualityComparer<IPAddress>.Default.GetHashCode(this.Begin);
+            hashCode = hashCode * -1521134295 + EqualityComparer<IPAddress>.Default.GetHashCode(this.End);
             return hashCode;
         }
 
         private int getPrefixLength()
         {
-            var byteBegin = Begin.GetAddressBytes();
+            var byteBegin = this.Begin.GetAddressBytes();
 
             // Handle single IP
-            if (Begin.Equals(End)) return byteBegin.Length * 8;
+            if (this.Begin.Equals(this.End)) return byteBegin.Length * 8;
 
             var length = byteBegin.Length * 8;
 
             for (var i = 0; i < length; i++)
             {
                 var mask = Bits.GetBitMask(byteBegin.Length, i);
-                if (new IPAddress(Bits.And(byteBegin, mask)).Equals(Begin))
+                if (new IPAddress(Bits.And(byteBegin, mask)).Equals(this.Begin))
                 {
-                    if (new IPAddress(Bits.Or(byteBegin, Bits.Not(mask))).Equals(End))
+                    if (new IPAddress(Bits.Or(byteBegin, Bits.Not(mask))).Equals(this.End))
                     {
                         return i;
                     }
                 }
             }
-            throw new FormatException(string.Format("{0} is not a CIDR Subnet", ToString()));
+            throw new FormatException(string.Format("{0} is not a CIDR Subnet", this.ToString()));
         }
 
         public int GetPrefixLength()
         {
             if (_prefixLength == EMPTYPREFIXLENGTH)
             {
-                _prefixLength = getPrefixLength();
+                _prefixLength = this.getPrefixLength();
             }
             return _prefixLength;
         }
@@ -407,7 +407,7 @@ namespace NetTools
         /// </summary>
         public string ToCidrString()
         {
-            return string.Format("{0}/{1}", Begin, GetPrefixLength());
+            return string.Format("{0}/{1}", this.Begin, this.GetPrefixLength());
         }
 
         #region JSON.NET Support by implement IReadOnlyDictionary<string, string>
@@ -415,46 +415,46 @@ namespace NetTools
         [EditorBrowsable(EditorBrowsableState.Never)]
         public IPAddressRange(IEnumerable<KeyValuePair<string, string>> items)
         {
-            this.Begin = IPAddress.Parse(TryGetValue(items, nameof(Begin), out var value1) ? value1 : throw new KeyNotFoundException());
-            this.End = IPAddress.Parse(TryGetValue(items, nameof(End), out var value2) ? value2 : throw new KeyNotFoundException());
+            this.Begin = IPAddress.Parse(this.TryGetValue(items, nameof(this.Begin), out var value1) ? value1 : throw new KeyNotFoundException());
+            this.End = IPAddress.Parse(this.TryGetValue(items, nameof(this.End), out var value2) ? value2 : throw new KeyNotFoundException());
         }
 
         /// <summary>
         /// Returns the input typed as IEnumerable&lt;IPAddress&gt;
         /// </summary>
-        public IEnumerable<IPAddress> AsEnumerable() => Operator;
+        public IEnumerable<IPAddress> AsEnumerable() => this.Operator;
 
         private IEnumerable<KeyValuePair<string, string>> GetDictionaryItems()
         {
             return new[] {
-                new KeyValuePair<string,string>(nameof(Begin), Begin.ToString()),
-                new KeyValuePair<string,string>(nameof(End), End.ToString()),
+                new KeyValuePair<string,string>(nameof(this.Begin), this.Begin.ToString()),
+                new KeyValuePair<string,string>(nameof(this.End), this.End.ToString()),
             };
         }
 
-        private bool TryGetValue(string key, out string value) => TryGetValue(GetDictionaryItems(), key, out value);
+        private bool TryGetValue(string key, out string value) => this.TryGetValue(this.GetDictionaryItems(), key, out value);
 
         private bool TryGetValue(IEnumerable<KeyValuePair<string, string>> items, string key, out string value)
         {
-            items = items ?? GetDictionaryItems();
+            items = items ?? this.GetDictionaryItems();
             var foundItem = items.FirstOrDefault(item => item.Key == key);
             value = foundItem.Value;
             return foundItem.Key != null;
         }
 
-        IEnumerable<string> IReadOnlyDictionary<string, string>.Keys => GetDictionaryItems().Select(item => item.Key);
+        IEnumerable<string> IReadOnlyDictionary<string, string>.Keys => this.GetDictionaryItems().Select(item => item.Key);
 
-        IEnumerable<string> IReadOnlyDictionary<string, string>.Values => GetDictionaryItems().Select(item => item.Value);
+        IEnumerable<string> IReadOnlyDictionary<string, string>.Values => this.GetDictionaryItems().Select(item => item.Value);
 
-        int IReadOnlyCollection<KeyValuePair<string, string>>.Count => GetDictionaryItems().Count();
+        int IReadOnlyCollection<KeyValuePair<string, string>>.Count => this.GetDictionaryItems().Count();
 
-        string IReadOnlyDictionary<string, string>.this[string key] => TryGetValue(key, out var value) ? value : throw new KeyNotFoundException();
+        string IReadOnlyDictionary<string, string>.this[string key] => this.TryGetValue(key, out var value) ? value : throw new KeyNotFoundException();
 
-        bool IReadOnlyDictionary<string, string>.ContainsKey(string key) => GetDictionaryItems().Any(item => item.Key == key);
+        bool IReadOnlyDictionary<string, string>.ContainsKey(string key) => this.GetDictionaryItems().Any(item => item.Key == key);
 
-        bool IReadOnlyDictionary<string, string>.TryGetValue(string key, out string value) => TryGetValue(key, out value);
+        bool IReadOnlyDictionary<string, string>.TryGetValue(string key, out string value) => this.TryGetValue(key, out value);
 
-        IEnumerator<KeyValuePair<string, string>> IEnumerable<KeyValuePair<string, string>>.GetEnumerator() => GetDictionaryItems().GetEnumerator();
+        IEnumerator<KeyValuePair<string, string>> IEnumerable<KeyValuePair<string, string>>.GetEnumerator() => this.GetDictionaryItems().GetEnumerator();
 
         #endregion
     }

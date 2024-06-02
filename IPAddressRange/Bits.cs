@@ -170,10 +170,10 @@ namespace NetTools
             if (bytes == null) throw new ArgumentNullException(nameof(bytes));
             if (bytes.All(x => x == byte.MinValue)) throw new OverflowException();
 
-            byte[] result = new byte[bytes.Length];
+            var result = new byte[bytes.Length];
             Array.Copy(bytes, result, bytes.Length);
 
-            for (int i = result.Length - 1; i >= 0; i--)
+            for (var i = result.Length - 1; i >= 0; i--)
             {
                 if (result[i] > byte.MinValue)
                 {

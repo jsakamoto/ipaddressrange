@@ -56,7 +56,7 @@ namespace IPRange.Test
         [TestCase("::ffff:10.0.2.0/ffff:ffff:ffff:ffff:ffff:ffff:ffff:ff00", "::ffff:10.0.2.0", "::ffff:10.0.2.255")]
         public void ParseSucceeds()
         {
-            TestContext.Run((string input, string expectedBegin, string expectedEnd) =>
+            this.TestContext.Run((string input, string expectedBegin, string expectedEnd) =>
             {
                 Console.WriteLine("TestCase: \"{0}\", Expected Begin: {1}, End: {2}", input, expectedBegin, expectedEnd);
                 var range = IPAddressRange.Parse(input);
@@ -91,7 +91,7 @@ namespace IPRange.Test
         [TestCase("fe80::0-fe80: :ffff", typeof(FormatException))] // ipv4, but include spaces
         public void ParseFails()
         {
-            TestContext.Run((string input, Type expectedException) =>
+            this.TestContext.Run((string input, Type expectedException) =>
             {
                 Console.WriteLine("TestCase: \"{0}\", Expected Exception: {1}", input, expectedException.Name);
                 try
@@ -129,7 +129,7 @@ namespace IPRange.Test
         [TestCase("fe80:dead::beaf:f%eth2-fe80:dead::beaf:a%eth2", false)]
         public void TryParse()
         {
-            TestContext.Run((string input, bool expectedReturn) =>
+            this.TestContext.Run((string input, bool expectedReturn) =>
             {
                 Console.WriteLine("TestCase: \"{0}\", Expected: {1}", input, expectedReturn);
                 IPAddressRange temp;

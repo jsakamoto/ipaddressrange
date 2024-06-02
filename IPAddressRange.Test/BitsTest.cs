@@ -1,6 +1,6 @@
 ﻿using System;
-using NetTools;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NetTools;
 
 namespace IPRange.Test
 {
