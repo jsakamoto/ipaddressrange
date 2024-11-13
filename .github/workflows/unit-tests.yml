@@ -9,14 +9,13 @@ jobs:
     runs-on: windows-latest
     steps:
       # Checkout the code
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      # Install .NET Core SDK
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v3
+      # Install .NET SDK
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
         with:
-           dotnet-version: '8.0.x'
-           dotnet-quality: 'preview'
+           dotnet-version: '9.0.x'
 
       # Perform unit tests
       - name: Perform unit tests

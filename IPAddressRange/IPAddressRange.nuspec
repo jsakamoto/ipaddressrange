@@ -25,6 +25,7 @@
       <group targetFramework="net6.0" />
       <group targetFramework="net7.0" />
       <group targetFramework="net8.0" />
+      <group targetFramework="net9.0" />
       <group targetFramework=".NETFramework4.6.2" />
       <group targetFramework=".NETStandard1.4">
         <dependency id="NETStandard.Library" version="1.6.1" exclude="Build,Analyzers" />
@@ -46,7 +47,10 @@
 
     <file src="bin\Release\net8.0\IPAddressRange.dll" target="lib\net8.0" />
     <file src="bin\Release\net8.0\IPAddressRange.XML" target="lib\net8.0" />
-    
+
+    <file src="bin\Release\net9.0\IPAddressRange.dll" target="lib\net9.0" />
+    <file src="bin\Release\net9.0\IPAddressRange.XML" target="lib\net9.0" />
+
     <file src="bin\Release\net462\IPAddressRange.dll" target="lib\net462" />
     <file src="bin\Release\net462\IPAddressRange.XML" target="lib\net462" />
 

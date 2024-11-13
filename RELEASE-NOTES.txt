@@ -1,3 +1,6 @@
+v.6.1.0
+- Add support for .NET 9.0
+
 v.6.0.0
 - Update the target frameworks (Drop the support for .NET4.5.2)
 - Fix: Enumerating never breaks if the end of the IPv4 address range is "255.255.255.255" (Issue #80)

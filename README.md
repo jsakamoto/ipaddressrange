@@ -4,8 +4,8 @@ IPAddressRange Class Library [![tests](https://github.com/jsakamoto/ipaddressran
 This library allows you to parse range of IP address string such as "192.168.0.0/24" and "192.168.0.0/255.255.255.0" and "192.168.0.0-192.168.0.255", and can contains check.
 This library supports both IPv4 and IPv6.
 
-Example
--------
+Examples
+--------
 
 ```csharp
 using NetTools;
