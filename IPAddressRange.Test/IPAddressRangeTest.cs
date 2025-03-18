@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-
+using System.Numerics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using NetTools;
@@ -121,6 +121,47 @@ namespace IPRange.Test
             range.Begin.ToString().Is("192.168.60.26");
             range.End.AddressFamily.Is(AddressFamily.InterNetwork);
             range.End.ToString().Is("192.168.60.37");
+        }
+
+        [DataTestMethod]
+        [DataRow("192.168.1.1", 1u)]
+        [DataRow("192.168.1.1/32", 1u)]
+        [DataRow("192.168.1.0/24", 256u)]
+        [DataRow("173.0.0.0/8", 16777216u)]
+        [DataRow("128.0.0.0/1", 2147483648u)]
+        public void AddressCountTest_IPv4(string rangeStr, uint expectedAddressCount)
+        {
+            var range = IPAddressRange.Parse(rangeStr);
+
+            range.AddressCount.Is(expectedAddressCount);
+        }
+
+        [TestMethod]
+        public void AddressCountTest_IPv4_AllAddresses()
+        {
+            var fullIPv4Range = IPAddressRange.Parse("0.0.0.0/0");
+
+            fullIPv4Range.AddressCount.Is(BigInteger.Pow(2, 32));
+        }
+
+        [DataTestMethod]
+        [DataRow("2001:0db8:85a3:0000:0000:8a2e:0370:7334", "1")]
+        [DataRow("2001:0db8:85a3:0000:0000:8a2e:0370:7334/128", "1")]
+        [DataRow("2001:0db8:85a3:0000:0000:8a2e::/96", "4294967296")]
+        [DataRow("2001:0db8:85a3::/64", "18446744073709551616")]
+        public void AddressCountTest_IPv6(string rangeStr, string expectedAddressCountStr)
+        {
+            var range = IPAddressRange.Parse(rangeStr);
+
+            range.AddressCount.Is(BigInteger.Parse(expectedAddressCountStr));
+        }
+
+        [TestMethod]
+        public void AddressCountTest_IPv6_AllAddresses()
+        {
+            var fullIPv6Range = IPAddressRange.Parse("::/0");
+
+            fullIPv6Range.AddressCount.Is(BigInteger.Pow(2, 128));
         }
 
         [TestMethod]

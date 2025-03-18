@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Net;
+using System.Numerics;
 using System.Text.RegularExpressions;
 using NetTools.Internals;
 
@@ -96,6 +97,13 @@ namespace NetTools
                 return _Operator;
             }
         }
+
+        /// <summary>
+        /// Number of addresses contained in this range.
+        /// Works both for IPv4 and IPv6 addresses.
+        /// </summary>
+        public BigInteger AddressCount
+            => Operator.AddressCount;
 
         // variable for store prefix length
         private int _prefixLength = EMPTYPREFIXLENGTH;
