@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
+using System.Numerics;
 
 namespace NetTools.Internals
 {
@@ -10,6 +11,8 @@ namespace NetTools.Internals
         private UInt32 Begin { get; }
 
         private UInt32 End { get; }
+
+        public BigInteger AddressCount => (BigInteger)this.End - this.Begin + 1;
 
         public IPv4RangeOperator(IPAddressRange range)
         {
@@ -39,7 +42,7 @@ namespace NetTools.Internals
             }
         }
 
-        int ICollection<IPAddress>.Count => (int)((this.End - this.Begin) + 1);
+        int ICollection<IPAddress>.Count => (int)AddressCount;
 
         bool ICollection<IPAddress>.IsReadOnly => true;
 
@@ -54,7 +57,7 @@ namespace NetTools.Internals
 
         void ICollection<IPAddress>.CopyTo(IPAddress[] array, int arrayIndex)
         {
-            if ((array.Length - arrayIndex) < (this as ICollection<IPAddress>).Count) throw new ArgumentException();
+            if ((array.Length - arrayIndex) < AddressCount) throw new ArgumentException();
 
             foreach (var ipAddress in this)
             {

@@ -12,6 +12,8 @@ namespace NetTools.Internals
 
         private BigInteger End { get; }
 
+        public BigInteger AddressCount => this.End - this.Begin + 1;
+
         public IPv6RangeOperator(IPAddressRange range)
         {
             this.Begin = range.Begin.ToBigInteger();
@@ -40,7 +42,7 @@ namespace NetTools.Internals
             }
         }
 
-        int ICollection<IPAddress>.Count => (int)((this.End - this.Begin) + 1);
+        int ICollection<IPAddress>.Count => (int)AddressCount;
 
         bool ICollection<IPAddress>.IsReadOnly => true;
 
@@ -55,7 +57,7 @@ namespace NetTools.Internals
 
         void ICollection<IPAddress>.CopyTo(IPAddress[] array, int arrayIndex)
         {
-            if ((array.Length - arrayIndex) < (this as ICollection<IPAddress>).Count) throw new ArgumentException();
+            if ((array.Length - arrayIndex) < AddressCount) throw new ArgumentException();
 
             foreach (var ipAddress in this)
             {
