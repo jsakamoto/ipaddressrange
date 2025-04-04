@@ -1,5 +1,5 @@
 v.6.2.0
-- Added AddressCount property to retrieve number of addresses contained by range
+- Added AddressCount property to retrieve number of addresses contained by range (PR #86 contributed by @Makaopior)
 
 v.6.1.0
 - Add support for .NET 9.0
