@@ -42,7 +42,7 @@ namespace NetTools.Internals
             }
         }
 
-        int ICollection<IPAddress>.Count => (int)AddressCount;
+        int ICollection<IPAddress>.Count => this.AddressCount <= int.MaxValue ? (int)this.AddressCount : throw new OverflowException("AddressCount exceeds int.MaxValue.");
 
         bool ICollection<IPAddress>.IsReadOnly => true;
 
@@ -57,7 +57,7 @@ namespace NetTools.Internals
 
         void ICollection<IPAddress>.CopyTo(IPAddress[] array, int arrayIndex)
         {
-            if ((array.Length - arrayIndex) < AddressCount) throw new ArgumentException();
+            if ((array.Length - arrayIndex) < this.AddressCount) throw new ArgumentException();
 
             foreach (var ipAddress in this)
             {

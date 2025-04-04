@@ -687,6 +687,16 @@ namespace IPRange.Test
         }
 
         [TestMethod]
+        public void Count_IPv6_Overflow_Test()
+        {
+            var ipAddressRange = IPAddressRange.Parse("fe80::0000:0000-ffff::0100:0001");
+            AssertEx.Throws<OverflowException>(() =>
+            {
+                var count = ipAddressRange.AsEnumerable().Count();
+            }).Message.Is("AddressCount exceeds int.MaxValue.");
+        }
+
+        [TestMethod]
         public void CopyTo_IPv4_Test()
         {
             // Given
