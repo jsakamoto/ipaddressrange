@@ -14,8 +14,8 @@
     <PackageTags>IPAddress</PackageTags>
     <NetStandardImplicitPackageVersion>1.6.0</NetStandardImplicitPackageVersion>
     <NuspecFile>IPAddressRange.nuspec</NuspecFile>
-    <Copyright>Copyright © 2012-2024 J.Sakamoto, Mozilla Public License 2.0</Copyright>
-    <Version>6.2.0</Version>
+    <Copyright>Copyright © 2012-2025 J.Sakamoto, Mozilla Public License 2.0</Copyright>
+    <Version>6.3.0</Version>
     <Authors>J.Sakamoto</Authors>
     <Company />
     <Product>IPAddressRange</Product>
