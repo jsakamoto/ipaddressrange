@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/README/">
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+    <File Path="RELEASE-NOTES.txt" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".github/workflows/unit-tests.yml" />
+  </Folder>
+  <Project Path="IPAddressRange.Test/IPAddressRange.Test.csproj" />
+  <Project Path="IPAddressRange/IPAddressRange.csproj" />
+</Solution>
