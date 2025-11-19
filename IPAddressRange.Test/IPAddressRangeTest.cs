@@ -123,7 +123,7 @@ namespace IPRange.Test
             range.End.ToString().Is("192.168.60.37");
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("192.168.1.1", 1u)]
         [DataRow("192.168.1.1/32", 1u)]
         [DataRow("192.168.1.0/24", 256u)]
@@ -144,7 +144,7 @@ namespace IPRange.Test
             fullIPv4Range.AddressCount.Is(BigInteger.Pow(2, 32));
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("2001:0db8:85a3:0000:0000:8a2e:0370:7334", "1")]
         [DataRow("2001:0db8:85a3:0000:0000:8a2e:0370:7334/128", "1")]
         [DataRow("2001:0db8:85a3:0000:0000:8a2e::/96", "4294967296")]
@@ -447,221 +447,186 @@ namespace IPRange.Test
 
 
         [TestMethod]
-        [TestCase("192.168.60.2", "192.168.60.2")]
-        [TestCase("192.168.60.2/24", "192.168.60.0-192.168.60.255")]
-        [TestCase("fe80::d503:4ee:3882:c586", "fe80::d503:4ee:3882:c586")]
-        [TestCase("fe80::d503:4ee:3882:c586/120", "fe80::d503:4ee:3882:c500-fe80::d503:4ee:3882:c5ff")]
-        public void ToString_Output()
+        [DataRow("192.168.60.2", "192.168.60.2")]
+        [DataRow("192.168.60.2/24", "192.168.60.0-192.168.60.255")]
+        [DataRow("fe80::d503:4ee:3882:c586", "fe80::d503:4ee:3882:c586")]
+        [DataRow("fe80::d503:4ee:3882:c586/120", "fe80::d503:4ee:3882:c500-fe80::d503:4ee:3882:c5ff")]
+        public void ToString_Output(string input, string expected)
         {
-            this.TestContext.Run((string input, string expected) =>
-            {
-                Console.WriteLine("TestCase: \"{0}\", Expected: \"{1}\"", input, expected);
-                var output = IPAddressRange.Parse(input).ToString();
-                Console.WriteLine("  Result: \"{0}\"", output);
-                output.Is(expected);
+            Console.WriteLine("TestCase: \"{0}\", Expected: \"{1}\"", input, expected);
+            var output = IPAddressRange.Parse(input).ToString();
+            Console.WriteLine("  Result: \"{0}\"", output);
+            output.Is(expected);
 
-                var parsed = IPAddressRange.Parse(output).ToString();
-                parsed.Is(expected, "Output of ToString() should be usable by Parse() and result in the same output");
-            });
+            var parsed = IPAddressRange.Parse(output).ToString();
+            parsed.Is(expected, "Output of ToString() should be usable by Parse() and result in the same output");
         }
 
         [TestMethod]
-        [TestCase("fe80::/10", 10)]
-        [TestCase("192.168.0.0/24", 24)]
-        [TestCase("192.168.0.0", 32)]
-        [TestCase("192.168.0.0-192.168.0.0", 32)]
-        [TestCase("fe80::", 128)]
-        [TestCase("192.168.0.0-192.168.0.255", 24)]
-        [TestCase("fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:ffff", 16)]
-        public void GetPrefixLength_Success()
+        [DataRow("fe80::/10", 10)]
+        [DataRow("192.168.0.0/24", 24)]
+        [DataRow("192.168.0.0", 32)]
+        [DataRow("192.168.0.0-192.168.0.0", 32)]
+        [DataRow("fe80::", 128)]
+        [DataRow("192.168.0.0-192.168.0.255", 24)]
+        [DataRow("fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:ffff", 16)]
+        public void GetPrefixLength_Success(string input, int expected)
         {
-            this.TestContext.Run((string input, int expected) =>
-            {
-                Console.WriteLine("TestCase: \"{0}\", Expected: \"{1}\"", input, expected);
-                var output = IPAddressRange.Parse(input).GetPrefixLength();
-                Console.WriteLine("  Result: \"{0}\"", output);
-                output.Is(expected);
-            });
+            Console.WriteLine("TestCase: \"{0}\", Expected: \"{1}\"", input, expected);
+            var output = IPAddressRange.Parse(input).GetPrefixLength();
+            Console.WriteLine("  Result: \"{0}\"", output);
+            output.Is(expected);
         }
 
         [TestMethod]
-        [TestCase("fe80::", "febf:ffff:ffff:ffff:ffff:ffff:ffff:ffff", 10)]
-        [TestCase("192.168.0.0", "192.168.0.255", 24)]
-        [TestCase("192.168.0.0", "192.168.0.0", 32)]
-        [TestCase("192.168.0.0", "192.168.0.0", 32)]
-        [TestCase("fe80::", "fe80::", 128)]
-        [TestCase("192.168.0.0", "192.168.0.255", 24)]
-        [TestCase("fe80::", "fe80:ffff:ffff:ffff:ffff:ffff:ffff:ffff", 16)]
-        public void GetPrefixLength_with_RewriteBeginEndProperties_Success()
+        [DataRow("fe80::", "febf:ffff:ffff:ffff:ffff:ffff:ffff:ffff", 10)]
+        [DataRow("192.168.0.0", "192.168.0.255", 24)]
+        [DataRow("192.168.0.0", "192.168.0.0", 32)]
+        [DataRow("fe80::", "fe80::", 128)]
+        [DataRow("fe80::", "fe80:ffff:ffff:ffff:ffff:ffff:ffff:ffff", 16)]
+        public void GetPrefixLength_with_RewriteBeginEndProperties_Success(string begin, string end, int expected)
         {
             var range = new IPAddressRange();
-            this.TestContext.Run((string begin, string end, int expected) =>
+            range.Begin = IPAddress.Parse(begin);
+            range.End = IPAddress.Parse(end);
+            Console.WriteLine($"TestCase: \"{begin}\"~\"{end}\", Expected: \"{expected}\"");
+            var output = range.GetPrefixLength();
+            Console.WriteLine($"  Result: \"{output}\"");
+            output.Is(expected);
+        }
+
+        [TestMethod]
+        [DataRow("192.168.0.0-192.168.0.254", typeof(FormatException))]
+        [DataRow("fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:fffe", typeof(FormatException))]
+        public void GetPrefixLength_Failures(string input, Type expectedException)
+        {
+            Console.WriteLine("TestCase: \"{0}\", Expected Exception: {1}", input, expectedException.Name);
+            try
+            {
+                IPAddressRange.Parse(input).GetPrefixLength();
+                Assert.Fail($"Expected exception of type {expectedException.Name} to be thrown for input \"{input}\"");
+            }
+            catch (AssertFailedException)
+            {
+                throw; // allow Assert.Fail to pass through 
+            }
+            catch (Exception ex)
+            {
+                ex.GetType().Is(expectedException);
+            }
+        }
+
+        [TestMethod]
+        [DataRow("192.168.0.0", "192.168.0.254", typeof(FormatException), "fe80::", "fe80::", 128)]
+        [DataRow("fe80::", "fe80:ffff:ffff:ffff:ffff:ffff:ffff:fffe", typeof(FormatException), "192.168.0.0", "192.168.0.255", 24)]
+        public void GetPrefixLength_with_RewriteBeginEndProperties_Failures(string begin, string end, Type expectedException, string begin2, string end2, int expected)
+        {
+            var range = new IPAddressRange();
+            Console.WriteLine($"TestCase: \"{begin}\"~\"{end}\", Expected Exception: \"{expectedException.Name}\"");
+            try
             {
                 range.Begin = IPAddress.Parse(begin);
                 range.End = IPAddress.Parse(end);
-                Console.WriteLine($"TestCase: \"{begin}\"~\"{end}\", Expected: \"{expected}\"");
-                var output = range.GetPrefixLength();
-                Console.WriteLine($"  Result: \"{output}\"");
-                output.Is(expected);
-            });
+                range.GetPrefixLength();
+                Assert.Fail($"Expected exception of type {expectedException.Name} to be thrown for input \"{begin}\"~\"{end}\"");
+            }
+            catch (AssertFailedException)
+            {
+                throw; // allow Assert.Fail to pass through 
+            }
+            catch (Exception ex)
+            {
+                ex.GetType().Is(expectedException);
+            }
+
+            // Once it was failed, but it will be recovered with valid begin/end property.
+            Console.WriteLine($"TestCase: \"{begin2}\"~\"{end2}\", Expected: \"{expected}\"");
+            range.Begin = IPAddress.Parse(begin2);
+            range.End = IPAddress.Parse(end2);
+            var output = range.GetPrefixLength();
+            Console.WriteLine($"  Result: \"{output}\"");
+            output.Is(expected);
         }
 
         [TestMethod]
-        [TestCase("192.168.0.0-192.168.0.254", typeof(FormatException))]
-        [TestCase("fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:fffe", typeof(FormatException))]
-        public void GetPrefixLength_Failures()
+        [DataRow("fe80::/10", "fe80::/10")]
+        [DataRow("192.168.0.0/24", "192.168.0.0/24")]
+        [DataRow("192.168.0.0", "192.168.0.0/32")]
+        [DataRow("192.168.0.0-192.168.0.0", "192.168.0.0/32")]
+        [DataRow("fe80::", "fe80::/128")]
+        [DataRow("192.168.0.0-192.168.0.255", "192.168.0.0/24")]
+        [DataRow("fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:ffff", "fe80::/16")]
+        public void ToCidrString_Output(string input, string expected)
         {
-            this.TestContext.Run((string input, Type expectedException) =>
-            {
-                Console.WriteLine("TestCase: \"{0}\", Expected Exception: {1}", input, expectedException.Name);
-                try
-                {
-                    IPAddressRange.Parse(input).GetPrefixLength();
-                    Assert.Fail("Expected exception of type {0} to be thrown for input \"{1}\"", expectedException.Name, input);
-                }
-                catch (AssertFailedException)
-                {
-                    throw; // allow Assert.Fail to pass through 
-                }
-                catch (Exception ex)
-                {
-                    ex.GetType().Is(expectedException);
-                }
-            });
+            Console.WriteLine("TestCase: \"{0}\", Expected: \"{1}\"", input, expected);
+            var output = IPAddressRange.Parse(input).ToCidrString();
+            Console.WriteLine("  Result: \"{0}\"", output);
+            output.Is(expected);
         }
 
         [TestMethod]
-        [TestCase("192.168.0.0", "192.168.0.254", typeof(FormatException), "fe80::", "fe80::", 128)]
-        [TestCase("fe80::", "fe80:ffff:ffff:ffff:ffff:ffff:ffff:fffe", typeof(FormatException), "192.168.0.0", "192.168.0.255", 24)]
-        public void GetPrefixLength_with_RewriteBeginEndProperties_Failures()
+        [DataRow("192.168.0.0-192.168.0.254", typeof(FormatException))]
+        [DataRow("fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:fffe", typeof(FormatException))]
+        public void ToCidrString_ThrowsOnNonCidr(string input, Type expectedException)
         {
-            var range = new IPAddressRange();
-            this.TestContext.Run((string begin, string end, Type expectedException, string begin2, string end2, int expected) =>
+            Console.WriteLine("TestCase: \"{0}\", Expected Exception: {1}", input, expectedException.Name);
+            try
             {
-                Console.WriteLine($"TestCase: \"{begin}\"~\"{end}\", Expected Exception: \"{expectedException.Name}\"");
-                try
-                {
-                    range.Begin = IPAddress.Parse(begin);
-                    range.End = IPAddress.Parse(end);
-                    range.GetPrefixLength();
-                    Assert.Fail($"Expected exception of type {expectedException.Name} to be thrown for input \"{begin}\"~\"{end}\"");
-                }
-                catch (AssertFailedException)
-                {
-                    throw; // allow Assert.Fail to pass through 
-                }
-                catch (Exception ex)
-                {
-                    ex.GetType().Is(expectedException);
-                }
-
-                // Once it was failed, but it will be recovered with valid begin/end property.
-                Console.WriteLine($"TestCase: \"{begin2}\"~\"{end2}\", Expected: \"{expected}\"");
-                range.Begin = IPAddress.Parse(begin2);
-                range.End = IPAddress.Parse(end2);
-                var output = range.GetPrefixLength();
-                Console.WriteLine($"  Result: \"{output}\"");
-                output.Is(expected);
-            });
+                IPAddressRange.Parse(input).ToCidrString();
+                Assert.Fail($"Expected exception of type {expectedException.Name} to be thrown for input \"{input}\"");
+            }
+            catch (AssertFailedException)
+            {
+                throw; // allow Assert.Fail to pass through 
+            }
+            catch (Exception ex)
+            {
+                ex.GetType().Is(expectedException);
+            }
         }
 
         [TestMethod]
-        [TestCase("fe80::/10", "fe80::/10")]
-        [TestCase("192.168.0.0/24", "192.168.0.0/24")]
-        [TestCase("192.168.0.0", "192.168.0.0/32")]
-        [TestCase("192.168.0.0-192.168.0.0", "192.168.0.0/32")]
-        [TestCase("fe80::", "fe80::/128")]
-        [TestCase("192.168.0.0-192.168.0.255", "192.168.0.0/24")]
-        [TestCase("fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:ffff", "fe80::/16")]
-        public void ToCidrString_Output()
+        [DataRow("192.168.0.0-192.168.0.254")]
+        [DataRow("fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:fffe")]
+        public void GetHashCode_SameRange_HashCodesAreSame(string input)
         {
-            this.TestContext.Run((string input, string expected) =>
-            {
-                Console.WriteLine("TestCase: \"{0}\", Expected: \"{1}\"", input, expected);
-                var output = IPAddressRange.Parse(input).ToCidrString();
-                Console.WriteLine("  Result: \"{0}\"", output);
-                output.Is(expected);
-            });
+            Console.WriteLine("TestCase: \"{0}\"", input);
+            var range1 = IPAddressRange.Parse(input);
+            var range2 = IPAddressRange.Parse(input);
+            range1.GetHashCode().Is(range2.GetHashCode());
         }
 
         [TestMethod]
-        [TestCase("192.168.0.0-192.168.0.254", typeof(FormatException))]
-        [TestCase("fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:fffe", typeof(FormatException))]
-        public void ToCidrString_ThrowsOnNonCidr()
+        [DataRow("192.168.0.0-192.168.0.254", "192.168.0.1-192.168.0.254")]
+        [DataRow("fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:fffe", "fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:fffd")]
+        public void GetHashCode_DifferentRanges_HashCodesAreDifferent(string input1, string input2)
         {
-            this.TestContext.Run((string input, Type expectedException) =>
-            {
-                Console.WriteLine("TestCase: \"{0}\", Expected Exception: {1}", input, expectedException.Name);
-                try
-                {
-                    IPAddressRange.Parse(input).ToCidrString();
-                    Assert.Fail("Expected exception of type {0} to be thrown for input \"{1}\"", expectedException.Name, input);
-                }
-                catch (AssertFailedException)
-                {
-                    throw; // allow Assert.Fail to pass through 
-                }
-                catch (Exception ex)
-                {
-                    ex.GetType().Is(expectedException);
-                }
-            });
+            Console.WriteLine("TestCase: \"{0}\" and \"{1}\"", input1, input2);
+            var range1 = IPAddressRange.Parse(input1);
+            var range2 = IPAddressRange.Parse(input2);
+            range1.GetHashCode().IsNot(range2.GetHashCode());
         }
 
         [TestMethod]
-        [TestCase("192.168.0.0-192.168.0.254")]
-        [TestCase("fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:fffe")]
-        public void GetHashCode_SameRange_HashCodesAreSame()
+        [DataRow("192.168.0.0-192.168.0.254")]
+        [DataRow("fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:fffe")]
+        public void Equals_SameRange_ReturnsTrue(string input)
         {
-            this.TestContext.Run((string input) =>
-            {
-                Console.WriteLine("TestCase: \"{0}\"", input);
-                var range1 = IPAddressRange.Parse(input);
-                var range2 = IPAddressRange.Parse(input);
-                range1.GetHashCode().Is(range2.GetHashCode());
-            });
+            Console.WriteLine("TestCase: \"{0}\"", input);
+            var range1 = IPAddressRange.Parse(input);
+            var range2 = IPAddressRange.Parse(input);
+            range1.Equals(range2).IsTrue();
         }
 
         [TestMethod]
-        [TestCase("192.168.0.0-192.168.0.254", "192.168.0.1-192.168.0.254")]
-        [TestCase("fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:fffe", "fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:fffd")]
-        public void GetHashCode_DifferentRanges_HashCodesAreDifferent()
+        [DataRow("192.168.0.0-192.168.0.254", "192.168.0.1-192.168.0.254")]
+        [DataRow("fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:fffe", "fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:fffd")]
+        public void Equals_SameRange_ReturnsFalse(string input1, string input2)
         {
-            this.TestContext.Run((string input1, string input2) =>
-            {
-                Console.WriteLine("TestCase: \"{0}\" and \"{1}\"", input1, input2);
-                var range1 = IPAddressRange.Parse(input1);
-                var range2 = IPAddressRange.Parse(input2);
-                range1.GetHashCode().IsNot(range2.GetHashCode());
-            });
-        }
-
-        [TestMethod]
-        [TestCase("192.168.0.0-192.168.0.254")]
-        [TestCase("fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:fffe")]
-        public void Equals_SameRange_ReturnsTrue()
-        {
-            this.TestContext.Run((string input) =>
-            {
-                Console.WriteLine("TestCase: \"{0}\"", input);
-                var range1 = IPAddressRange.Parse(input);
-                var range2 = IPAddressRange.Parse(input);
-                range1.Equals(range2).IsTrue();
-            });
-        }
-
-        [TestMethod]
-        [TestCase("192.168.0.0-192.168.0.254", "192.168.0.1-192.168.0.254")]
-        [TestCase("fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:fffe", "fe80::-fe80:ffff:ffff:ffff:ffff:ffff:ffff:fffd")]
-        public void Equals_SameRange_ReturnsFalse()
-        {
-            this.TestContext.Run((string input1, string input2) =>
-            {
-                Console.WriteLine("TestCase: \"{0}\" and \"{1}\"", input1, input2);
-                var range1 = IPAddressRange.Parse(input1);
-                var range2 = IPAddressRange.Parse(input2);
-                range1.Equals(range2).IsFalse();
-            });
+            Console.WriteLine("TestCase: \"{0}\" and \"{1}\"", input1, input2);
+            var range1 = IPAddressRange.Parse(input1);
+            var range2 = IPAddressRange.Parse(input2);
+            range1.Equals(range2).IsFalse();
         }
 
         [TestMethod]
